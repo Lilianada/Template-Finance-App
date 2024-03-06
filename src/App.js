@@ -1,24 +1,120 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import { Provider } from "react-redux";
+import { checkAdminRoleAndLogoutIfNot } from "./config/utils";
+import { useAuth } from "./authState";
+import { db } from "./config/firebase";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./App.css";
+import store from "../src/store/store";
+import Skeleton from "./components/Skeleton";
+import Login from "./pages/Auth/Login";
+import ProtectedRoute from "./protectedRoutes";
+import ForgotPassword from "./pages/Auth/ForgotPassword";
+import LoadingScreen from "./components/LoadingScreen";
+import Bonds from "./pages/Bonds";
+import AddBond from "./pages/Bonds/Add";
+import EditBond from "./pages/Bonds/Edit";
+import Dashboard from "./pages/Dashboard";
+import RegisteredUsers from "./pages/RegisteredUsers";
+import EditUser from "./pages/RegisteredUsers/EditUser";
+import { ModalProvider } from "./context/ModalContext";
+import AddNewUser from "./pages/RegisteredUsers/AddUser";
+import ViewUser from "./pages/RegisteredUsers/ViewUser";
 
 function App() {
+  const { loadingAuthState } = useAuth();
+
+  useEffect(() => {
+    checkAdminRoleAndLogoutIfNot(db);
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ModalProvider>
+      <Provider store={store}>
+        <div className="App">
+          <Router>
+            <Routes>
+              <Route
+                path="/dashboard/"
+                element={
+                  <ProtectedRoute>
+                    <Skeleton />
+                  </ProtectedRoute>
+                }
+              >
+                <Route
+                  index
+                  element={
+                    <ProtectedRoute>
+                      <Dashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="registered_users"
+                  element={
+                    <ProtectedRoute>
+                      <RegisteredUsers />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="registered_users/add_new_user"
+                  element={
+                    <ProtectedRoute>
+                      <AddNewUser />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="registered_users/view/:userId"
+                  element={
+                    <ProtectedRoute>
+                      <ViewUser />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="registered_users/edit/:userId"
+                  element={
+                    <ProtectedRoute>
+                      <EditUser />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="bonds"
+                  element={
+                    <ProtectedRoute>
+                      <Bonds />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="bonds/add"
+                  element={
+                    <ProtectedRoute>
+                      <AddBond />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="bonds/edit/:bondId"
+                  element={
+                    <ProtectedRoute>
+                      <EditBond />
+                    </ProtectedRoute>
+                  }
+                />
+              </Route>
+              <Route path="/" element={<Login />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+            </Routes>
+          </Router>
+          {loadingAuthState && <LoadingScreen />}
+        </div>
+      </Provider>
+    </ModalProvider>
   );
 }
 
