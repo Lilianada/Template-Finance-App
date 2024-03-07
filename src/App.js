@@ -16,10 +16,10 @@ import AddBond from "./pages/Bonds/Add";
 import EditBond from "./pages/Bonds/Edit";
 import Dashboard from "./pages/Dashboard";
 import RegisteredUsers from "./pages/RegisteredUsers";
-import EditUser from "./pages/RegisteredUsers/EditUser";
 import { ModalProvider } from "./context/ModalContext";
 import AddNewUser from "./pages/RegisteredUsers/AddUser";
 import ViewUser from "./pages/RegisteredUsers/ViewUser";
+import Edit from "./pages/RegisteredUsers/ClientInfo/Edit";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -78,7 +78,7 @@ function App() {
                   path="registered_users/edit/:userId"
                   element={
                     <ProtectedRoute>
-                      <EditUser />
+                      <Edit />
                     </ProtectedRoute>
                   }
                 />

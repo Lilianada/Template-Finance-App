@@ -1,8 +1,11 @@
 import { PaperClipIcon } from "@heroicons/react/20/solid";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ClientInfo from "./ClientInfo";
 import BankInfo from "./BankInfo";
 import PortfolioInfo from "./PortfolioInfo";
+import ClientKyc from "./KYC";
+import Edit from "../Bonds/Edit";
+import EditKyc from "./KYC/edit";
 
 export default function ViewUser() {
   
@@ -89,6 +92,10 @@ export default function ViewUser() {
         </div>
       </div>
 
+      {/* Client KYC */}
+      <ClientKyc/>
+
+      <EditKyc/>
       {/* Banking Details */}
       <BankInfo/>
 

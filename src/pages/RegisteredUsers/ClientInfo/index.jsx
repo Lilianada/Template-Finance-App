@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getUser } from "../../config/user";
-import { customModal } from "../../config/modalUtils";
-import { useModal } from "../../context/ModalContext";
+import { getUser } from "../../../config/user";
+import { customModal } from "../../../config/modalUtils";
+import { useModal } from "../../../context/ModalContext";
 import {
   CheckIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 import { getFunctions, httpsCallable } from "firebase/functions";
-import DotLoader from "../../components/DotLoader";
+import DotLoader from "../../../components/DotLoader";
 
 export default function ClientInfo() {
     const location = useLocation();

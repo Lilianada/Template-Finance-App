@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Select from "react-select";
-import { getUser, updateUser } from "../../config/user";
-import DotLoader from "../../components/DotLoader";
-import { customModal } from "../../config/modalUtils";
+import { getUser, updateUser } from "../../../config/user";
+import DotLoader from "../../../components/DotLoader";
+import { customModal } from "../../../config/modalUtils";
 import {
   CheckIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
-import { useModal } from "../../context/ModalContext";
+import { useModal } from "../../../context/ModalContext";
 import { getFunctions, httpsCallable } from "firebase/functions";
 
 const CountrySelect = ({ value, onChange }) => {

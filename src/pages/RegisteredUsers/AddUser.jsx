@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Select from "react-select";
-import { updateUser } from "../../config/user";
 import DotLoader from "../../components/DotLoader";
 import { customModal } from "../../config/modalUtils";
 import {
