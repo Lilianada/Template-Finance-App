@@ -4,8 +4,6 @@ import ClientInfo from "./ClientInfo";
 import BankInfo from "./BankInfo";
 import PortfolioInfo from "./PortfolioInfo";
 import ClientKyc from "./KYC";
-import Edit from "../Bonds/Edit";
-import EditKyc from "./KYC/edit";
 
 export default function ViewUser() {
   
@@ -94,8 +92,7 @@ export default function ViewUser() {
 
       {/* Client KYC */}
       <ClientKyc/>
-
-      <EditKyc/>
+\
       {/* Banking Details */}
       <BankInfo/>
 
