@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { getRegisteredUsers } from '../../config/user';
 import { useNavigate } from 'react-router-dom';
+import DotLoader from '../../components/DotLoader';
   
   export default function UserTable() {
     const [users, setUsers] = useState([]);
@@ -59,6 +60,7 @@ import { useNavigate } from 'react-router-dom';
         </div>
         { isLoading ? (
         <div className="mt-8">
+          <DotLoader/>
         </div>
         ) :
           (<div className="-mx-4 mt-8 sm:-mx-0">

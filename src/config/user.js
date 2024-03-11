@@ -249,3 +249,21 @@ export async function getRegisteredUsers() {
       return []; // Return an empty array or handle the error as needed
   }
 }
+
+//fetch user kyc
+export async function getUserKyc() {
+  // Get a reference to the 'terms' collection
+  const kycRef = collection(db, 'user_kyc');
+  const termsSnapshot = await getDocs(kycRef);
+
+  const kycData = termsSnapshot.docs.map((doc) => ({
+    ...doc.data(),
+    id: doc.id,
+  }));
+  // If there are no terms at all, return null
+  if (kycData.length === 0) {
+    return null;
+  }
+
+  return kycData;
+}

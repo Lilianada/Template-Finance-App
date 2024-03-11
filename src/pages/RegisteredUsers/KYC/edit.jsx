@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { RadioGroup } from "@headlessui/react";
 import {
     educationExperience,
@@ -16,46 +17,68 @@ import {
     tradingKnowledgeAssessment,
     tradingStrategy,
 } from "./data";
-
-
+import { getUserKyc } from "../../../config/user";
+import DotLoader from "../../../components/DotLoader";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 function EditKyc() {
-  const [selectedPlan, setSelectedPlan] = useState(riskReward[1]);
+  const location = useLocation();
+  const { editKyc } = location.state || {};
+  const uid = editKyc;
+  
   const [formData, setFormData] = useState({
-    primaryPurpose: "",
-    tradingExperience: "",
-    plannedInvestments: [],
-    investmentWindow: "",
-    stocksExperience: "",
-    stocksInvestment: "",
-    cryptoExperience: "",
-    cryptoInvestment: "",
-    leveragedExperience: "",
-    leveragedInvestment: "",
-    tradingKnowledge: [],
-    knowledgeAssessment: [],
-    tradingStrategy: "",
-    purposeOfTrading: "",
-    attitudeToRisk: "",
-    financialStatus: [],
-    occupation: "",
-    employerDetails: "",
-    netAnnualIncome: "",
-    liquidAssets: "",
-    investmentAmount: "",
-    riskReward: "",
-    familyMembers: [],
-    verifyAccount: "",
+    primaryPurpose: primaryPurpose || '',
+    tradingExperience: tradingExperience || '',
+    plannedInvestments: plannedInvestments || [],
+    investmentWindow:  investmentWindow || '',
+    // tradingKnowledge: tradingKnowledge || '',
+    tradingStrategy: tradingStrategy || '',
+    purposeOfTrading: purposeOfTrading || '',
+    financialStatus: financialStatus || '',
+    occupation: occupation || '',
+    // employerDetails: employerDetails || '',
+    netAnnualIncome: netAnnualIncome || '',
+    // liquidAssets: liquidAssets  || '',
+    investmentAmount: investmentAmount || '',
+    riskReward: riskReward || '',
+    familyMembers: familyMembers || [],
   });
+  const [isLoading, setIsLoading] = useState(false);
+  
+
+  useEffect(() => {
+    const fetchKycDetails = async () => {
+      setIsLoading(true);
+      // setError('');
+      try {
+        const details = await getUserKyc(uid);
+        setFormData(prevDetails => ({
+          ...prevDetails,
+          primaryPurpose: details.primaryPurpose || '',
+          tradingExperience: details.tradingExperience || '',
+          plannedInvestments: details.plannedInvestments || [],
+          investmentWindow: details.investmentWindow || '',
+          // Set other fields similarly
+        }));
+      } catch (err) {
+        console.error('Error fetching KYC details:', err);
+        // setError('Failed to fetch KYC details');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    if (uid) {
+      fetchKycDetails();
+    }
+  }, [uid]);
 
   // Handle field changes for both single and multiple value fields
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
-    if (type === "checkbox") {
+    if (type === 'checkbox') {
       setFormData((prevData) => ({
         ...prevData,
         [name]: checked
@@ -74,8 +97,13 @@ function EditKyc() {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log(formData);
+    
     // Implement your submission logic here, e.g., send data to an API
   };
+
+  if (isLoading) {
+    return <DotLoader />;
+  }
 
   return (
     <div className="bg-gray-50 py-6 px-4 my-8 rounded-md shadow text-left">
@@ -85,7 +113,7 @@ function EditKyc() {
             Know Your Customer (KYC)
           </h3>
           <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
-            Edit details about 's Account.
+            Add or edit client's KYC.
           </p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-6 mt-6">
@@ -111,7 +139,7 @@ function EditKyc() {
                     </p>
                     <select
                       name="primaryPurpose"
-                      value={formData.primaryPurpose}
+                      value={formData.primaryPurpose || "Select your primary purpose"}
                       onChange={handleChange}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     >
@@ -131,7 +159,7 @@ function EditKyc() {
                     </p>
                     <select
                       name="primaryPurpose"
-                      value={formData.plannedInvestments}
+                      value={formData.plannedInvestments || "Select your planned investments"}
                       onChange={handleChange}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     >
@@ -151,7 +179,7 @@ function EditKyc() {
                     </p>
                     <select
                       name="primaryPurpose"
-                      value={formData.investmentWindow}
+                      value={formData.investmentWindow || "Select your investment window"} 
                       onChange={handleChange}
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     >
@@ -194,7 +222,7 @@ function EditKyc() {
                             value={investment}
                             checked={formData.plannedInvestments.includes(
                               investment
-                            )}
+                            ) || false}
                             onChange={handleChange}
                             className="form-checkbox h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
                           />
@@ -220,12 +248,12 @@ function EditKyc() {
                               value={investment}
                               checked={formData.plannedInvestments.includes(
                                 investment
-                              )}
+                              ) || false}
                               onChange={handleChange}
                               className="form-checkbox h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
                             />
                             <span className="ml-2 text-sm text-gray-700">
-                              {investment}
+                              {investment || "N/A"}
                             </span>
                           </label>
                         </div>
@@ -288,7 +316,7 @@ function EditKyc() {
                               value={investment}
                               checked={formData.plannedInvestments.includes(
                                 investment
-                              )}
+                              ) || false}
                               onChange={handleChange}
                               className="form-checkbox h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
                             />
@@ -528,72 +556,36 @@ function EditKyc() {
                       Which risk/reward scenario best describes your annual
                       investments expectations with us?
                     </p>
-                    <RadioGroup value={selectedPlan} onChange={setSelectedPlan}>
-                      <RadioGroup.Label className="sr-only">
-                        Select your attitude to risk
-                      </RadioGroup.Label>
-                      <div className="relative -space-y-px rounded-md bg-white">
-                        {riskReward.map((plan, planIdx) => (
-                          <RadioGroup.Option
-                            key={plan.name}
-                            value={plan}
-                            className={({ checked }) =>
-                              classNames(
-                                planIdx === 0
-                                  ? "rounded-tl-md rounded-tr-md"
-                                  : "",
-                                planIdx === riskReward.length - 1
-                                  ? "rounded-bl-md rounded-br-md"
-                                  : "",
-                                checked
-                                  ? "z-10 border-orange-200 bg-orange-50"
-                                  : "border-gray-200",
-                                "relative flex cursor-pointer flex-col border p-4 focus:outline-none md:grid md:grid-cols-2 md:pr-6"
-                              )
-                            }
-                          >
-                            {({ active, checked }) => (
-                              <>
-                                <span className="flex items-center text-sm">
-                                  <span
-                                    className={classNames(
-                                      checked
-                                        ? "bg-orange-500 border-transparent"
-                                        : "bg-white border-gray-300",
-                                      active
-                                        ? "ring-2 ring-offset-2 ring-gray-900"
-                                        : "",
-                                      "h-4 w-4 rounded-full border flex items-center justify-center"
-                                    )}
-                                    aria-hidden="true"
-                                  >
-                                    <span className="rounded-full bg-white w-1.5 h-1.5" />
-                                  </span>
-                                  <RadioGroup.Label
-                                    as="span"
-                                    className="ml-3 font-medium text-gray-900"
-                                  >
-                                    {plan.name}
-                                  </RadioGroup.Label>
-                                </span>
-
-                                <RadioGroup.Description
-                                  as="span"
-                                  className={classNames(
-                                    checked
-                                      ? "text-orange-700"
-                                      : "text-gray-500",
-                                    "ml-6 pl-1 text-sm md:ml-0 md:pl-0 md:text-left"
-                                  )}
-                                >
-                                  {plan.limit}
-                                </RadioGroup.Description>
-                              </>
-                            )}
-                          </RadioGroup.Option>
-                        ))}
-                      </div>
-                    </RadioGroup>
+                    <RadioGroup value={formData.riskReward} onChange={(value) => setFormData({...formData, riskReward: value})}>
+        <div className="space-y-4">
+          {riskReward.map((option, index) => (
+            <RadioGroup.Option key={index} value={option}>
+              {({ checked }) => (
+                <div className={classNames(
+                  checked ? 'bg-indigo-50 border-indigo-200 z-10' : 'border-gray-200',
+                  'relative border p-4 flex cursor-pointer focus:outline-none'
+                )}>
+                  <span className={classNames(
+                    checked ? 'bg-indigo-600 border-transparent' : 'bg-white border-gray-300',
+                    'h-4 w-4 mt-0.5 cursor-pointer rounded-full border flex items-center justify-center'
+                  )}
+                  aria-hidden="true">
+                    <span className="rounded-full bg-white w-1.5 h-1.5" />
+                  </span>
+                  <div className="ml-3 flex flex-col">
+                    <RadioGroup.Label as="span" className="block text-sm font-medium text-gray-900">
+                      {option.name}
+                    </RadioGroup.Label>
+                    <RadioGroup.Description as="span" className="text-sm text-gray-500">
+                      {option.description}
+                    </RadioGroup.Description>
+                  </div>
+                </div>
+              )}
+            </RadioGroup.Option>
+          ))}
+        </div>
+      </RadioGroup>
                   </div>
 
                   {/*Trading knowledge assessment  */}

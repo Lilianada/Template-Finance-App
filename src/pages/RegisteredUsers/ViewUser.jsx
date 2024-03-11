@@ -6,18 +6,16 @@ import PortfolioInfo from "./PortfolioInfo";
 import ClientKyc from "./KYC";
 
 export default function ViewUser() {
-  
   return (
     <>
       {/* Client Information */}
       <ClientInfo />
-      {/* End of Client Information */}
 
       {/* Client Documents */}
       <div className="py-6 bg-gray-50 px-4 my-8 rounded-md shadow">
         <div className="px-4 sm:px-0 text-left">
           <h3 className="text-lg font-semibold leading-7 text-gray-900">
-            Attachments
+            Documents
           </h3>
         </div>
         <div className="px-4 py-6 sm:col-span-2 sm:px-0">
@@ -91,14 +89,13 @@ export default function ViewUser() {
       </div>
 
       {/* Client KYC */}
-      <ClientKyc/>
-\
+      <ClientKyc />
+
       {/* Banking Details */}
-      <BankInfo/>
+      <BankInfo />
 
       {/* Portfolio Information */}
-     <PortfolioInfo />
-      {/* End of Portfolio Information */}
+      <PortfolioInfo />
     </>
   );
 }

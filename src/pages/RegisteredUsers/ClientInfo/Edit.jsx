@@ -225,7 +225,6 @@ export default function Edit() {
     }
   };
 
-
   return (
     <form className="text-left bg-gray-50 px-6 py-8" onSubmit={handleUpdate}>
       <div className="space-y-12">
