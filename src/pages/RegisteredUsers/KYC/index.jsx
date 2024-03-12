@@ -8,9 +8,6 @@ export default function ClientKYC({ initialUser }) {
   const [kycDetails, setKycDetails] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [viewUser, setViewUser] = useState(initialUser || {});
-  const {
-    uid
-  } = viewUser;
 
   const fetchKycDetails = async () => {
     setIsLoading(true);
@@ -26,7 +23,7 @@ export default function ClientKYC({ initialUser }) {
 
   useEffect(() => {
     fetchKycDetails();
-  }, []); 
+  }, []);
 
   const handleEdit = (user) => {
     navigate(`/dashboard/registered_users/view/edit_kyc/${user}`, {
@@ -67,14 +64,6 @@ export default function ClientKYC({ initialUser }) {
               </dt>
               <dd className="mt-1 text-sm text-gray-500">
                 {kycDetails.purpose || "N/A"}
-              </dd>
-            </div>
-            <div className="sm:col-span-1">
-              <dt className="text-sm font-medium text-gray-900">
-                Trading Experience
-              </dt>
-              <dd className="mt-1 text-sm text-gray-500">
-                {kycDetails.tradeExperience || "N/A"}
               </dd>
             </div>
             <div className="sm:col-span-1">
@@ -125,7 +114,152 @@ export default function ClientKYC({ initialUser }) {
                 {kycDetails.cryptoInvestment || "N/A"}
               </dd>
             </div>
-            {/* Add more sections based on your KYC form structure */}
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-900">
+                Leverage Investments
+              </dt>
+              <dd className="mt-1 text-sm text-gray-500">
+                {kycDetails.leverageExperience || "N/A"}
+              </dd>
+            </div>
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-900">
+                Leverage Investments Amount
+              </dt>
+              <dd className="mt-1 text-sm text-gray-500">
+                {kycDetails.leverageInvestments || "N/A"}
+              </dd>
+            </div>
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-900">
+                Trading Experience
+              </dt>
+              <dd className="mt-1 text-sm text-gray-500">
+                {kycDetails.tradeExperience || "N/A"}
+              </dd>
+            </div>
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-900">
+                Trading Education Experience
+              </dt>
+              {kycDetails.eduExperience &&
+              kycDetails.eduExperience.length > 0 ? (
+                kycDetails.eduExperience.map((item, index) => (
+                  <dd className="mt-1 text-sm text-gray-500" key={index}>
+                    {item}
+                  </dd>
+                ))
+              ) : (
+                <dd className="mt-1 text-sm text-gray-500">N/A</dd>
+              )}
+            </div>
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-900">
+                Trading Knowledge Assessment
+              </dt>
+              {kycDetails.tradeKnowledge &&
+              kycDetails.tradeKnowledge.length > 0 ? (
+                kycDetails.tradeKnowledge.map((item, index) => (
+                  <dd className="mt-1 text-sm text-gray-500" key={index}>
+                    {item}
+                  </dd>
+                ))
+              ) : (
+                <dd className="mt-1 text-sm text-gray-500">N/A</dd>
+              )}
+            </div>
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-900">
+                Trading Strategy
+              </dt>
+              <dd className="mt-1 text-sm text-gray-500">
+                {kycDetails.tradeStrategy || "N/A"}
+              </dd>
+            </div>
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-900">
+                Purpose of Trading
+              </dt>
+              <dd className="mt-1 text-sm text-gray-500">
+                {kycDetails.purposingTrading || "N/A"}
+              </dd>
+            </div>
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-900">
+                Investment Amount
+              </dt>
+              <dd className="mt-1 text-sm text-gray-500">
+                {kycDetails.investAmount || "N/A"}
+              </dd>
+            </div>
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-900">
+                Risk Reward Scenarios
+              </dt>
+              <dd className="mt-1 text-sm text-gray-500">
+                {kycDetails.risk ? kycDetails.risk.name : "N/A"}
+              </dd>
+            </div>
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-900">
+                Family Assessment
+              </dt>
+              {kycDetails.familyAssessment &&
+              kycDetails.familyAssessment.length > 0 ? (
+                kycDetails.familyAssessment.map((family, index) => (
+                  <dd className="mt-1 text-sm text-gray-500" key={index}>
+                    {family || "N/A"}
+                  </dd>
+                ))
+              ) : (
+                <dd className="mt-1 text-sm text-gray-500">N/A</dd>
+              )}
+            </div>
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-900">
+                Financial Status
+              </dt>
+              {kycDetails.financialStats && kycDetails.financialStats.length > 0 ? (kycDetails.financialStats.map((stats, index) => (
+                <dd className="mt-1 text-sm text-gray-500" key={index}>
+                  {stats}
+                  </dd>
+                ))
+              ) : (
+                <dd className="mt-1 text-sm text-gray-500">N/A</dd>
+              )}
+            </div>
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-900">
+                Source of Income
+              </dt>
+              <dd className="mt-1 text-sm text-gray-500">
+                {kycDetails.job || "N/A"}
+              </dd>
+            </div>
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-900">
+                Employer Details
+              </dt>
+              <dd className="mt-1 text-sm text-gray-500">
+                {kycDetails.employerDets || "N/A"}
+              </dd>
+            </div>
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-900">
+                Annual Net Income
+              </dt>
+              <dd className="mt-1 text-sm text-gray-500">
+                {kycDetails.netIncome || "N/A"}
+              </dd>
+            </div>
+            <div className="sm:col-span-1">
+              <dt className="text-sm font-medium text-gray-900">
+                Total Cash and Liquid Assets (USD)
+              </dt>
+              <dd className="mt-1 text-sm text-gray-500">
+                {kycDetails.assets || "N/A"}
+              </dd>
+            </div>
           </dl>
           <div className="mt-8 flex justify-end space-x-3">
             <button

@@ -26,10 +26,6 @@ import DotLoader from "../../../components/DotLoader";
 import { useModal } from "../../../context/ModalContext";
 import { customModal } from "../../../config/modalUtils";
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
 function EditKyc() {
   const { userId } = useParams();
   const { showModal, hideModal } = useModal();
@@ -54,18 +50,20 @@ function EditKyc() {
     netIncome: "",
     assets: "",
     investAmount: "",
-    risk: "",
-    family: [],
+    risk: {
+      name: "",
+      limit: "",
+    },
+    familyAssessment: [],
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchKycDetails = async () => {
-      setIsLoading(true);
       try {
         const details = await getUserKyc(userId);
-        if (details) { // Check if details are not null
+        console.log("KYC details:", details);
+        if (details) {
           setFormData((prevDetails) => ({
             ...prevDetails,
             eduExperience: details.eduExperience || [],
@@ -73,7 +71,7 @@ function EditKyc() {
             tradeExperience: details.tradeExperience || "",
             investments: details.investments || "",
             investWindow: details.investWindow || "",
-            tradeKnowledge: details.tradeKnowledge || "",
+            tradeKnowledge: details.tradeKnowledge || [],
             tradeStrategy: details.tradeStrategy || "",
             purposeTrading: details.purposeTrading || "",
             financialStats: details.financialStats || [],
@@ -88,20 +86,20 @@ function EditKyc() {
             netIncome: details.netIncome || "",
             assets: details.assets || "",
             investAmount: details.investAmount || "",
-            risk: details.risk || "",
-            family: details.family || [],
+            risk: details.risk || { name: "", limit: "" },
+            familyAssessment: details.familyAssessment || [],
           }));
-        } else { // Set default values if details are null
+        } else {
           setFormData({
             eduExperience: [],
             purpose: "",
             tradeExperience: "",
             investments: "",
             investWindow: "",
-            tradeKnowledge: "",
+            tradeKnowledge: [],
             tradeStrategy: "",
             purposeTrading: "",
-            financialStats: "",
+            financialStats: [],
             stocksInvestment: "",
             stockExperience: "",
             cryptoExperience: "",
@@ -113,15 +111,16 @@ function EditKyc() {
             netIncome: "",
             assets: "",
             investAmount: "",
-            risk: "",
-            family: [],
+            risk: {
+              name: "",
+              limit: "",
+            },
+            familyAssessment: [],
           });
         }
       } catch (err) {
         console.error("Error fetching KYC details:", err);
-      } finally {
-        setIsLoading(false);
-      }
+      } 
     };
 
     if (userId) {
@@ -188,10 +187,6 @@ function EditKyc() {
     setIsSubmitting(false);
   };
 
-  // if (isLoading) {
-  //   return <DotLoader />;
-  // }
-
   return (
     <div className="bg-gray-50 py-6 px-4 lg:px-8 my-8 rounded-md shadow text-left">
       <div className="">
@@ -205,6 +200,7 @@ function EditKyc() {
         </div>
         <form onSubmit={handleSubmit} className="space-y-6 mt-6">
           {/* Form sections */}
+          
           <div className="space-y-4 grid gap-4">
             {/* Your Goal */}
             <section aria-labelledby="plan-heading">
@@ -638,8 +634,8 @@ function EditKyc() {
                         How much are you willing to invest?
                       </p>
                       <select
-                        name="amount"
-                        value={formData.amount}
+                        name="investAmount"
+                        value={formData.investAmount}
                         onChange={handleChange}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       >
@@ -661,30 +657,34 @@ function EditKyc() {
                         investments expectations with us?
                       </p>
                       <RadioGroup
-                        value={formData.risk}
-                        onChange={(value) =>
-                          setFormData({ ...formData, risk: value })
-                        }
+                        value={formData.risk.name}
+                        onChange={(selectedName) => {
+                          const selectedRisk = riskReward.find(
+                            (risk) => risk.name === selectedName
+                          );
+                          setFormData((prevFormData) => ({
+                            ...prevFormData,
+                            risk: selectedRisk || { name: "", limit: "" },
+                          }));
+                        }}
                       >
                         <div className="space-y-4">
                           {riskReward.map((option, index) => (
-                            <RadioGroup.Option key={index} value={option}>
+                            <RadioGroup.Option key={index} value={option.name}>
                               {({ checked }) => (
                                 <div
-                                  className={classNames(
+                                  className={`relative border p-4 flex cursor-pointer focus:outline-none rounded-lg ${
                                     checked
                                       ? "bg-indigo-50 border-indigo-200 z-10"
-                                      : "border-gray-200",
-                                    "relative border p-4 flex cursor-pointer focus:outline-none rounded-lg"
-                                  )}
+                                      : "border-gray-200"
+                                  }`}
                                 >
                                   <span
-                                    className={classNames(
+                                    className={`h-4 w-4 mt-0.5 cursor-pointer rounded-full border flex items-center justify-center ${
                                       checked
                                         ? "bg-indigo-600 border-transparent"
-                                        : "bg-white border-gray-300",
-                                      "h-4 w-4 mt-0.5 cursor-pointer rounded-full border flex items-center justify-center"
-                                    )}
+                                        : "bg-white border-gray-300"
+                                    }`}
                                     aria-hidden="true"
                                   >
                                     <span className="rounded-full bg-white w-1.5 h-1.5" />
@@ -722,9 +722,9 @@ function EditKyc() {
                           <label className="inline-flex items-center">
                             <input
                               type="checkbox"
-                              name="family"
+                              name="familyAssessment"
                               value={item}
-                              checked={formData.family.includes(item)}
+                              checked={formData.familyAssessment.includes(item)}
                               onChange={handleChange}
                               className="form-checkbox h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
                             />
@@ -863,7 +863,7 @@ function EditKyc() {
               className="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg  h-10"
               disabled={isSubmitting}
             >
-              {isSubmitting ? <DotLoader/> :  "Submit KYC Form"}
+              {isSubmitting ? <DotLoader /> : "Submit KYC Form"}
             </button>
           </div>
         </form>
