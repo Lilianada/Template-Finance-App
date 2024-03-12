@@ -1,84 +1,138 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { RadioGroup } from "@headlessui/react";
 import {
-    educationExperience,
-    familyMembers,
-    financialStatus,
-    investmentAmount,
-    investmentWindow,
-    netAnnualIncome,
-    occupation,
-    plannedInvestments,
-    primaryPurpose,
-    purposeOfTrading,
-    riskReward,
-    tradingExperience,
-    tradingKnowledgeAssessment,
-    tradingStrategy,
+  CheckIcon,
+  ExclamationTriangleIcon,
+} from "@heroicons/react/24/outline";
+import {
+  educationExperience,
+  familyMembers,
+  financialStatus,
+  investmentAmount,
+  investmentWindow,
+  netAnnualIncome,
+  occupation,
+  plannedInvestments,
+  primaryPurpose,
+  purposeOfTrading,
+  riskReward,
+  tradingExperience,
+  tradingKnowledgeAssessment,
+  tradingStrategy,
 } from "./data";
-import { getUserKyc } from "../../../config/user";
+import { getUserKyc, updateUserKyc } from "../../../config/user";
 import DotLoader from "../../../components/DotLoader";
+import { useModal } from "../../../context/ModalContext";
+import { customModal } from "../../../config/modalUtils";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 function EditKyc() {
-  const location = useLocation();
-  const { editKyc } = location.state || {};
-  const uid = editKyc;
-  
+  const { userId } = useParams();
+  const { showModal, hideModal } = useModal();
   const [formData, setFormData] = useState({
-    primaryPurpose: primaryPurpose || '',
-    tradingExperience: tradingExperience || '',
-    plannedInvestments: plannedInvestments || [],
-    investmentWindow:  investmentWindow || '',
-    // tradingKnowledge: tradingKnowledge || '',
-    tradingStrategy: tradingStrategy || '',
-    purposeOfTrading: purposeOfTrading || '',
-    financialStatus: financialStatus || '',
-    occupation: occupation || '',
-    // employerDetails: employerDetails || '',
-    netAnnualIncome: netAnnualIncome || '',
-    // liquidAssets: liquidAssets  || '',
-    investmentAmount: investmentAmount || '',
-    riskReward: riskReward || '',
-    familyMembers: familyMembers || [],
+    eduExperience: "",
+    purpose: "",
+    tradeExperience: "",
+    investments: "",
+    investWindow: "",
+    tradingKnowledge: "",
+    tradeKnowledge: "",
+    purposeTrading: "",
+    financialStats: [],
+    stocksInvestment: "",
+    stockExperience: "",
+    cryptoExperience: "",
+    cryptoInvestment: "",
+    leverageExperience: "",
+    leverageInvestments: "",
+    job: "",
+    employerDets: "",
+    netIncome: "",
+    assets: "",
+    investAmount: "",
+    risk: "",
+    family: [],
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
 
   useEffect(() => {
     const fetchKycDetails = async () => {
       setIsLoading(true);
-      // setError('');
       try {
-        const details = await getUserKyc(uid);
-        setFormData(prevDetails => ({
-          ...prevDetails,
-          primaryPurpose: details.primaryPurpose || '',
-          tradingExperience: details.tradingExperience || '',
-          plannedInvestments: details.plannedInvestments || [],
-          investmentWindow: details.investmentWindow || '',
-          // Set other fields similarly
-        }));
+        const details = await getUserKyc(userId);
+        if (details) { // Check if details are not null
+          setFormData((prevDetails) => ({
+            ...prevDetails,
+            eduExperience: details.eduExperience || [],
+            purpose: details.purpose || "",
+            tradeExperience: details.tradeExperience || "",
+            investments: details.investments || "",
+            investWindow: details.investWindow || "",
+            tradeKnowledge: details.tradeKnowledge || "",
+            tradeStrategy: details.tradeStrategy || "",
+            purposeTrading: details.purposeTrading || "",
+            financialStats: details.financialStats || [],
+            job: details.job || "",
+            employerDets: details.employerDets || "",
+            stocksInvestment: details.stocksInvestment || "",
+            stockExperience: details.stockExperience || "",
+            cryptoExperience: details.cryptoExperience || "",
+            cryptoInvestment: details.cryptoInvestment || "",
+            leverageExperience: details.leverageExperience || "",
+            leverageInvestments: details.leverageInvestments || "",
+            netIncome: details.netIncome || "",
+            assets: details.assets || "",
+            investAmount: details.investAmount || "",
+            risk: details.risk || "",
+            family: details.family || [],
+          }));
+        } else { // Set default values if details are null
+          setFormData({
+            eduExperience: [],
+            purpose: "",
+            tradeExperience: "",
+            investments: "",
+            investWindow: "",
+            tradeKnowledge: "",
+            tradeStrategy: "",
+            purposeTrading: "",
+            financialStats: "",
+            stocksInvestment: "",
+            stockExperience: "",
+            cryptoExperience: "",
+            cryptoInvestment: "",
+            leverageExperience: "",
+            leverageInvestments: "",
+            job: "",
+            employerDets: "",
+            netIncome: "",
+            assets: "",
+            investAmount: "",
+            risk: "",
+            family: [],
+          });
+        }
       } catch (err) {
-        console.error('Error fetching KYC details:', err);
-        // setError('Failed to fetch KYC details');
+        console.error("Error fetching KYC details:", err);
       } finally {
         setIsLoading(false);
       }
     };
-    if (uid) {
+
+    if (userId) {
       fetchKycDetails();
     }
-  }, [uid]);
+  }, []);
 
   // Handle field changes for both single and multiple value fields
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
-    if (type === 'checkbox') {
+    if (type === "checkbox") {
       setFormData((prevData) => ({
         ...prevData,
         [name]: checked
@@ -94,19 +148,52 @@ function EditKyc() {
   };
 
   // Example submission handler
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(formData);
-    
-    // Implement your submission logic here, e.g., send data to an API
+    setIsSubmitting(true);
+
+    const response = await updateUserKyc(userId, formData); // Await the response from the updateUserKyc function
+
+    if (response.success) {
+      // Show a success message if KYC details were successfully updated
+      customModal({
+        showModal,
+        title: "Success!",
+        text: "KYC details updated successfully.",
+        showConfirmButton: false,
+        icon: CheckIcon,
+        iconBgColor: "bg-green-100",
+        iconTextColor: "text-green-600",
+        buttonBgColor: "bg-green-600",
+        timer: 2000,
+        onClose: hideModal,
+      });
+    } else {
+      // Handle the error case
+      console.error("Error updating KYC details:", response.error);
+      customModal({
+        showModal,
+        title: "Error!",
+        text: `There was a problem updating KYC details: ${response.error}`,
+        showConfirmButton: false,
+        icon: ExclamationTriangleIcon,
+        iconBgColor: "bg-red-100",
+        iconTextColor: "text-red-600",
+        buttonBgColor: "bg-red-600",
+        onClose: hideModal,
+        timer: 3000,
+      });
+    }
+
+    setIsSubmitting(false);
   };
 
-  if (isLoading) {
-    return <DotLoader />;
-  }
+  // if (isLoading) {
+  //   return <DotLoader />;
+  // }
 
   return (
-    <div className="bg-gray-50 py-6 px-4 my-8 rounded-md shadow text-left">
+    <div className="bg-gray-50 py-6 px-4 lg:px-8 my-8 rounded-md shadow text-left">
       <div className="">
         <div className="px-4 sm:px-0 text-left">
           <h3 className="text-lg font-semibold leading-7 text-gray-900">
@@ -122,7 +209,7 @@ function EditKyc() {
             {/* Your Goal */}
             <section aria-labelledby="plan-heading">
               <div className="shadow sm:overflow-hidden sm:rounded-md">
-                <div className="space-y-6 bg-white px-4 py-6 sm:p-6">
+                <div className="space-y-6 bg-white p-7 sm:p-6">
                   <div>
                     <h2
                       id="plan-heading"
@@ -131,65 +218,68 @@ function EditKyc() {
                       Your goal
                     </h2>
                   </div>
+                  <div className=" lg:w-[720px] sm:w-full flex flex-col gap-4">
+                    {/* Purpose of trade */}
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        Primary purpose of trading with us
+                      </p>
+                      <select
+                        name="purpose"
+                        value={formData.purpose}
+                        onChange={handleChange}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      >
+                        <option value="">Select your primary purpose</option>
+                        {primaryPurpose.map((purpose, index) => (
+                          <option value={purpose} key={index}>
+                            {purpose}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
 
-                  {/* Purpose of trade */}
-                  <div className="mt-2 space-y-2">
-                    <p className="mt-1 text-sm text-gray-500">
-                      Primary purpose of trading with us
-                    </p>
-                    <select
-                      name="primaryPurpose"
-                      value={formData.primaryPurpose || "Select your primary purpose"}
-                      onChange={handleChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    >
-                      <option value="">Select your primary purpose</option>
-                      {primaryPurpose.map((purpose, index) => (
-                        <option value={purpose} key={index}>
-                          {purpose}
+                    {/* planned investments */}
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        Planned investments
+                      </p>
+                      <select
+                        name="investments"
+                        value={formData.investments}
+                        onChange={handleChange}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      >
+                        <option value="">
+                          Select your planned investments
                         </option>
-                      ))}
-                    </select>
-                  </div>
+                        {plannedInvestments.map((investment, index) => (
+                          <option value={investment} key={index}>
+                            {investment}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
 
-                  {/* planned investments */}
-                  <div className="mt-2 space-y-2">
-                    <p className="mt-1 text-sm text-gray-500">
-                      Planned investments
-                    </p>
-                    <select
-                      name="primaryPurpose"
-                      value={formData.plannedInvestments || "Select your planned investments"}
-                      onChange={handleChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    >
-                      <option value="">Select your planned investments</option>
-                      {plannedInvestments.map((investment, index) => (
-                        <option value={investment} key={index}>
-                          {investment}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/*Investment window */}
-                  <div className="mt-2 space-y-2">
-                    <p className="mt-1 text-sm text-gray-500">
-                      Investment window
-                    </p>
-                    <select
-                      name="primaryPurpose"
-                      value={formData.investmentWindow || "Select your investment window"} 
-                      onChange={handleChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    >
-                      <option value="">Select your investment window</option>
-                      {investmentWindow.map((investment, index) => (
-                        <option value={investment} key={index}>
-                          {investment}
-                        </option>
-                      ))}
-                    </select>
+                    {/*Investment window */}
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        Investment window
+                      </p>
+                      <select
+                        name="investWindow"
+                        value={formData.investWindow}
+                        onChange={handleChange}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      >
+                        <option value="">Select your investment window</option>
+                        {investmentWindow.map((investment, index) => (
+                          <option value={investment} key={index}>
+                            {investment}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -198,7 +288,7 @@ function EditKyc() {
             {/* Stock investing experience */}
             <section aria-labelledby="plan-heading">
               <div className="shadow sm:overflow-hidden sm:rounded-md">
-                <div className="space-y-6 bg-white px-4 py-6 sm:p-6">
+                <div className="space-y-6 bg-white p-7 sm:p-6">
                   <div>
                     <h2
                       id="plan-heading"
@@ -207,58 +297,60 @@ function EditKyc() {
                       Stocks Investing Experience
                     </h2>
                   </div>
-
-                  <div className="mt-2 space-y-2">
-                    <p className="mt-1 text-sm text-gray-500">
-                      Over the last year, how many times have you invested in
-                      stocks and/or ETFs?
-                    </p>
-                    {["1-10", "10-20", "20 plus"].map((investment, index) => (
-                      <div key={index}>
-                        <label className="inline-flex items-center">
-                          <input
-                            type="checkbox"
-                            name="plannedInvestments"
-                            value={investment}
-                            checked={formData.plannedInvestments.includes(
-                              investment
-                            ) || false}
-                            onChange={handleChange}
-                            className="form-checkbox h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">
-                            {investment}
-                          </span>
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="mt-2 space-y-2">
-                    <p className="mt-1 text-sm text-gray-500">
-                      In the last year, how much have you invested in stocks
-                      and/or ETFs?
-                    </p>
-                    {["$1-$500", "$500-$2000", "$2000+"].map(
-                      (investment, index) => (
+                  <div className="flex flex-col gap-4">
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        Over the last year, how many times have you invested in
+                        stocks and/or ETFs?
+                      </p>
+                      {["1-10", "10-20", "20 plus"].map((investment, index) => (
                         <div key={index}>
                           <label className="inline-flex items-center">
                             <input
-                              type="checkbox"
-                              name="plannedInvestments"
+                              type="radio"
+                              name="stockExperience"
                               value={investment}
-                              checked={formData.plannedInvestments.includes(
-                                investment
-                              ) || false}
+                              checked={formData.stockExperience === investment}
                               onChange={handleChange}
-                              className="form-checkbox h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                              className="form-radio h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
                             />
                             <span className="ml-2 text-sm text-gray-700">
-                              {investment || "N/A"}
+                              {investment}
                             </span>
                           </label>
                         </div>
-                      )
-                    )}
+                      ))}
+                    </div>
+
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        In the last year, how much have you invested in stocks
+                        and/or ETFs?
+                      </p>
+                      {["$1 - $500", "$500 - $2000", "$2000 plus"].map(
+                        (investment, index) => (
+                          <div key={index}>
+                            <label className="inline-flex items-center">
+                              <input
+                                type="radio"
+                                name="stocksInvestment"
+                                value={investment}
+                                checked={
+                                  formData.stocksInvestment.includes(
+                                    investment
+                                  ) || false
+                                }
+                                onChange={handleChange}
+                                className="form-radio h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                              />
+                              <span className="ml-2 text-sm text-gray-700">
+                                {investment}
+                              </span>
+                            </label>
+                          </div>
+                        )
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -267,7 +359,7 @@ function EditKyc() {
             {/* Crypto investing experience */}
             <section aria-labelledby="plan-heading">
               <div className="shadow sm:overflow-hidden sm:rounded-md">
-                <div className="space-y-6 bg-white px-4 py-6 sm:p-6">
+                <div className="space-y-6 bg-white p-7 sm:p-6">
                   <div>
                     <h2
                       id="plan-heading"
@@ -276,57 +368,61 @@ function EditKyc() {
                       Crypto Investing Experience
                     </h2>
                   </div>
-
-                  <div className="mt-2 space-y-2">
-                    <p className="mt-1 text-sm text-gray-500">
-                      Over the last year, how many times have you invested in
-                      crypto?
-                    </p>
-                    {["1-10", "10-20", "20 plus"].map((investment, index) => (
-                      <div key={index}>
-                        <label className="inline-flex items-center">
-                          <input
-                            type="checkbox"
-                            name="plannedInvestments"
-                            value={investment}
-                            checked={formData.plannedInvestments.includes(
-                              investment
-                            )}
-                            onChange={handleChange}
-                            className="form-checkbox h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">
-                            {investment}
-                          </span>
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="mt-2 space-y-2">
-                    <p className="mt-1 text-sm text-gray-500">
-                      How much did you invest?
-                    </p>
-                    {["$1-$500", "$500-$2000", "$2000 plus"].map(
-                      (investment, index) => (
+                  <div className=" lg:w-[720px] sm:w-full flex flex-col gap-4">
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        Over the last year, how many times have you invested in
+                        crypto?
+                      </p>
+                      {["1-10", "10-20", "20 plus"].map((investment, index) => (
                         <div key={index}>
                           <label className="inline-flex items-center">
                             <input
-                              type="checkbox"
-                              name="plannedInvestments"
+                              type="radio"
+                              name="cryptoExperience"
                               value={investment}
-                              checked={formData.plannedInvestments.includes(
+                              checked={formData.cryptoExperience.includes(
                                 investment
-                              ) || false}
+                              )}
                               onChange={handleChange}
-                              className="form-checkbox h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                              className="form-radio h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
                             />
                             <span className="ml-2 text-sm text-gray-700">
                               {investment}
                             </span>
                           </label>
                         </div>
-                      )
-                    )}
+                      ))}
+                    </div>
+
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        How much did you invest?
+                      </p>
+                      {["$1-$500", "$500-$2000", "$2000 plus"].map(
+                        (investment, index) => (
+                          <div key={index}>
+                            <label className="inline-flex items-center">
+                              <input
+                                type="radio"
+                                name="cryptoInvestment"
+                                value={investment}
+                                checked={
+                                  formData.cryptoInvestment.includes(
+                                    investment
+                                  ) || false
+                                }
+                                onChange={handleChange}
+                                className="form-radio h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                              />
+                              <span className="ml-2 text-sm text-gray-700">
+                                {investment}
+                              </span>
+                            </label>
+                          </div>
+                        )
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -335,7 +431,7 @@ function EditKyc() {
             {/* Leverage investing experience */}
             <section aria-labelledby="plan-heading">
               <div className="shadow sm:overflow-hidden sm:rounded-md">
-                <div className="space-y-6 bg-white px-4 py-6 sm:p-6">
+                <div className="space-y-6 bg-white p-7 sm:p-6">
                   <div>
                     <h2
                       id="plan-heading"
@@ -349,44 +445,139 @@ function EditKyc() {
                       margin trading, etc.) over the last year.
                     </p>
                   </div>
+                  <div className=" lg:w-[720px] sm:w-full flex flex-col gap-4">
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        How many of these types of investments have you made?
+                      </p>
+                      {["1-10", "10-40", "40 plus"].map((investment, index) => (
+                        <div key={index}>
+                          <label className="inline-flex items-center">
+                            <input
+                              type="radio"
+                              name="leverageExperience"
+                              value={investment}
+                              checked={formData.leverageExperience.includes(
+                                investment
+                              )}
+                              onChange={handleChange}
+                              className="form-radio h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                            />
+                            <span className="ml-2 text-sm text-gray-700">
+                              {investment}
+                            </span>
+                          </label>
+                        </div>
+                      ))}
+                    </div>
 
-                  <div className="mt-2 space-y-2">
-                    <p className="mt-1 text-sm text-gray-500">
-                      How many of these types of investments have you made?
-                    </p>
-                    {["1-10", "10-40", "40 plus"].map((investment, index) => (
-                      <div key={index}>
-                        <label className="inline-flex items-center">
-                          <input
-                            type="checkbox"
-                            name="plannedInvestments"
-                            value={investment}
-                            checked={formData.plannedInvestments.includes(
-                              investment
-                            )}
-                            onChange={handleChange}
-                            className="form-checkbox h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">
-                            {investment}
-                          </span>
-                        </label>
-                      </div>
-                    ))}
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        In the last year, how much have you invested in ?
+                      </p>
+                      {["$1-$500", "$500-$2000", "$2000 plus"].map(
+                        (investment, index) => (
+                          <div key={index}>
+                            <label className="inline-flex items-center">
+                              <input
+                                type="radio"
+                                name="leverageInvestments"
+                                value={investment}
+                                checked={formData.leverageInvestments.includes(
+                                  investment
+                                )}
+                                onChange={handleChange}
+                                className="form-radio h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                              />
+                              <span className="ml-2 text-sm text-gray-700">
+                                {investment}
+                              </span>
+                            </label>
+                          </div>
+                        )
+                      )}
+                    </div>
                   </div>
-                  <div className="mt-2 space-y-2">
-                    <p className="mt-1 text-sm text-gray-500">
-                      In the last year, how much have you invested in crypto?
-                    </p>
-                    {["$1-$500", "$500-$2000", "$2000 plus"].map(
-                      (investment, index) => (
+                </div>
+              </div>
+            </section>
+
+            {/* Trading Knowledge and Experience */}
+            <section aria-labelledby="plan-heading">
+              <div className="shadow sm:overflow-hidden sm:rounded-md">
+                <div className="space-y-6 bg-white lg:p-7 sm:p-6">
+                  <div>
+                    <h2
+                      id="plan-heading"
+                      className="text-lg font-medium leading-6 text-gray-900"
+                    >
+                      Your Trading Knowldge and Experience
+                    </h2>
+                  </div>
+                  <div className=" lg:w-[720px] sm:w-full flex flex-col gap-4">
+                    {/* Trading Experience */}
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        Trading Experience
+                      </p>
+                      <select
+                        name="tradeExperience"
+                        value={formData.tradeExperience}
+                        onChange={handleChange}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      >
+                        <option value="">Select your trading experience</option>
+                        {tradingExperience.map((experience, index) => (
+                          <option value={experience} key={index}>
+                            {experience}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Trading education experience */}
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        What's your investment education experience regarding
+                        leveraged products?(CDs, Futures, Options, Forex, Margin
+                        trade and ETF). Please select one or more relevant
+                        answers.
+                      </p>
+                      {educationExperience.map((experience, index) => (
                         <div key={index}>
                           <label className="inline-flex items-center">
                             <input
                               type="checkbox"
-                              name="plannedInvestments"
+                              name="eduExperience"
+                              value={experience}
+                              checked={formData.eduExperience.includes(
+                                experience
+                              )}
+                              onChange={handleChange}
+                              className="form-checkbox h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                            />
+                            <span className="ml-2 text-sm text-gray-700">
+                              {experience}
+                            </span>
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/*Trading knowledge assessment  */}
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        We would like to assess your level of knowledge of
+                        complex derivatives and trading with leverage
+                      </p>
+                      {tradingKnowledgeAssessment.map((investment, index) => (
+                        <div key={index}>
+                          <label className="inline-flex items-center">
+                            <input
+                              type="checkbox"
+                              name="tradeKnowledge"
                               value={investment}
-                              checked={formData.plannedInvestments.includes(
+                              checked={formData.tradeKnowledge.includes(
                                 investment
                               )}
                               onChange={handleChange}
@@ -397,229 +588,162 @@ function EditKyc() {
                             </span>
                           </label>
                         </div>
-                      )
-                    )}
+                      ))}
+                    </div>
+
+                    {/* Trading strategy */}
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        How long do you plan to leave your positions open?
+                      </p>
+                      <select
+                        name="tradeStrategy"
+                        value={formData.tradeStrategy}
+                        onChange={handleChange}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      >
+                        <option value="">Select your trading strategy</option>
+                        {tradingStrategy.map((strategy, index) => (
+                          <option value={strategy} key={index}>
+                            {strategy}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Purpose of trading */}
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        What best describes your primary purpose of trading with
+                        us?
+                      </p>
+                      <select
+                        name="purposeTrading"
+                        value={formData.purposeTrading}
+                        onChange={handleChange}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      >
+                        <option value="">Select your purpose of trading</option>
+                        {purposeOfTrading.map((purpose, index) => (
+                          <option value={purpose} key={index}>
+                            {purpose}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Investment amount */}
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        How much are you willing to invest?
+                      </p>
+                      <select
+                        name="amount"
+                        value={formData.amount}
+                        onChange={handleChange}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      >
+                        <option value="">
+                          Select how much you are willing to invest
+                        </option>
+                        {investmentAmount.map((attitude, index) => (
+                          <option value={attitude} key={index}>
+                            {attitude}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Risk reward */}
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        Which risk/reward scenario best describes your annual
+                        investments expectations with us?
+                      </p>
+                      <RadioGroup
+                        value={formData.risk}
+                        onChange={(value) =>
+                          setFormData({ ...formData, risk: value })
+                        }
+                      >
+                        <div className="space-y-4">
+                          {riskReward.map((option, index) => (
+                            <RadioGroup.Option key={index} value={option}>
+                              {({ checked }) => (
+                                <div
+                                  className={classNames(
+                                    checked
+                                      ? "bg-indigo-50 border-indigo-200 z-10"
+                                      : "border-gray-200",
+                                    "relative border p-4 flex cursor-pointer focus:outline-none rounded-lg"
+                                  )}
+                                >
+                                  <span
+                                    className={classNames(
+                                      checked
+                                        ? "bg-indigo-600 border-transparent"
+                                        : "bg-white border-gray-300",
+                                      "h-4 w-4 mt-0.5 cursor-pointer rounded-full border flex items-center justify-center"
+                                    )}
+                                    aria-hidden="true"
+                                  >
+                                    <span className="rounded-full bg-white w-1.5 h-1.5" />
+                                  </span>
+                                  <div className="ml-3 flex flex-col lg:flex-row gap-4 w-full">
+                                    <RadioGroup.Label
+                                      as="span"
+                                      className="block text-sm font-medium text-gray-900"
+                                    >
+                                      {option.name}
+                                    </RadioGroup.Label>
+                                    <RadioGroup.Description
+                                      as="span"
+                                      className="block text-sm text-gray-500"
+                                    >
+                                      {option.limit}
+                                    </RadioGroup.Description>
+                                  </div>
+                                </div>
+                              )}
+                            </RadioGroup.Option>
+                          ))}
+                        </div>
+                      </RadioGroup>
+                    </div>
+
+                    {/*Family Assessment */}
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        Does any of the following apply to you? <br /> I or any
+                        of my immediate family members are:
+                      </p>
+                      {familyMembers.map((item, index) => (
+                        <div key={index}>
+                          <label className="inline-flex items-center">
+                            <input
+                              type="checkbox"
+                              name="family"
+                              value={item}
+                              checked={formData.family.includes(item)}
+                              onChange={handleChange}
+                              className="form-checkbox h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                            />
+                            <span className="ml-2 text-sm text-gray-700">
+                              {item}
+                            </span>
+                          </label>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
             </section>
 
-            {/* Trading Knowledge and Experience */}
+            {/* Financial Status */}
             <section aria-labelledby="plan-heading">
               <div className="shadow sm:overflow-hidden sm:rounded-md">
-                <div className="space-y-6 bg-white px-4 py-6 sm:p-6">
-                  <div>
-                    <h2
-                      id="plan-heading"
-                      className="text-lg font-medium leading-6 text-gray-900"
-                    >
-                      Your Trading Knowldge and Experience
-                    </h2>
-                  </div>
-
-                  {/* Trading Experience */}
-                  <div className="mt-2 space-y-2">
-                    <p className="mt-1 text-sm text-gray-500">
-                      Trading Experience
-                    </p>
-                    <select
-                      name="tradingExperience"
-                      value={formData.tradingExperience}
-                      onChange={handleChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    >
-                      <option value="">Select your trading experience</option>
-                        {tradingExperience.map((experience, index) => (
-                            <option value={experience} key={index}>
-                                {experience}
-                            </option>
-                        ))}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-                    </select>
-                  </div>
-
-                  {/* Trading education experience */}
-                  <div className="mt-2 space-y-2">
-                    <p className="mt-1 text-sm text-gray-500">
-                      What's your investment education experience regarding
-                      leveraged products?(CDs, Futures, Options, Forex, Margin
-                      trade and ETF). Please select one or more relevant
-                      answers.
-                    </p>
-                    <select
-                      name="educationExperience"
-                      value={formData.educationExperience}
-                      onChange={handleChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    >
-                      <option value="">Select your education experience</option>
-                      {educationExperience.map((experience, index) => (
-                        <option value={experience} key={index}>
-                          {experience}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/*Trading knowledge assessment  */}
-                  <div className="mt-2 space-y-2">
-                    <p className="mt-1 text-sm text-gray-500">
-                      We would like to assess your level of knowledge of complex
-                      derivatives and trading with leverage
-                    </p>
-                    {tradingKnowledgeAssessment.map((investment, index) => (
-                      <div key={index}>
-                        <label className="inline-flex items-center">
-                          <input
-                            type="checkbox"
-                            name="plannedInvestments"
-                            value={investment}
-                            checked={formData.plannedInvestments.includes(
-                              investment
-                            )}
-                            onChange={handleChange}
-                            className="form-checkbox h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">
-                            {investment}
-                          </span>
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Trading strategy */}
-                  <div className="mt-2 space-y-2">
-                    <p className="mt-1 text-sm text-gray-500">
-                      How long do you plan to leave your positions open?
-                    </p>
-                    <select
-                      name="tradingExperience"
-                      value={formData.tradingStrategy}
-                      onChange={handleChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    >
-                      <option value="">Select your trading strategy</option>
-                      {tradingStrategy.map((strategy, index) => (
-                        <option value={strategy} key={index}>
-                          {strategy}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Purpose of trading */}
-                  <div className="mt-2 space-y-2">
-                    <p className="mt-1 text-sm text-gray-500">
-                      What best describes your primary purpose of trading with
-                      us?
-                    </p>
-                    <select
-                      name="tradingExperience"
-                      value={formData.purposeOfTrading}
-                      onChange={handleChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    >
-                      <option value="">Select your purpose of trading</option>
-                      {purposeOfTrading.map((purpose, index) => (
-                        <option value={purpose} key={index}>
-                          {purpose}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Investment amount */}
-                  <div className="mt-2 space-y-2">
-                    <p className="mt-1 text-sm text-gray-500">
-                      How much are you willing to invest?
-                    </p>
-                    <select
-                      name="tradingExperience"
-                      value={formData.investmentAmount}
-                      onChange={handleChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    >
-                      <option value="">
-                        Select how much you are willing to invest
-                      </option>
-                      {investmentAmount.map((attitude, index) => (
-                        <option value={attitude} key={index}>
-                          {attitude}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Risk reward */}
-                  <div className="mt-2 space-y-2">
-                    <p className="mt-1 text-sm text-gray-500">
-                      Which risk/reward scenario best describes your annual
-                      investments expectations with us?
-                    </p>
-                    <RadioGroup value={formData.riskReward} onChange={(value) => setFormData({...formData, riskReward: value})}>
-        <div className="space-y-4">
-          {riskReward.map((option, index) => (
-            <RadioGroup.Option key={index} value={option}>
-              {({ checked }) => (
-                <div className={classNames(
-                  checked ? 'bg-indigo-50 border-indigo-200 z-10' : 'border-gray-200',
-                  'relative border p-4 flex cursor-pointer focus:outline-none'
-                )}>
-                  <span className={classNames(
-                    checked ? 'bg-indigo-600 border-transparent' : 'bg-white border-gray-300',
-                    'h-4 w-4 mt-0.5 cursor-pointer rounded-full border flex items-center justify-center'
-                  )}
-                  aria-hidden="true">
-                    <span className="rounded-full bg-white w-1.5 h-1.5" />
-                  </span>
-                  <div className="ml-3 flex flex-col">
-                    <RadioGroup.Label as="span" className="block text-sm font-medium text-gray-900">
-                      {option.name}
-                    </RadioGroup.Label>
-                    <RadioGroup.Description as="span" className="text-sm text-gray-500">
-                      {option.description}
-                    </RadioGroup.Description>
-                  </div>
-                </div>
-              )}
-            </RadioGroup.Option>
-          ))}
-        </div>
-      </RadioGroup>
-                  </div>
-
-                  {/*Trading knowledge assessment  */}
-                  <div className="mt-2 space-y-2">
-                    <p className="mt-1 text-sm text-gray-500">
-                      Does any of the following apply to you? <br /> I or any of
-                      my immediate family members are:
-                    </p>
-                    {familyMembers.map((item, index) => (
-                      <div key={index}>
-                        <label className="inline-flex items-center">
-                          <input
-                            type="checkbox"
-                            name="familyMembers"
-                            value={item}
-                            checked={formData.familyMembers.includes(item)}
-                            onChange={handleChange}
-                            className="form-checkbox h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">
-                            {item}
-                          </span>
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* Risk Reward */}
-            <section aria-labelledby="plan-heading">
-              <div className="shadow sm:overflow-hidden sm:rounded-md">
-                <div className="space-y-6 bg-white px-4 py-6 sm:p-6">
+                <div className="space-y-6 bg-white p-7 sm:p-6">
                   <div>
                     <h2
                       id="plan-heading"
@@ -629,39 +753,39 @@ function EditKyc() {
                     </h2>
                   </div>
 
-                  <div className="mt-2 space-y-2">
-                    <p className="mt-1 text-sm text-gray-500">
-                      Your sources of income Your answer is considered as the
-                      source of funds for your investments
-                    </p>
-                    {financialStatus.map((item, index) => (
-                      <div key={index}>
-                        <label className="inline-flex items-center">
-                          <input
-                            type="checkbox"
-                            name="familyMembers"
-                            value={item}
-                            checked={formData.financialStatus.includes(item)}
-                            onChange={handleChange}
-                            className="form-checkbox h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">
-                            {item}
-                          </span>
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mt-2 space-y-2">
-                    <div className="mt-2 space-y-2">
+                  <div className="lg:w-[720px] sm:w-full flex flex-col gap-4">
+                    <div className="space-y-2">
                       <p className="mt-1 text-sm text-gray-500">
                         Your sources of income Your answer is considered as the
                         source of funds for your investments
                       </p>
+                      {financialStatus.map((item, index) => (
+                        <div key={index}>
+                          <label className="inline-flex items-center">
+                            <input
+                              type="checkbox"
+                              name="financialStats"
+                              value={item}
+                              checked={formData.financialStats.includes(item)}
+                              onChange={handleChange}
+                              className="form-checkbox h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                            />
+                            <span className="ml-2 text-sm text-gray-700">
+                              {item}
+                            </span>
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        Your sources of income, your answer is considered as the
+                        source of funds for your investments
+                      </p>
                       <select
-                        name="occupation"
-                        value={formData.occupation}
+                        name="job"
+                        value={formData.job}
                         onChange={handleChange}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       >
@@ -673,73 +797,73 @@ function EditKyc() {
                         ))}
                       </select>
                     </div>
-                  </div>
 
-                  <div className="mt-2 space-y-2">
-                    <p className="mt-1 text-sm text-gray-500">
-                      Employer name, address and your position
-                    </p>
-                    <input
-                      type="text"
-                      name="employerDetails"
-                      value={formData.employerDetails}
-                      onChange={handleChange}
-                      placeholder="Company Name, Address, Position"
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    />
-                  </div>
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        Employer name, address and your position
+                      </p>
+                      <input
+                        type="text"
+                        name="employerDets"
+                        value={formData.employerDets}
+                        onChange={handleChange}
+                        placeholder="Company Name, Address, Position"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      />
+                    </div>
 
-                  <div className="mt-2 space-y-2">
-                    <p className="mt-1 text-sm text-gray-500">
-                      Your net annual income (USD)
-                    </p>
-                    <select
-                      name="netAnnualIncome"
-                      value={formData.netAnnualIncome}
-                      onChange={handleChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    >
-                      <option value="">Select your net annual income</option>
-                      {netAnnualIncome.map((item, index) => (
-                        <option value={item} key={index}>
-                          {item}
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        Your net annual income (USD)
+                      </p>
+                      <select
+                        name="netIncome"
+                        value={formData.netIncome}
+                        onChange={handleChange}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      >
+                        <option value="">Select your net annual income</option>
+                        {netAnnualIncome.map((item, index) => (
+                          <option value={item} key={index}>
+                            {item}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        Your total cash and liquid assets (USD). Such as savings
+                        accounts, brokerage accounts etc.
+                      </p>
+                      <select
+                        name="assets"
+                        value={formData.assets}
+                        onChange={handleChange}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      >
+                        <option value="">
+                          Select your total cash and liquid assets
                         </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="mt-2 space-y-2">
-                    <p className="mt-1 text-sm text-gray-500">
-                      Your total cash and liquid assets (USD). Such as savings
-                      accounts, brokerage accounts etc.
-                    </p>
-                    <select
-                      name="netAnnualIncome"
-                      value={formData.liquidAssets}
-                      onChange={handleChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    >
-                      <option value="">
-                        Select your total cash and liquid assets
-                      </option>
-                      {netAnnualIncome.map((item, index) => (
-                        <option value={item} key={index}>
-                          {item}
-                        </option>
-                      ))}
-                    </select>
+                        {netAnnualIncome.map((item, index) => (
+                          <option value={item} key={index}>
+                            {item}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
                 </div>
-                </div>
+              </div>
             </section>
-
 
             {/* Submit Button */}
             <button
               type="submit"
-              className="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg "
+              className="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg  h-10"
+              disabled={isSubmitting}
             >
-              Submit KYC Form
+              {isSubmitting ? <DotLoader/> :  "Submit KYC Form"}
             </button>
           </div>
         </form>

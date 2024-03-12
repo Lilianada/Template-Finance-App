@@ -251,19 +251,32 @@ export async function getRegisteredUsers() {
 }
 
 //fetch user kyc
-export async function getUserKyc() {
-  // Get a reference to the 'terms' collection
-  const kycRef = collection(db, 'user_kyc');
-  const termsSnapshot = await getDocs(kycRef);
+const KYC_DOC_ID = 'kycDoc'; 
+export async function getUserKyc(userId) {
+  const kycRef = collection(db, USERS_COLLECTION, userId, KYC_DOC_ID);
+  const kycSnapshot = await getDocs(kycRef);
 
-  const kycData = termsSnapshot.docs.map((doc) => ({
+  const kycData = kycSnapshot.docs.map((doc) => ({
     ...doc.data(),
     id: doc.id,
   }));
-  // If there are no terms at all, return null
+  // If there's no kyc at all, return null
   if (kycData.length === 0) {
     return null;
   }
+  return kycData ? kycData[0] : null;
+}
 
-  return kycData;
+
+// Update or create user KYC document
+export async function updateUserKyc(userId, kycData) {
+  try {
+    const kycCollectionRef = collection(db, USERS_COLLECTION, userId, KYC_DOC_ID);
+    const kycDocRef = doc(kycCollectionRef, "kyc_document");
+    await setDoc(kycDocRef, kycData, { merge: true });
+    return { success: true, id: KYC_DOC_ID }; 
+  } catch (error) {
+    console.error("Error updating kyc:", error);
+    return { success: false, error: error.message }; // Return error message on failure
+  }
 }

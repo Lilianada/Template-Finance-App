@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getUser } from "../../../config/user";
 import { customModal } from "../../../config/modalUtils";
 import { useModal } from "../../../context/ModalContext";
@@ -10,12 +10,10 @@ import {
 import { getFunctions, httpsCallable } from "firebase/functions";
 import DotLoader from "../../../components/DotLoader";
 
-export default function ClientInfo() {
-  const location = useLocation();
+export default function ClientInfo({ initialUser }) {
   const navigate = useNavigate();
   const {showModal, hideModal} = useModal();
   const [isDeleting, setIsDeleting] = useState(false);
-  const initialUser = location.state.viewUser;
   const [viewUser, setViewUser] = useState(initialUser || {});
   const {
     uid,

@@ -1,15 +1,19 @@
 import { PaperClipIcon } from "@heroicons/react/20/solid";
 import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import ClientInfo from "./ClientInfo";
 import BankInfo from "./BankInfo";
 import PortfolioInfo from "./PortfolioInfo";
 import ClientKyc from "./KYC";
 
 export default function ViewUser() {
+  const location = useLocation();
+  const initialUser = location.state.viewUser;
+
   return (
     <>
       {/* Client Information */}
-      <ClientInfo />
+      <ClientInfo initialUser={initialUser} />
 
       {/* Client Documents */}
       <div className="py-6 bg-gray-50 px-4 my-8 rounded-md shadow">
@@ -89,13 +93,13 @@ export default function ViewUser() {
       </div>
 
       {/* Client KYC */}
-      <ClientKyc />
+      <ClientKyc initialUser={initialUser}/>
 
       {/* Banking Details */}
-      <BankInfo />
+      <BankInfo initialUser={initialUser}/>
 
       {/* Portfolio Information */}
-      <PortfolioInfo />
+      <PortfolioInfo initialUser={initialUser}/>
     </>
   );
 }
