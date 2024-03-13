@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useModal } from "../../../context/ModalContext";
 import { deleteBankingDetails, getBankingDetails } from "../../../config/bankDetails";
 import { customModal } from "../../../config/modalUtils";
@@ -6,21 +7,23 @@ import {
   CheckIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
+import DotLoader from "../../../components/DotLoader";
 
 export default function BankDetails({ initialUser }) {
   const { showModal, hideModal } = useModal();
-  const user = initialUser;
+  const user = initialUser.uid;
   const [isLoading, setIsLoading] = useState(false);
   const [bankingDetails, setBankingDetails] = useState([]);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
+  const navigate = useNavigate();
   const [bankingDetailId, setBankingDetailId] = useState(null);
   
   const fetchBankDetails = async () => {
     setIsLoading(true);
     try {
         const fetchedDetails = await getBankingDetails(user);
-        setBankingDetails(fetchedDetails); // Pass the fetched data
+        setBankingDetails(fetchedDetails[0]); 
+        setBankingDetailId(fetchedDetails[0].id)
       } catch (error) {
         console.error(error);
       } finally{
@@ -32,16 +35,16 @@ export default function BankDetails({ initialUser }) {
     fetchBankDetails();
   }, []);
 
-  const handleDelete = async (bankingDetailsId) => {
+  const handleDelete = async () => {
+    console.log(user)
     setIsDeleting(true);
-    const uid = user.userId;
     try {
       customModal({
         showModal,
         title: "Are you sure?",
-        text: `You are about to delete ${uid.fullName}'s banking Details. This action cannot be undone.`,
+        text: `You are about to delete ${initialUser.fullName}'s banking Details. This action cannot be undone.`,
         showConfirmButton: true,
-        confirmButtonText: "Yes, delete",
+        confirmButtonText: isDeleting ? <DotLoader/> : 'Yes, delete',
         cancelButtonText: "Cancel",
         confirmButtonBgColor: "bg-red-600",
         confirmButtonTextColor: "text-white",
@@ -58,7 +61,6 @@ export default function BankDetails({ initialUser }) {
         iconTextColor: "text-red-600",
         timer: 0,
       });
-      //   fetchSubCollection("bankingDetails", setBankingDetails);
     } catch (error) {
       console.error("Failed to delete Banking Details:", error);
       customModal({
@@ -79,12 +81,13 @@ export default function BankDetails({ initialUser }) {
   };
 
   const confirmDelete = async () => {
+    setIsDeleting(true);
     try {
       await deleteBankingDetails(user, bankingDetailId);
       customModal({
         showModal,
         title: "Success!",
-        text: `${user.fullName}'s data has been deleted successfully.`,
+        text: `${initialUser.fullName}'s data has been deleted successfully.`,
         showConfirmButton: false,
         icon: CheckIcon,
         iconBgColor: "bg-green-100",
@@ -96,21 +99,17 @@ export default function BankDetails({ initialUser }) {
       window.history.back();
     } catch (error) {
       console.error(error);
+    } finally {
+        setIsDeleting(false);
     }
   };
 
   const handleEdit = async (id) => {
-    setIsEditing(true);
-
-    try {
-
-    } catch (err) {
-        console.error(err)
-    } finally {
-        setIsEditing(false);
-    }
+    navigate(`/dashboard/registered_users/view/edit_bank_details/${user}`, {
+        state: { editBank: bankingDetails },
+      });
   }
-
+ 
   return (
     <div className="py-6 bg-gray-50 px-4 my-8 rounded-md shadow">
       <div className="px-4 sm:px-0 text-left">
@@ -125,7 +124,7 @@ export default function BankDetails({ initialUser }) {
               Account name
             </dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-              {bankingDetails.accountName}
+              {bankingDetails.accountName || "N/A"}
             </dd>
           </div>
           <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
@@ -133,7 +132,7 @@ export default function BankDetails({ initialUser }) {
               Bank Name
             </dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-            {bankingDetails.bankName}
+            {bankingDetails.bankName || "N/A"}
             </dd>
           </div>
           <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
@@ -141,7 +140,7 @@ export default function BankDetails({ initialUser }) {
               Branch
             </dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-              {bankingDetails.branch}
+              {bankingDetails.branch || "N/A"}
             </dd>
           </div>
           <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
@@ -149,7 +148,7 @@ export default function BankDetails({ initialUser }) {
               BSB Number
             </dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-              {bankingDetails.bsbNumber}
+              {bankingDetails.bsbNumber || "N/A"}
             </dd>
           </div>
           <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
@@ -157,38 +156,42 @@ export default function BankDetails({ initialUser }) {
               Account Number
             </dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-              {bankingDetails.accountNumber}
+              {bankingDetails.accountNumber || "N/A"}
             </dd>
           </div>
-          <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
-            <dt className="text-sm font-medium leading-6 text-gray-900">
-              Swift Code
-            </dt>
-            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-              {bankingDetails.swiftCode}
-            </dd>
-          </div>
-          <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
-            <dt className="text-sm font-medium leading-6 text-gray-900">
-              IBAN
-            </dt>
-            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-              {bankingDetails.iban}
-            </dd>
-          </div>
+          {!bankingDetails.swiftCode === "" && (
+            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+                <dt className="text-sm font-medium leading-6 text-gray-900">
+                Swift Code
+                </dt>
+                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                {bankingDetails.swiftCode || "N/A"}
+                </dd>
+            </div>
+            )}
+            {!bankingDetails.iban === "" && (
+            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+                <dt className="text-sm font-medium leading-6 text-gray-900">
+                IBAN
+                </dt>
+                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                {bankingDetails.iban || 'N/A'}
+                </dd>
+            </div>
+            )}
         </dl>
         <div className="mt-6 flex space-x-3 justify-end">
           <button
             type="button"
             className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-            onClick={() => handleEdit(user.userId)}
+            onClick={() => handleEdit(bankingDetailId)}
           >
             Edit Details
           </button>
           <button
             type="button"
             className="inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
-            onClick={() => handleDelete(user.userId)}
+            onClick={() => handleDelete(bankingDetailId)}
           >
             Delete Details
           </button>

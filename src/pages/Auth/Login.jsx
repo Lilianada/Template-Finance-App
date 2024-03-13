@@ -11,6 +11,7 @@ import Background from "../../assets/images/Background.jpg";
 import Logo from "../../assets/images/logo.png";
 import { auth, db, storage } from "../../config/firebase";
 import { checkAdminRoleAndLogoutIfNot } from "../../config/utils";
+import DotLoader from "../../components/DotLoader";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -85,16 +86,12 @@ export default function Login() {
         <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
           <div className="mx-auto w-full max-w-sm lg:w-96 text-left">
             <div>
-              <img
-                className="h-12 w-auto"
-                src={logoUrl}
-                alt="Your Company"
-              />
+              <img className="h-12 w-auto" src={logoUrl} alt="Your Company" />
               <h2 className="mt-8 text-2xl font-bold leading-9 tracking-tight text-gray-900">
                 Sign in to your account
               </h2>
               <p className="mt-2 text-sm leading-6 text-gray-500">
-              To access the admin dashboard, please login with your info.
+                To access the admin dashboard, please login with your info.
               </p>
             </div>
 
@@ -177,9 +174,16 @@ export default function Login() {
                   <div>
                     <button
                       type="submit"
-                      className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                      className="flex w-full justify-center align-middle rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
-                      {isLoading ? "Loading..." : "Sign In"}
+                      {isLoading ? (
+                        <div className="flex w-full justify-center align-middle gap-2">
+                          <span>Loading</span>
+                          <DotLoader />
+                        </div>
+                      ) : (
+                        "Sign In"
+                      )}
                     </button>
                   </div>
                 </form>

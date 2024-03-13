@@ -97,9 +97,12 @@ export default function Header() {
           onClose={() => setOpenModal(false)}
           title="Signout"
           description="Are you sure you want to sign out of your account?"
-          positiveButtonText="Sign Out"
-          negativeButtonText="Cancel"
-          onPositiveAction={() => {
+          showConfirmButton={true}
+          confirmButtonText="Sign Out"
+          cancelButtonText="Cancel"
+          confirmButtonBgColor="bg-red-600"
+          confirmButtonTextColor="text-white"
+          onConfirm={() => {
             setIsLoading(true);
             auth
               .signOut()
@@ -112,7 +115,7 @@ export default function Header() {
                 console.error("Error signing out:", error);
               });
           }}
-          onNegativeAction={() => setOpenModal(false)}
+          onCancel={() => setOpenModal(false)}
           Icon={ExclamationTriangleIcon} // Your Icon Component
           iconBgColor="bg-red-100"
           buttonBgColor="bg-red-600"

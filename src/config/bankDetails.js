@@ -31,8 +31,10 @@ export async function manageBankingDetails(uid, formData, bankingDetailsId) {
       where("bankName", "==", formData.bankName),
       where("branch", "==", formData.branch),
       where("bsbNumber", "==", formData.bsbNumber),
+      where("iban", "==", formData.iban),
+      where("swiftCode", "==", formData.swiftCode),
       checkForDuplicates &&
-        where("accountNumber", "!=", bankingDetailsId ? bankingDetailsId : null) // Exclude matching account number for updates
+        where("accountNumber", "!=", bankingDetailsId ? bankingDetailsId : null) 
     );
     querySnapshot = await getDocs(existingDetailsQuery);
   }
@@ -77,14 +79,13 @@ export async function manageBankingDetails(uid, formData, bankingDetailsId) {
 }
 
 export async function getBankingDetails(uid) {
-  const bankingDetailsQuery = query(
-    doc(db, USERS_COLLECTION, uid),
-    BANKING_DETAILS_SUB_COLLECTION
-  );
+  const bankingDetailsRef = collection(db, USERS_COLLECTION, uid, BANKING_DETAILS_SUB_COLLECTION);
+  const bankingDetailsQuery = query(bankingDetailsRef); // No need for doc here
+
   const querySnapshot = await getDocs(bankingDetailsQuery);
 
   if (querySnapshot.empty) {
-    return null; // Return null if no banking details are found
+    return null;
   }
 
   return querySnapshot.docs.map((doc) => ({

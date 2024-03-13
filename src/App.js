@@ -21,6 +21,7 @@ import AddNewUser from "./pages/RegisteredUsers/AddUser";
 import ViewUser from "./pages/RegisteredUsers/ViewUser";
 import Edit from "./pages/RegisteredUsers/ClientInfo/Edit";
 import EditKyc from "./pages/RegisteredUsers/KYC/edit";
+import EditBankDetails from "./pages/RegisteredUsers/BankDetails/Edit";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -88,6 +89,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <EditKyc />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="registered_users/view/edit_bank_details/:userId"
+                  element={
+                    <ProtectedRoute>
+                      <EditBankDetails />
                     </ProtectedRoute>
                   }
                 />
