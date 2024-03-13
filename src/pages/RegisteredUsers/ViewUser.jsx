@@ -2,9 +2,9 @@ import { PaperClipIcon } from "@heroicons/react/20/solid";
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ClientInfo from "./ClientInfo";
-import BankInfo from "./BankInfo";
 import PortfolioInfo from "./PortfolioInfo";
 import ClientKyc from "./KYC";
+import BankDetails from "./BankDetails";
 
 export default function ViewUser() {
   const location = useLocation();
@@ -96,7 +96,7 @@ export default function ViewUser() {
       <ClientKyc initialUser={initialUser}/>
 
       {/* Banking Details */}
-      <BankInfo initialUser={initialUser}/>
+      <BankDetails initialUser={initialUser}/>
 
       {/* Portfolio Information */}
       <PortfolioInfo initialUser={initialUser}/>

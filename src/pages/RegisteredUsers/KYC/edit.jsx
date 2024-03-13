@@ -62,7 +62,6 @@ function EditKyc() {
     const fetchKycDetails = async () => {
       try {
         const details = await getUserKyc(userId);
-        console.log("KYC details:", details);
         if (details) {
           setFormData((prevDetails) => ({
             ...prevDetails,
@@ -200,7 +199,7 @@ function EditKyc() {
         </div>
         <form onSubmit={handleSubmit} className="space-y-6 mt-6">
           {/* Form sections */}
-          
+
           <div className="space-y-4 grid gap-4">
             {/* Your Goal */}
             <section aria-labelledby="plan-heading">
@@ -858,13 +857,24 @@ function EditKyc() {
             </section>
 
             {/* Submit Button */}
+            <div className="mt-8 flex justify-end space-x-3">
+            <button
+              type="button"
+              className="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-900"
+              disabled={isSubmitting}
+              onClick={() => window.history.back()}
+            >
+             Cancel
+            </button>
+
             <button
               type="submit"
-              className="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg  h-10"
+              className="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white transition ease-in focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
               disabled={isSubmitting}
-            >
-              {isSubmitting ? <DotLoader /> : "Submit KYC Form"}
+              >
+             {isSubmitting ? <DotLoader /> : "Submit"}
             </button>
+              </div>
           </div>
         </form>
       </div>

@@ -31,10 +31,6 @@ export default function ClientKYC({ initialUser }) {
     });
   };
 
-  if (isLoading) {
-    return <DotLoader />;
-  }
-
   return (
     <div className="py-6 bg-gray-50 px-4 my-8 rounded-md shadow">
       <div className="text-left">
@@ -142,31 +138,36 @@ export default function ClientKYC({ initialUser }) {
               <dt className="text-sm font-medium text-gray-900">
                 Trading Education Experience
               </dt>
-              {kycDetails.eduExperience &&
-              kycDetails.eduExperience.length > 0 ? (
-                kycDetails.eduExperience.map((item, index) => (
-                  <dd className="mt-1 text-sm text-gray-500" key={index}>
-                    {item}
-                  </dd>
-                ))
-              ) : (
-                <dd className="mt-1 text-sm text-gray-500">N/A</dd>
-              )}
+              <ul>
+                {kycDetails.eduExperience &&
+                kycDetails.eduExperience.length > 0 ? (
+                  kycDetails.eduExperience.map((item, index) => (<li key={index} className="list-disc ml-4">
+                    <dd className="mt-1 text-sm text-gray-500" key={index}>
+                      {item}
+                    </dd>
+                    </li>
+                  ))
+                ) : (
+                  <dd className="mt-1 text-sm text-gray-500">N/A</dd>
+                )}
+              </ul>
             </div>
             <div className="sm:col-span-1">
               <dt className="text-sm font-medium text-gray-900">
                 Trading Knowledge Assessment
               </dt>
-              {kycDetails.tradeKnowledge &&
-              kycDetails.tradeKnowledge.length > 0 ? (
-                kycDetails.tradeKnowledge.map((item, index) => (
-                  <dd className="mt-1 text-sm text-gray-500" key={index}>
-                    {item}
-                  </dd>
-                ))
-              ) : (
-                <dd className="mt-1 text-sm text-gray-500">N/A</dd>
-              )}
+              <ul>
+                {kycDetails.tradeKnowledge &&
+                kycDetails.tradeKnowledge.length > 0 ? (
+                  kycDetails.tradeKnowledge.map((item, index) => (
+                    <li key={index} className="list-disc ml-4">
+                      <dd className="mt-1 text-sm text-gray-500 truncate">{item}</dd>
+                    </li>
+                  ))
+                ) : (
+                  <dd className="mt-1 text-sm text-gray-500">N/A</dd>
+                )}
+              </ul>
             </div>
             <div className="sm:col-span-1">
               <dt className="text-sm font-medium text-gray-900">
@@ -181,7 +182,7 @@ export default function ClientKYC({ initialUser }) {
                 Purpose of Trading
               </dt>
               <dd className="mt-1 text-sm text-gray-500">
-                {kycDetails.purposingTrading || "N/A"}
+                {kycDetails.purposeTrading || "N/A"}
               </dd>
             </div>
             <div className="sm:col-span-1">
@@ -204,29 +205,37 @@ export default function ClientKYC({ initialUser }) {
               <dt className="text-sm font-medium text-gray-900">
                 Family Assessment
               </dt>
-              {kycDetails.familyAssessment &&
-              kycDetails.familyAssessment.length > 0 ? (
-                kycDetails.familyAssessment.map((family, index) => (
-                  <dd className="mt-1 text-sm text-gray-500" key={index}>
-                    {family || "N/A"}
-                  </dd>
-                ))
-              ) : (
-                <dd className="mt-1 text-sm text-gray-500">N/A</dd>
-              )}
+              <ul>
+                {kycDetails.familyAssessment &&
+                kycDetails.familyAssessment.length > 0 ? (
+                  kycDetails.familyAssessment.map((family, index) => (
+                    <li key={index} className="list-disc ml-4">
+                      <dd className="mt-1 text-sm text-gray-500">
+                        {family || "N/A"}
+                      </dd>
+                    </li>
+                  ))
+                ) : (
+                  <dd className="mt-1 text-sm text-gray-500">N/A</dd>
+                )}
+              </ul>
             </div>
             <div className="sm:col-span-1">
               <dt className="text-sm font-medium text-gray-900">
                 Financial Status
               </dt>
-              {kycDetails.financialStats && kycDetails.financialStats.length > 0 ? (kycDetails.financialStats.map((stats, index) => (
-                <dd className="mt-1 text-sm text-gray-500" key={index}>
-                  {stats}
-                  </dd>
-                ))
-              ) : (
-                <dd className="mt-1 text-sm text-gray-500">N/A</dd>
-              )}
+              <ul>
+                {kycDetails.financialStats &&
+                kycDetails.financialStats.length > 0 ? (
+                  kycDetails.financialStats.map((stats, index) => (
+                    <li key={index} className="list-disc ml-4">
+                      <dd className="mt-1 text-sm text-gray-500">{stats}</dd>
+                    </li>
+                  ))
+                ) : (
+                  <dd className="mt-1 text-sm text-gray-500">N/A</dd>
+                )}
+              </ul>
             </div>
             <div className="sm:col-span-1">
               <dt className="text-sm font-medium text-gray-900">
@@ -240,7 +249,7 @@ export default function ClientKYC({ initialUser }) {
               <dt className="text-sm font-medium text-gray-900">
                 Employer Details
               </dt>
-              <dd className="mt-1 text-sm text-gray-500">
+              <dd className="mt-1 text-sm text-gray-500 truncate">
                 {kycDetails.employerDets || "N/A"}
               </dd>
             </div>

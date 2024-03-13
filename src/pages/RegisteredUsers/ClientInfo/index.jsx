@@ -84,7 +84,6 @@ export default function ClientInfo({ initialUser }) {
         functionsInstance,
         "deleteUserAccount"
       );
-      // Call the Cloud Function to delete the user from Firestore and Authentication
       const selectedUserId = viewUser.uid;
       await deleteFunction({ userId: selectedUserId });
 
@@ -100,7 +99,6 @@ export default function ClientInfo({ initialUser }) {
         timer: 2000,
         onClose: hideModal,
       });
-
       window.history.back();
     } catch (error) {
       console.error("Failed to delete user:", error);
