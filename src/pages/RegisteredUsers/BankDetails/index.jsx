@@ -8,6 +8,7 @@ import {
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 import DotLoader from "../../../components/DotLoader";
+import { getUser } from "../../../config/user";
 
 export default function BankDetails({ initialUser }) {
   const { showModal, hideModal } = useModal();
@@ -17,7 +18,10 @@ export default function BankDetails({ initialUser }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const navigate = useNavigate();
   const [bankingDetailId, setBankingDetailId] = useState(null);
-  
+  const [userCountry, setUserCountry] = useState({
+    country: '',
+  });
+  const country = userCountry.country;
   const fetchBankDetails = async () => {
     setIsLoading(true);
     try {
@@ -31,8 +35,31 @@ export default function BankDetails({ initialUser }) {
       }
   } 
 
+  const fetchUserCountry = async () => {
+    setIsLoading(true);
+    if (!user) {
+      console.log("No UID found.");
+      return;
+    }
+    try {
+      const usersData = await getUser(user);
+      if (usersData.length > 0) {
+        const userData = usersData[0];
+        setUserCountry({
+          ...userData,
+          country: userData.country,
+        });
+      }
+    } catch (error) {
+      console.log("Error fetching user data: ", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchBankDetails();
+    fetchUserCountry();
   }, []);
 
   const handleDelete = async () => {
@@ -159,7 +186,8 @@ export default function BankDetails({ initialUser }) {
               {bankingDetails.accountNumber || "N/A"}
             </dd>
           </div>
-          {!bankingDetails.swiftCode === "" && (
+          {country !== "AU" && (
+            <>
             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
                 <dt className="text-sm font-medium leading-6 text-gray-900">
                 Swift Code
@@ -168,8 +196,6 @@ export default function BankDetails({ initialUser }) {
                 {bankingDetails.swiftCode || "N/A"}
                 </dd>
             </div>
-            )}
-            {!bankingDetails.iban === "" && (
             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
                 <dt className="text-sm font-medium leading-6 text-gray-900">
                 IBAN
@@ -178,6 +204,7 @@ export default function BankDetails({ initialUser }) {
                 {bankingDetails.iban || 'N/A'}
                 </dd>
             </div>
+            </>
             )}
         </dl>
         <div className="mt-6 flex space-x-3 justify-end">

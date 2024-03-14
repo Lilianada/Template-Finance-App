@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useModal } from "../../../context/ModalContext";
 import {
   deleteBankingDetails,
+  getBankingDetails,
   manageBankingDetails,
 } from "../../../config/bankDetails";
 import { customModal } from "../../../config/modalUtils";
@@ -30,10 +31,9 @@ export default function EditBankDetails({ initialUser }) {
     iban: "",
   });
   const [userCountry, setUserCountry] = useState({
-    country: {},
+    country: '',
   });
-  const country = userCountry.country.value;
-
+  const country = userCountry.country;
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -82,7 +82,6 @@ export default function EditBankDetails({ initialUser }) {
         timer: 2000,
         onClose: hideModal,
       });
-      setBankingDetailId(result.id);
       setIsEditing(true);
     } catch (error) {
       console.error("Error adding banking details:", error);
@@ -193,6 +192,27 @@ export default function EditBankDetails({ initialUser }) {
       setIsLoading(false);
     }
   };
+
+  const fetchDetails = async () => {
+    setIsLoading(true);
+
+    try {
+        const details = await getBankingDetails(userId);
+        setFormData(details[0])
+        setBankingDetailId(details[0].id)
+        console.log(details[0].id)
+    } catch (error) {
+        console.error(error);
+    } finally {
+        setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchDetails();
+    fetchUserCountry();
+  }, [])
+
 
   return (
     <form className="text-left bg-gray-50 px-6 py-8" onSubmit={handleUpdate}>
