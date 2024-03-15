@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ScaleIcon } from "@heroicons/react/24/outline";
 
-const cards = [
-    { name: "Total balance", href: "/", icon: ScaleIcon, amount: "$30,659.45" },
-    { name: "Cash balance", href: "/", icon: ScaleIcon, amount: "$30,659.45" },
-    { name: "Bonds balance", href: "/", icon: ScaleIcon, amount: "$30,659.45" },
-    { name: "IPOs balance", href: "/", icon: ScaleIcon, amount: "$30,659.45" },
-    { name: "Terms balance", href: "/", icon: ScaleIcon, amount: "$30,659.45" },
-    { name: "Stocks balance", href: "/", icon: ScaleIcon, amount: "$30,659.45" },
-  ];
-  
-export default function PortfolioInfo() {
+
+export default function PortfolioInfo({initialUser}) {
+  const userId = initialUser.uid;
+  const [amount, setAmount] = useState('$30,659.45');
+  const cards = [
+      { name: "Total balance", icon: ScaleIcon, amount: "$30,659.45" },
+      { name: "Cash balance", href: `registered_users/view/edit_cash_details/${userId}`, icon: ScaleIcon, amount: amount },
+      { name: "Bonds balance", href: `registered_users/view/edit_bonds_details/${userId}`, icon: ScaleIcon, amount: amount },
+      { name: "IPOs balance", href: `registered_users/view/edit_ipos_details/${userId}`, icon: ScaleIcon, amount: amount },
+      { name: "Terms balance", href: `registered_users/view/edit_terms_details/${userId}`, icon: ScaleIcon, amount: amount },
+      { name: "Stocks balance", href: `registered_users/view/edit_stocks_details/${userId}`, icon: ScaleIcon, amount: amount },
+    ];
   return (
     <div className="py-6 bg-gray-50 px-4 my-8 rounded-md shadow">
     <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-left">

@@ -65,7 +65,7 @@ export default function EditBankDetails({ initialUser }) {
     }
 
     try {
-      const result = await manageBankingDetails(
+      await manageBankingDetails(
         userId,
         formData,
         bankingDetailId
@@ -174,7 +174,6 @@ export default function EditBankDetails({ initialUser }) {
   const fetchUserCountry = async () => {
     setIsLoading(true);
     if (!userId) {
-      console.log("No UID found.");
       return;
     }
     try {
@@ -200,7 +199,6 @@ export default function EditBankDetails({ initialUser }) {
         const details = await getBankingDetails(userId);
         setFormData(details[0])
         setBankingDetailId(details[0].id)
-        console.log(details[0].id)
     } catch (error) {
         console.error(error);
     } finally {
