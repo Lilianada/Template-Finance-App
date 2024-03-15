@@ -40,7 +40,7 @@ export default function ForgotPassword() {
                   type="submit"
                   className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
-                  Sign in
+                  Submit
                 </button>
               </div>
             </form>
@@ -48,7 +48,7 @@ export default function ForgotPassword() {
             <p className="mt-10 text-center text-sm text-gray-500">
               Remembered your password?{" "}
               <Link
-                href="#"
+                to="/"
                 className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
               >
                 Sign In

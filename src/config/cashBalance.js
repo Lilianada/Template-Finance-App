@@ -28,7 +28,7 @@ import {
   const CASH_DEPOSITS = "cashDeposits";
   
   // Function to fetch all the cash deposits
-  export async function getCashDeposits() {
+  export async function getAllCashDeposits() {
     try {
       // Get a reference to the USERS_COLLECTION
       const usersRef = collection(db, USERS_COLLECTION);
@@ -71,6 +71,32 @@ import {
       );
     }
   }
+
+  export async function getUserCashDeposits(userUid) {
+    try {
+      // Create a reference directly to the specific user's cash deposits
+      const cashDepositsRef = collection(db, USERS_COLLECTION, userUid, CASH_DEPOSITS);
+      const cashDepositsSnapshot = await getDocs(cashDepositsRef);
+  
+      // Map through the cash deposits and prepare the data
+      const userCashDeposits = cashDepositsSnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id
+      }));
+  
+      // If there are no cash deposits, return null
+      if (userCashDeposits.length === 0) {
+        return null;
+      }
+  
+      return userCashDeposits;
+    } catch (error) {
+      console.error("Error in getUserCashDeposits:", error);
+      throw new Error("Failed to retrieve cash deposits for the user. Please try again later.");
+    }
+  }
+  
+
   
   // Handle Cash Deposits
   export const addCashDeposit = async (uid, depositData) => {
