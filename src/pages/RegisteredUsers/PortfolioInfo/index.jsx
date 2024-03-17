@@ -11,8 +11,11 @@ export default function PortfolioInfo({ initialUser }) {
   const [termsBalance, setTermsBalance] = useState("");
   const [stocksBalance, setStocksBalance] = useState("");
 
+
+  //Get Cash Balance
   useEffect(() => {
     getCashBalance();
+    getBondsBalance();
   });
 
   const getCashBalance = async () => {
@@ -20,7 +23,6 @@ export default function PortfolioInfo({ initialUser }) {
     if (result === null) {
       setCashBalance("$0.00");
     } else {
-      // Sum up all amounts from the result array
       const total = result.reduce(
         (acc, deposit) => acc + Number(deposit.amount),
         0
@@ -29,11 +31,16 @@ export default function PortfolioInfo({ initialUser }) {
     }
   };
 
+  //Get Bonds Balance
+  const getBondsBalance = async () => {
+
+  }
+
   const cards = [
     { name: "Total balance", icon: ScaleIcon, amount: "$30,659.45" },
     {
       name: "Cash balance",
-      href: `registered_users/view/edit_cash_details/${userId}`,
+      href: `/dashboard/registered_users/view/edit_cash_details/${userId}`,
       icon: ScaleIcon,
       amount: cashBalance,
     },
@@ -62,6 +69,7 @@ export default function PortfolioInfo({ initialUser }) {
       amount: amount,
     },
   ];
+
   return (
     <div className="py-6 bg-gray-50 px-4 my-8 rounded-md shadow">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-left">
