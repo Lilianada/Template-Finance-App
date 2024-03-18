@@ -119,7 +119,7 @@ export default function ClientCashPage() {
             className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             onClick={() => navigate(`/dashboard/registered_users/view/add_cash_details/${userId}`)}
             >
-            Add deposit
+            Add transaction
           </button>
         </div>
       </div>
@@ -186,12 +186,12 @@ export default function ClientCashPage() {
                     </dl>
                   </td>
                   <td className="px-3 py-4 text-sm text-gray-500 ">
-                    {formatNumber(item.amount)}
+                    $ {formatNumber(item.amount)}
                   </td>
                   <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell capitalize">
                     {item.status}
                   </td>
-                  <td className="hidden px-3 py-4 text-sm text-gray-500  capitalize">
+                  <td className="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell capitalize">
                     {item.reference}
                   </td>
                   <td className="px-3 py-4 text-sm text-gray-500 capitalize">

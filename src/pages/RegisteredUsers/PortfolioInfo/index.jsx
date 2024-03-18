@@ -21,7 +21,7 @@ export default function PortfolioInfo({ initialUser }) {
   const getCashBalance = async () => {
     const result = await getUserCashDeposits(userId);
     if (result === null) {
-      setCashBalance("$0.00");
+      setCashBalance("0.00");
     } else {
       const total = result.reduce(
         (acc, deposit) => acc + Number(deposit.amount),
