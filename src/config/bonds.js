@@ -54,6 +54,37 @@ export async function getBondRequests() {
   }
 }
 
+export async function getUserBonds(userUid) {
+  try {
+    // Create a reference directly to the specific user's cash deposits
+    const bondDepositsRef = collection(
+      db,
+      USERS_COLLECTION,
+      userUid,
+      BONDS_REQUEST_SUB_COLLECTION
+    );
+    const bondDepositsSnapshot = await getDocs(bondDepositsRef);
+
+    // Map through the bond deposits and prepare the data
+    const userBondDeposits = bondDepositsSnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+
+    // If there are no bond deposits, return null
+    if (userBondDeposits.length === 0) {
+      return null;
+    }
+
+    return userBondDeposits;
+  } catch (error) {
+    console.error("Error in getUserBondDeposits:", error);
+    throw new Error(
+      "Failed to retrieve bond deposits for the user. Please try again later."
+    );
+  }
+}
+
 // Sum of bond requests
 export async function sumBondRequests(db, setBondRequestsCount) {
   const adminDashRef = collection(db, ADMINDASH_COLLECTION);

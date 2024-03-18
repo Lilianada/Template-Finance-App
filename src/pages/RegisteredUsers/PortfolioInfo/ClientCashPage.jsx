@@ -3,7 +3,7 @@ import {
   deleteCashDeposit,
   getUserCashDeposits,
 } from "../../../config/cashBalance";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { formatNumber } from "../../../config/utils";
 import { useModal } from "../../../context/ModalContext";
 import { customModal } from "../../../config/modalUtils";
@@ -11,6 +11,8 @@ import {
   CheckIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
+import DotLoader from "../../../components/DotLoader";
+import LoadingScreen from "../../../components/LoadingScreen";
 
 export default function ClientCashPage() {
   const { showModal, hideModal } = useModal();
@@ -100,6 +102,10 @@ export default function ClientCashPage() {
       setIsDeleting(false);
     }
   };
+
+  if (isDeleting) {
+    <LoadingScreen/>
+  }
 
   return (
     <div className="px-4 sm:px-6 lg:px-8">
@@ -210,7 +216,8 @@ export default function ClientCashPage() {
                       onClick={() => handleDelete(item.id)}
                       className="text-red-600 hover:text-red-900"
                     >
-                      Delete<span className="sr-only">, {item.amount}</span>
+                        Delete
+                      <span className="sr-only">, {item.amount}</span>
                     </button>
                   </td>
                 </tr>

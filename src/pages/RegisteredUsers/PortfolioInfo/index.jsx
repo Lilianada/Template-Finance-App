@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ScaleIcon } from "@heroicons/react/24/outline";
 import { getUserCashDeposits } from "../../../config/cashBalance";
+import { formatNumber } from "../../../config/utils";
 
 export default function PortfolioInfo({ initialUser }) {
   const userId = initialUser.uid;
@@ -33,7 +34,8 @@ export default function PortfolioInfo({ initialUser }) {
 
   //Get Bonds Balance
   const getBondsBalance = async () => {
-
+    //  const result = await getUserB
+    
   }
 
   const cards = [
@@ -92,7 +94,7 @@ export default function PortfolioInfo({ initialUser }) {
                       </dt>
                       <dd>
                         <div className="text-lg font-medium text-gray-900">
-                          ${card.amount}
+                          ${formatNumber(card.amount)}
                         </div>
                       </dd>
                     </dl>
