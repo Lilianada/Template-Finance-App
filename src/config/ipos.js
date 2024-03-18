@@ -33,6 +33,24 @@ import { getCurrentDate } from "./utils";
   //IPOS
   const IPOS_COLLECTION = "ipos";
   
+//Get Users Ipos
+export async function getUserIpos(uid) {
+  const iposQuery = query(
+    collection(db, USERS_COLLECTION, uid, IPOS_COLLECTION)
+    // orderBy("date")
+  );
+  const querySnapshot = await getDocs(iposQuery);
+
+  if (querySnapshot.empty) {
+    return null; // Return null if no ipos are found
+  }
+
+  return querySnapshot.docs.map((doc) => ({
+    ...doc.data(),
+    id: doc.id,
+  }));
+}
+
   // 1.Get all IPOs
   export const getAllIpos = async () => {
     const iposQuery = query(

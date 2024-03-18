@@ -20,6 +20,7 @@ import {
     getDoc,
     getDocs,
     onSnapshot,
+    query,
     setDoc,
     updateDoc,
   } from "firebase/firestore";
@@ -31,7 +32,25 @@ import {
   
   //TERMS
   const TERMS_COLLECTION = "fixedTermDeposit";
+  const FIXED_TERMS_SUB_COLLECTION = "fixedTermDeposits";
   
+export async function getUserFixedTerm(uid) {
+  const fixedTermQuery = query(
+    collection(db, USERS_COLLECTION, uid, FIXED_TERMS_SUB_COLLECTION)
+    // orderBy("date")
+  );
+  const querySnapshot = await getDocs(fixedTermQuery);
+
+  if (querySnapshot.empty) {
+    return null; // Return null if no fixedTerm are found
+  }
+
+  return querySnapshot.docs.map((doc) => ({
+    ...doc.data(),
+    id: doc.id,
+  }));
+}
+
   //get all terms
   export async function getAllTerms() {
     // Get a reference to the 'terms' collection

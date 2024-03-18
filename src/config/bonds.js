@@ -6,6 +6,7 @@ import {
   getDoc,
   getDocs,
   onSnapshot,
+  query,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
@@ -13,8 +14,7 @@ import { db } from "./firebase";
 
 const ADMINDASH_COLLECTION = "admin_users";
 const USERS_COLLECTION = "users";
-
-//BONDS REQUEST
+const HOLDINGS_SUB_COLLECTION = "bondsHoldings";
 const BONDS_REQUEST_SUB_COLLECTION = "bondsRequest";
 
 export async function getBondRequests() {
@@ -61,7 +61,7 @@ export async function getUserBonds(userUid) {
       db,
       USERS_COLLECTION,
       userUid,
-      BONDS_REQUEST_SUB_COLLECTION
+      HOLDINGS_SUB_COLLECTION
     );
     const bondDepositsSnapshot = await getDocs(bondDepositsRef);
 
@@ -85,6 +85,22 @@ export async function getUserBonds(userUid) {
   }
 }
 
+export async function getBondsHoldings(uid) {
+  const bondsQuery = query(
+    collection(db, USERS_COLLECTION, uid, HOLDINGS_SUB_COLLECTION)
+    // orderBy("date")
+  );
+  const querySnapshot = await getDocs(bondsQuery);
+
+  if (querySnapshot.empty) {
+    return null; // Return null if no bonds are found
+  }
+
+  return querySnapshot.docs.map((doc) => ({
+    ...doc.data(),
+    id: doc.id,
+  }));
+}
 // Sum of bond requests
 export async function sumBondRequests(db, setBondRequestsCount) {
   const adminDashRef = collection(db, ADMINDASH_COLLECTION);

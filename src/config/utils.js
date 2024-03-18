@@ -57,3 +57,15 @@ import {
     const [day, month, year] = dateStr.split("-");
     return `${year}-${month}-${day}`;
   };
+
+  export function convertToNumber(stringAmount) {
+    // Check if the input is already a number, and if not, convert it
+    if (typeof stringAmount === "string") {
+      return parseFloat(stringAmount.replace(",", ""));
+    } else if (typeof stringAmount === "number") {
+      return stringAmount;
+    }
+    return 0;
+  }
+
+  

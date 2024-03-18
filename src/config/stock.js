@@ -25,7 +25,8 @@ import {
     where,
   } from "firebase/firestore";
   import { db } from "./firebase";
-import { getCurrentDate } from "./settings";
+import { getCurrentDate } from "./utils";
+
   
   const ADMINUSERS_COLLECTION = "adminUsers";
   const USERS_COLLECTION = "users";
@@ -34,6 +35,30 @@ import { getCurrentDate } from "./settings";
   
   // ADD STOCKS TO USER
   const STOCKS_COLLECTION = "stocks";
+  // Function to get stock data from the user's database
+  export async function getStockFromUserDB(userId) {
+    try {
+      const userDocRef = doc(db, USERS_COLLECTION, userId);
+  
+      const userDocSnap = await getDoc(userDocRef);
+  
+      if (userDocSnap.exists()) {
+        // Creating a reference to the stocks sub-collection of the user's document
+        const stocksCollectionRef = collection(userDocRef, STOCKS_COLLECTION);
+        const stocksSnapshot = await getDocs(stocksCollectionRef);
+  
+        const stocksData = stocksSnapshot.docs.map((doc) => doc.data());
+        return stocksData;
+      } else {
+        console.error(`User with ID ${userId} not found.`);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error getting stock from user database: ", error);
+      throw error;
+    }
+  }
+  
   //Adding of stocks
   export async function addStockToPortfolio(userId, stockData) {
     try {
