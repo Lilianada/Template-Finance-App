@@ -24,6 +24,7 @@ import EditKyc from "./pages/RegisteredUsers/KYC/edit";
 import EditBankDetails from "./pages/RegisteredUsers/BankDetails/Edit";
 import ClientCashPage from "./pages/RegisteredUsers/PortfolioInfo/ClientCashPage";
 import EditPortfolio from "./pages/RegisteredUsers/PortfolioInfo/Edit";
+import AddToPortfolio from "./pages/RegisteredUsers/PortfolioInfo/Add";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -107,6 +108,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <ClientCashPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="registered_users/view/add_cash_details/:userId"
+                  element={
+                    <ProtectedRoute>
+                      <AddToPortfolio />
                     </ProtectedRoute>
                   }
                 />

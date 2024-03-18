@@ -21,7 +21,7 @@ export default function Header() {
     <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
       <div className="relative flex flex-1 items-center justify-center">
         <h1 className="hidden md:block md:text-2xl text-sm font-semibold leading-6 text-gray-900 ">
-          IAVF Investment Management
+          CVS Investment Management
         </h1>
       </div>
       <div className="flex items-center gap-x-4 lg:gap-x-6">
