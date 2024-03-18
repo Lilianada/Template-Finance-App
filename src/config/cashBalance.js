@@ -17,6 +17,7 @@ import {
     collection,
     deleteDoc,
     doc,
+    getDoc,
     getDocs,
     setDoc,
   } from "firebase/firestore";
@@ -96,6 +97,29 @@ import {
     }
   }
   
+  export async function getCashTransaction(userId, transactionId) {
+    try {
+        // Create a reference directly to the specific cash transaction document for the user
+        const transactionRef = doc(db, USERS_COLLECTION, userId, CASH_DEPOSITS, transactionId);
+
+        // Get the document
+        const transactionSnapshot = await getDoc(transactionRef);
+
+        // Check if the document exists
+        if (transactionSnapshot.exists()) {
+            return {
+                id: transactionSnapshot.id,
+                ...transactionSnapshot.data(),
+            };
+        } else {
+            // No such transaction exists
+            return null;
+        }
+    } catch (error) {
+        console.error("Error in getCashTransaction:", error);
+        throw new Error("Failed to retrieve the cash transaction for the user. Please try again later.");
+    }
+}
 
   
   // Handle Cash Deposits

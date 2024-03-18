@@ -131,7 +131,7 @@ export default function BankDetails({ initialUser }) {
     }
   };
 
-  const handleEdit = async (id) => {
+  const handleEdit = async (bankingDetails) => {
     navigate(`/dashboard/registered_users/view/edit_bank_details/${user}`, {
         state: { editBank: bankingDetails },
       });

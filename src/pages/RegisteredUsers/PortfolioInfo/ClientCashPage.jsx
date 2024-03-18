@@ -1,10 +1,23 @@
 import { useEffect, useState } from "react";
-import { getUserCashDeposits } from "../../../config/cashBalance";
-import { useParams } from "react-router-dom";
+import {
+  deleteCashDeposit,
+  getUserCashDeposits,
+} from "../../../config/cashBalance";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { formatNumber } from "../../../config/utils";
+import { useModal } from "../../../context/ModalContext";
+import { customModal } from "../../../config/modalUtils";
+import {
+  CheckIcon,
+  ExclamationTriangleIcon,
+} from "@heroicons/react/24/outline";
 
 export default function ClientCashPage() {
+  const { showModal, hideModal } = useModal();
   const [cashTransaction, setCashTransaction] = useState([]);
+  const [selectedId, setSelectedId] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+  const navigate = useNavigate();
   const { userId } = useParams();
 
   useEffect(() => {
@@ -14,6 +27,78 @@ export default function ClientCashPage() {
   const getCashBalance = async () => {
     const result = await getUserCashDeposits(userId);
     setCashTransaction(result);
+  };
+
+  const handleEdit = async (id) => {
+    navigate(`/dashboard/registered_users/view/edit_cash_details/${userId}`, {
+      state: { details: id },
+    });
+  };
+
+  const handleDelete = (id) => {
+    setSelectedId(id)
+    console.log(selectedId)
+    customModal({
+      showModal,
+      title: "Are you sure?",
+      text: `You are about to delete this cash transaction. This action cannot be undone.`,
+      showConfirmButton: true,
+      confirmButtonText: "Yes, delete",
+      cancelButtonText: "Cancel",
+      confirmButtonBgColor: "bg-red-600",
+      confirmButtonTextColor: "text-white",
+      cancelButtonBgColor: "bg-white",
+      cancelButtonTextColor: "text-gray-900",
+      onConfirm: () => {
+        confirmDelete();
+        hideModal();
+      },
+      onCancel: hideModal(),
+      onClose: hideModal(),
+      icon: ExclamationTriangleIcon,
+      iconBgColor: "bg-red-100",
+      iconTextColor: "text-red-600",
+      timer: 0,
+    });
+  };
+
+  const confirmDelete = async () => {
+    setIsDeleting(true);
+    console.log(userId, selectedId);
+    try {
+      await deleteCashDeposit(userId, selectedId);
+
+      customModal({
+        showModal,
+        title: "Success!",
+        text: `The cash transaction has been deleted successfully.`,
+        showConfirmButton: false,
+        icon: CheckIcon,
+        iconBgColor: "bg-green-100",
+        iconTextColor: "text-green-600",
+        buttonBgColor: "bg-green-600",
+        timer: 2000,
+        onClose: hideModal,
+      });
+
+      window.history.back();
+    } catch (error) {
+      console.error("Failed to delete user:", error);
+      customModal({
+        showModal,
+        title: "Error!",
+        text: "There was an error deleting the user. Please try again.",
+        showConfirmButton: false,
+        icon: ExclamationTriangleIcon,
+        iconBgColor: "bg-red-100",
+        iconTextColor: "text-red-600",
+        buttonBgColor: "bg-red-600",
+        timer: 2000,
+        onClose: hideModal,
+      });
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -76,6 +161,8 @@ export default function ClientCashPage() {
               </th>
             </tr>
           </thead>
+          {cashTransaction === 0 ? (<p>No Cash Transactions available.</p>
+            ) : (
           <tbody className="divide-y divide-gray-200 bg-white text-left">
             {cashTransaction.map((item, index) => (
               <tr key={index}>
@@ -105,13 +192,25 @@ export default function ClientCashPage() {
                   {item.date}
                 </td>
                 <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                  <a href="#" className="text-indigo-600 hover:text-indigo-900">
+                  <button
+                    onClick={() => handleEdit(item.id)}
+                    className="text-indigo-600 hover:text-indigo-900"
+                  >
                     Edit<span className="sr-only">, {item.amount}</span>
-                  </a>
+                  </button>
+                </td>
+                <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                  <button
+                    onClick={() => handleDelete(item.id)}
+                    className="text-red-600 hover:text-red-900"
+                  >
+                    Delete<span className="sr-only">, {item.amount}</span>
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
+        )}
         </table>
       </div>
     </div>

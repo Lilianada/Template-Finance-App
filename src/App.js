@@ -23,6 +23,7 @@ import Edit from "./pages/RegisteredUsers/ClientInfo/Edit";
 import EditKyc from "./pages/RegisteredUsers/KYC/edit";
 import EditBankDetails from "./pages/RegisteredUsers/BankDetails/Edit";
 import ClientCashPage from "./pages/RegisteredUsers/PortfolioInfo/ClientCashPage";
+import EditPortfolio from "./pages/RegisteredUsers/PortfolioInfo/Edit";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -102,10 +103,18 @@ function App() {
                   }
                 />
                 <Route
-                  path="registered_users/view/edit_cash_details/:userId"
+                  path="registered_users/view/view_cash_details/:userId"
                   element={
                     <ProtectedRoute>
                       <ClientCashPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="registered_users/view/edit_cash_details/:userId"
+                  element={
+                    <ProtectedRoute>
+                      <EditPortfolio />
                     </ProtectedRoute>
                   }
                 />
