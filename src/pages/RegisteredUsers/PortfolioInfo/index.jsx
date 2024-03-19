@@ -390,7 +390,7 @@ export default function PortfolioInfo({ initialUser }) {
                 <div className="text-sm">
                   <div className="font-medium text-cyan-700 hover:text-cyan-900"
                   >
-                    Nothing to view
+                    Total value of all accounts
                   </div>
                 </div>
               </div>
@@ -433,3 +433,4 @@ export default function PortfolioInfo({ initialUser }) {
     </div>
   );
 }
+ 

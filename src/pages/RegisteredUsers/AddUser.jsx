@@ -8,14 +8,7 @@ import {
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 import { useModal } from "../../context/ModalContext";
-import { doc, setDoc } from "firebase/firestore";
-import { db } from "../../config/firebase";
-import { addUser } from "../../store/user/userSlice";
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  sendPasswordResetEmail,
-} from "firebase/auth";
+import { addUserAsync } from "../../store/user/userSlice";
 
 const CountrySelect = ({ value, onChange }) => {
   const [countries, setCountries] = useState([]);
@@ -56,8 +49,8 @@ export default function AddNewUser() {
     secondaryAccountHolder: "",
     secondaryTitle: "",
     password: password,
-    mobile: "",
-    home: "",
+    mobilePhone: "",
+    homePhone: "",
     address: "",
     city: "",
     country: "",
@@ -84,8 +77,8 @@ export default function AddNewUser() {
       secondaryTitle,
       email,
       password,
-      mobile,
-      home,
+      mobilePhone,
+      homePhone,
       address,
       city,
       country,
@@ -98,7 +91,7 @@ export default function AddNewUser() {
       !fullName ||
       !email ||
       !password ||
-      !mobile ||
+      !mobilePhone ||
       !address ||
       !city ||
       !country ||
@@ -119,58 +112,24 @@ export default function AddNewUser() {
     }
     setIsLoading(true);
     try {
-      // Create user in Firebase Authentication
-      const auth = getAuth();
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-      const userEmail = user.email;
-
-      // Send password reset email
-      sendPasswordResetEmail(auth, userEmail)
-        .then(() => {
-          
+      // Dispatch the addUserAsync thunk action
+      await dispatch(
+        addUserAsync({
+          title,
+          fullName,
+          jointAccount,
+          secondaryAccountHolder,
+          secondaryTitle,
+          email,
+          password,
+          mobilePhone,
+          homePhone,
+          address,
+          city,
+          country,
+          postcode,
         })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          customModal({
-            showModal,
-            title: "Error!",
-            text: `There was an error sending the password reset email. ${errorCode}: ${errorMessage}`,
-            showConfirmButton: false,
-            icon: ExclamationTriangleIcon,
-            iconBgColor: "bg-red-100",
-            iconTextColor: "text-red-600",
-            buttonBgColor: "bg-red-600",
-            timer: 3000,
-          });
-        });
-
-      // Add user to Firestore using user.uid as the document ID
-      const newUser = {
-        uid: user.uid,
-        title,
-        fullName,
-        jointAccount,
-        secondaryAccountHolder,
-        secondaryTitle,
-        email,
-        mobilePhone: mobile,
-        homePhone: home,
-        address,
-        city,
-        country,
-        postcode,
-      };
-      const usersRef = doc(db, "users", newUser.uid);
-      await setDoc(usersRef, newUser);
-
-      // Dispatch to Redux
-      dispatch(addUser(newUser));
+      ).unwrap();
 
       customModal({
         showModal,
@@ -184,7 +143,9 @@ export default function AddNewUser() {
         timer: 2000,
         onClose: hideModal,
       });
-      setTimeout(() => { window.history.back(); }, 2000);
+      setTimeout(() => {
+        window.history.back();
+      }, 2000);
     } catch (error) {
       console.error("Error adding user:", error);
       customModal({
@@ -208,7 +169,7 @@ export default function AddNewUser() {
       <div className="space-y-12">
         <div className="">
           <h2 className="text-xl font-semibold leading-7 text-gray-900">
-           Create New User
+            Create New User
           </h2>
           <p className="mt-1 text-sm leading-6 text-gray-600">
             Fill in the correct details of the user you wish to create.
@@ -331,7 +292,7 @@ export default function AddNewUser() {
 
             <div className="sm:col-span-3">
               <label
-                htmlFor="home"
+                htmlFor="homePhone"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Home Phone
@@ -339,10 +300,10 @@ export default function AddNewUser() {
               <div className="mt-2">
                 <input
                   type="text"
-                  name="home"
-                  id="home"
+                  name="homePhone"
+                  id="homePhone"
                   onChange={handleChange}
-                  value={formData.home || ""}
+                  value={formData.homePhone || ""}
                   autoComplete="homePhone"
                   placeholder="e.g. +234-567-8901"
                   required
@@ -366,7 +327,7 @@ export default function AddNewUser() {
                   required
                   onChange={handleChange}
                   placeholder="e.g. +234-567-8901"
-                  value={formData.mobile || ""}
+                  value={formData.mobilePhone || ""}
                   autoComplete="mobilePhone"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -396,20 +357,20 @@ export default function AddNewUser() {
 
             <div className="sm:col-span-3">
               <label
-                htmlFor="home-address"
+                htmlFor="homePhone-address"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Home Address
               </label>
               <div className="mt-2">
                 <input
-                  id="home-address"
+                  id="homePhone-address"
                   name="address"
                   type="text"
                   onChange={handleChange}
                   value={formData.address || ""}
                   required
-                  autoComplete="home-address"
+                  autoComplete="homePhone-address"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>

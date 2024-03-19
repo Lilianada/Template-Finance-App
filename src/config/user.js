@@ -14,6 +14,7 @@ import {
     createUserWithEmailAndPassword,
     getAuth,
     sendEmailVerification,
+    sendPasswordResetEmail,
     signOut,
   } from "firebase/auth";
   
@@ -221,15 +222,65 @@ import {
     }
   }
   
+  // create new user in firebase
+  export async function addUserToFirebase(formData) {
+    const {
+      title,
+      fullName,
+      jointAccount,
+      secondaryAccountHolder,
+      secondaryTitle,
+      email,
+      password,
+      mobilePhone,
+      homePhone,
+      address,
+      city,
+      country,
+      postcode,
+    } = formData;
+  
+    const auth = getAuth();
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      const userEmail = user.email;
+
+      // Send password reset email
+      await sendPasswordResetEmail(auth, userEmail)
+       
+      // Add user to Firestore using user.uid as the document ID
+      const newUser = {
+        uid: user.uid,
+        title,
+        fullName,
+        jointAccount,
+        secondaryAccountHolder,
+        secondaryTitle,
+        email,
+        mobilePhone,
+        homePhone,
+        address,
+        city,
+        country,
+        postcode,
+      };
+      const usersRef = doc(db, "users", newUser.uid);
+      await setDoc(usersRef, newUser);
+      return newUser; 
+  }
+
   // update user data
   export function updateUser(uid, userData) {
     const userDoc = doc(db, USERS_COLLECTION, uid);
-    console.log("userData", userData);
     return updateDoc(userDoc, userData);
   }
   
   //delete user
-  export function deleteuser(uid) {
+  export function deleteUser(uid) {
     const userDoc = doc(db, USERS_COLLECTION, uid);
     return deleteDoc(userDoc);
   }

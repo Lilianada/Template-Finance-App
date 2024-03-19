@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useDispatch} from "react-redux";
 import Select from "react-select";
 import { getUser, updateUser } from "../../../config/user";
 import DotLoader from "../../../components/DotLoader";
@@ -10,6 +11,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useModal } from "../../../context/ModalContext";
 import { getFunctions, httpsCallable } from "firebase/functions";
+import { updateUserAsync } from "../../../store/user/userSlice";
 
 const CountrySelect = ({ value, onChange }) => {
   const [countries, setCountries] = useState([]);
@@ -39,6 +41,7 @@ const CountrySelect = ({ value, onChange }) => {
 
 export default function Edit() {
   const location = useLocation();
+  const dispatch = useDispatch();
   const { editUser } = location.state || {};
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -50,8 +53,8 @@ export default function Edit() {
     secondaryAccountHolder: editUser.secondaryAccountHolder,
     secondaryTitle: editUser.secondaryTitle,
     email: editUser.email,
-    mobile: editUser.mobilePhone,
-    home: editUser.homePhone,
+    mobilePhone: editUser.mobilePhone,
+    homePhone: editUser.homePhone,
     address: editUser.address,
     city: editUser.city,
     country: editUser.country,
@@ -73,11 +76,11 @@ export default function Edit() {
     const {
       fullName,
       email,
-      mobile,
+      mobilePhone,
     } = formData;
 
     // Check if required fields are filled
-    if (!fullName || !email || !mobile) {
+    if (!fullName || !email || !mobilePhone) {
       return customModal({
         showModal,
         title: "Error!",
@@ -114,7 +117,7 @@ export default function Edit() {
     setIsEditing(true);
 
     try {
-      await updateUser(editUser.uid, updatedUser);
+      await dispatch(updateUserAsync({ userId: editUser.uid, userDetails: updatedUser })).unwrap();
       customModal({
         showModal,
         title: "Updated!",
@@ -364,7 +367,7 @@ export default function Edit() {
 
             <div className="sm:col-span-3">
               <label
-                htmlFor="home"
+                htmlFor="homePhone"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Home Phone
@@ -372,10 +375,10 @@ export default function Edit() {
               <div className="mt-2">
                 <input
                   type="text"
-                  name="home"
-                  id="home"
+                  name="homePhone"
+                  id="homePhone"
                   onChange={handleChange}
-                  value={formData.home || ""}
+                  value={formData.homePhone || ""}
                   autoComplete="homePhone"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -396,8 +399,8 @@ export default function Edit() {
                   id="mobilePhone"
                   required
                   onChange={handleChange}
-                  value={formData.mobile || ""}
-                  autoComplete="given-name"
+                  value={formData.mobilePhone || ""}
+                  autoComplete="mobilePhone"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
