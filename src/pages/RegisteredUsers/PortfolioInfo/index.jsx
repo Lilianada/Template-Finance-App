@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ScaleIcon } from "@heroicons/react/24/outline";
 import { getUserCashDeposits } from "../../../config/cashBalance";
 import { convertToNumber, formatNumber } from "../../../config/utils";
-import { getBondsHoldings, getUserBonds } from "../../../config/bonds";
+import { getUserBonds } from "../../../config/bonds";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../config/firebase";
 import { getStockFromUserDB } from "../../../config/stock";
@@ -24,17 +24,6 @@ export default function PortfolioInfo({ initialUser }) {
   const [ipos, setIpos] = useState([]);
   const [cashDeposits, setCashDeposits] = useState([]);
   const [shares, setShares] = useState([]);
-
-  // Convert a string representation of a number to a JavaScript number
-  function convertToNumber(stringAmount) {
-    // Check if the input is already a number, and if not, convert it
-    if (typeof stringAmount === "string") {
-      return parseFloat(stringAmount.replace(",", ""));
-    } else if (typeof stringAmount === "number") {
-      return stringAmount;
-    }
-    return 0;
-  }
 
   useEffect(() => {
     const user = userId;
@@ -140,14 +129,14 @@ export default function PortfolioInfo({ initialUser }) {
     totalShares,
   ]);
 
-  // Assuming getCashDeposit, getStockFromUserDB, getUserIpos, and getBondsHoldings are async functions that fetch data from a database or an API.
+  // Assuming getCashDeposit, getStockFromUserDB, getUserIpos, and getUserBonds are async functions that fetch data from a database or an API.
   const fetchAndCalculateTotalCashDepositAmount = async (userId) => {
     try {
       // Fetch all necessary data
       const cashDepositData = await getUserCashDeposits(userId);
       const sharesData = await getStockFromUserDB(userId);
       const ipoData = await getUserIpos(userId);
-      const bondData = await getBondsHoldings(userId);
+      const bondData = await getUserBonds(userId);
       // Calculate total cash deposits amount including proceeds from sales
       const totalCashDeposits = await calculateTotalCashBalance(
         cashDepositData,
@@ -171,7 +160,7 @@ export default function PortfolioInfo({ initialUser }) {
 
   // Fetch and calculate the total bond amount
   const fetchAndCalculateTotalBondAmount = async (user, bonds) => {
-    const bondData = await getBondsHoldings(user, bonds);
+    const bondData = await getUserBonds(user);
     return calculateTotalBondAmount(bondData);
   };
 
@@ -388,7 +377,7 @@ export default function PortfolioInfo({ initialUser }) {
               </div>
               <div className="bg-gray-50 px-5 py-3">
                 <div className="text-sm">
-                  <div className="font-medium text-cyan-700 hover:text-cyan-900"
+                  <div className="font-medium text-indigo-700 hover:text-indigo-900"
                   >
                     Total value of all accounts
                   </div>
@@ -420,7 +409,7 @@ export default function PortfolioInfo({ initialUser }) {
                 <div className="text-sm">
                   <Link
                     to={card.href}
-                    className="font-medium text-cyan-700 hover:text-cyan-900"
+                    className="font-medium text-indigo-700 hover:text-indigo-900"
                   >
                     View breakdown
                   </Link>

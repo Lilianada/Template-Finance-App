@@ -6,7 +6,6 @@ import {
   getDoc,
   getDocs,
   onSnapshot,
-  query,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
@@ -85,22 +84,6 @@ export async function getUserBonds(userUid) {
   }
 }
 
-export async function getBondsHoldings(uid) {
-  const bondsQuery = query(
-    collection(db, USERS_COLLECTION, uid, HOLDINGS_SUB_COLLECTION)
-    // orderBy("date")
-  );
-  const querySnapshot = await getDocs(bondsQuery);
-
-  if (querySnapshot.empty) {
-    return null; // Return null if no bonds are found
-  }
-
-  return querySnapshot.docs.map((doc) => ({
-    ...doc.data(),
-    id: doc.id,
-  }));
-}
 // Sum of bond requests
 export async function sumBondRequests(db, setBondRequestsCount) {
   const adminDashRef = collection(db, ADMINDASH_COLLECTION);
@@ -138,6 +121,7 @@ export async function sumBondRequests(db, setBondRequestsCount) {
     });
   });
 }
+
 // Function to handle selling bonds
 export async function handleSellApproval(uid, bondData) {
   const userBondsPath = `users/${uid}/bondsHoldings`;

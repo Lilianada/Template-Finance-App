@@ -61,7 +61,7 @@ export const userSlice = createSlice({
   name: 'users',
   initialState: {
     users: [],
-    status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
+    status: 'idle', 
     error: null,
   },
   reducers: {
