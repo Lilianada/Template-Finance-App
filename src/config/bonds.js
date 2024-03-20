@@ -52,7 +52,8 @@ export async function getBondRequests() {
     return [];
   }
 }
-export async function getUserBonds(userUid, callback) {
+
+export async function getUserBonds(userUid) {
   try {
     // Create a reference directly to the specific user's cash deposits
     const bondDepositsRef = collection(
@@ -62,19 +63,14 @@ export async function getUserBonds(userUid, callback) {
       HOLDINGS_SUB_COLLECTION
     );
 
-    // Subscribe to real-time updates using onSnapshot
-    const unsubscribe = onSnapshot(bondDepositsRef, (snapshot) => {
-      const userBondDeposits = snapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      
-      // Call the callback function with the updated bond deposits
-      callback(userBondDeposits);
-    });
-
-    // Return the unsubscribe function
-    return unsubscribe;
+    // Get the initial data
+    const snapshot = await getDocs(bondDepositsRef);
+    const userBondDeposits = snapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
+    // Return the bond deposits
+    return userBondDeposits;
   } catch (error) {
     console.error("Error in getUserBondDeposits:", error);
     throw new Error(
@@ -82,6 +78,7 @@ export async function getUserBonds(userUid, callback) {
     );
   }
 }
+
 
 // Sum of bond requests
 export async function sumBondRequests(db, setBondRequestsCount) {

@@ -14,6 +14,7 @@ import {
 
 const initialState = {
   terms: [],
+  userTerms: [],
   status: "idle",
   error: null,
 };
@@ -31,8 +32,8 @@ export const fetchAllTerms = createAsyncThunk(
 export const fetchUserTerms = createAsyncThunk(
   'terms/fetchUserTerms',
   async (userId) => {
-    const response = await getUserFixedTerm(userId);
-    return response;
+    const userTerms = await getUserFixedTerm(userId);
+    return userTerms;
   }
 );
 
@@ -116,13 +117,17 @@ const termsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     // Fetch all terms reducer
-    builder.addCase(fetchAllTerms.pending, (state) => {
+    builder
+    .addCase(fetchAllTerms.pending, (state) => {
       state.status = "loading";
     });
     builder.addCase(fetchAllTerms.fulfilled, (state, action) => {
       state.status = "succeeded";
       state.terms = action.payload;
     });
+    builder.addCase(fetchUserTerms.fulfilled, (state, action) => {
+      state.userTerms = action.payload;
+    })
     builder.addCase(fetchAllTerms.rejected, (state, action) => {
       state.status = "failed";
       state.error = action.error.message;
@@ -181,6 +186,7 @@ export default termsSlice.reducer;
 
 // Selectors
 export const selectAllTerms = (state) => state.terms.terms;
+export const selectUserTerms = (state) => state.terms.userTerms;
 export const selectTermById = (state, termId) =>
   state.terms.terms.find((term) => term.id === termId);
 export const selectTermStatus = (state) => state.terms.status;

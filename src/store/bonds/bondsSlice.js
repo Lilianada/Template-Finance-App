@@ -7,48 +7,6 @@ import {
   deleteBond,
 } from  "../../config/bonds";
 
-// Async thunks
-export const fetchBondRequests = createAsyncThunk(
-  'bonds/fetchBondRequests',
-  async () => {
-    const response = await getBondRequests();
-    return response;
-  }
-);
-
-export const fetchUserBonds = createAsyncThunk(
-  'bonds/fetchUserBonds',
-  async (userId) => {
-    const response = await getUserBonds(userId);
-    return response;
-  }
-);
-
-export const createBond = createAsyncThunk(
-  'bonds/createBond',
-  async (bondData) => {
-    const response = await addNewBond(bondData);
-    return response;
-  }
-);
-
-export const updateBondDetails = createAsyncThunk(
-  'bonds/updateBond',
-  async ({ bondId, updatedData }) => {
-    const response = await updateBond(bondId, updatedData);
-    return response;
-  }
-);
-
-export const removeBond = createAsyncThunk(
-  'bonds/deleteBond',
-  async (bondId) => {
-    const response = await deleteBond(bondId);
-    return response;
-  }
-);
-
-// Initial state and reducers
 const initialState = {
   bondRequests: [],
   userBonds: [],
@@ -56,18 +14,60 @@ const initialState = {
   error: null,
 };
 
+
+// Async thunks
+export const fetchBondRequests = createAsyncThunk(
+  'bonds/fetchBondRequests',
+  async () => {
+    const bondRequests = await getBondRequests();
+    return bondRequests;
+  }
+);
+
+export const fetchUserBonds = createAsyncThunk(
+  'bonds/fetchUserBonds',
+  async (userId) => {
+    const userBonds = await getUserBonds(userId);
+    return userBonds;
+  }
+);
+
+export const createBond = createAsyncThunk(
+  'bonds/createBond',
+  async (bondData) => {
+    const newBond = await addNewBond(bondData);
+    return newBond;
+  }
+);
+
+export const updateBondDetails = createAsyncThunk(
+  'bonds/updateBond',
+  async ({ bondId, updatedData }) => {
+    const updatedBond = await updateBond(bondId, updatedData);
+    return updatedBond;
+  }
+);
+
+export const removeBond = createAsyncThunk(
+  'bonds/deleteBond',
+  async (bondId) => {
+    await deleteBond(bondId);
+    return bondId;
+  }
+);
+
 const bondsSlice = createSlice({
   name: 'bonds',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    // Add cases for handling lifecycle of each async thunk
     builder
       .addCase(fetchBondRequests.fulfilled, (state, action) => {
         state.bondRequests = action.payload;
       })
       .addCase(fetchUserBonds.fulfilled, (state, action) => {
         state.userBonds = action.payload;
+        state.status = "succeeded"
       })
       .addCase(createBond.fulfilled, (state, action) => {
         state.userBonds.push(action.payload);

@@ -3,8 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ScaleIcon } from "@heroicons/react/24/outline";
 import { convertToNumber, formatNumber } from "../../../config/utils";
 import { Link } from "react-router-dom";
-import { fetchUserBonds } from "../../../store/bonds/bondSlice";
 import { fetchUserTerms } from "../../../store/terms/termsSlice";
+import { fetchUserBonds } from "../../../store/bonds/bondsSlice";
+import { fetchUserIpos } from "../../../store/ipos/iposSlice";
 
 export default function PortfolioInfo({ initialUser }) {
   const userId = initialUser.uid;
@@ -19,26 +20,34 @@ export default function PortfolioInfo({ initialUser }) {
 
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchUserData = () => {
       try {
-        await dispatch(fetchUserBonds(userId));
-        await dispatch(fetchUserTerms(userId));
-        // await dispatch(fetchUserIpos(userId));
-        // await dispatch(fetchUserCashDeposits(userId));
-        // await dispatch(fetchUserStocks(userId));
+        dispatch(fetchUserBonds(userId));
+        dispatch(fetchUserTerms(userId));
+        dispatch(fetchUserIpos(userId));
+      //   dispatch(fetchUserCashDeposits(userId));
+      //   dispatch(fetchUserStocks(userId));
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
     };
+   
 
     fetchUserData();
   }, [dispatch, userId]);
 
+  const bonds = useSelector(state => state.bonds.userBonds);
   const terms = useSelector(state => state.terms.userTerms);
   const ipos = useSelector(state => state.ipos.userIpos);
-  const cashDeposits = useSelector(state => state.cashDeposits.userCashDeposits);
-  const stocks = useSelector(state => state.stocks.userStocks);
-  const userBonds = useSelector(state => state.bonds.userBonds);
+  // const cashDeposits = useSelector(state => state.cashDeposits.userCashDeposits);
+  // const stocks = useSelector(state => state.stocks.userStocks);
+  console.log(ipos)
+
+  useEffect(() => {
+    if (bonds.length > 0) {
+      setTotalBondAmount(calculateTotalBondAmount(bonds));
+    }
+  }, [bonds]);
 
   useEffect(() => {
     if (terms.length > 0) {
@@ -52,23 +61,18 @@ export default function PortfolioInfo({ initialUser }) {
     }
   }, [ipos]);
 
-  useEffect(() => {
-    if (cashDeposits.length > 0) {
-      setTotalDeposits(calculateTotalCashBalance(cashDeposits));
-    }
-  }, [cashDeposits]);
+  // useEffect(() => {
+  //   if (cashDeposits.length > 0) {
+  //     setTotalDeposits(calculateTotalCashBalance(cashDeposits));
+  //   }
+  // }, [cashDeposits]);
 
-  useEffect(() => {
-    if (stocks.length > 0) {
-      setTotalShares(calculateTotalSharesAmount(stocks));
-    }
-  }, [stocks]);
+  // useEffect(() => {
+  //   if (stocks.length > 0) {
+  //     setTotalShares(calculateTotalSharesAmount(stocks));
+  //   }
+  // }, [stocks]);
 
-  useEffect(() => {
-    if (userBonds.length > 0) {
-      setTotalBondAmount(calculateTotalBondAmount(userBonds));
-    }
-  }, [userBonds]);
 
   // Calculate total balance
   useEffect(() => {
