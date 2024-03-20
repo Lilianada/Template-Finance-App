@@ -1,116 +1,74 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from 'react-redux';
 import { ScaleIcon } from "@heroicons/react/24/outline";
-import { getUserCashDeposits } from "../../../config/cashBalance";
 import { convertToNumber, formatNumber } from "../../../config/utils";
-import { getUserBonds } from "../../../config/bonds";
-import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../../../config/firebase";
-import { getStockFromUserDB } from "../../../config/stock";
-import { getUserIpos } from "../../../config/ipos";
-import { getUserFixedTerm } from "../../../config/terms";
 import { Link } from "react-router-dom";
+import { fetchUserBonds } from "../../../store/bonds/bondSlice";
+import { fetchUserTerms } from "../../../store/terms/termsSlice";
 
 export default function PortfolioInfo({ initialUser }) {
   const userId = initialUser.uid;
+  const dispatch = useDispatch();
+
   const [totalBondAmount, setTotalBondAmount] = useState(0);
   const [totalTermAmount, setTotalTermAmount] = useState(0);
   const [totalIpoAmount, setTotalIpoAmount] = useState(0);
   const [totalShares, setTotalShares] = useState(0);
   const [totalDeposits, setTotalDeposits] = useState(0);
   const [balance , setBalance] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [bonds, setBonds] = useState([]);
-  const [terms, setTerms] = useState([]);
-  const [ipos, setIpos] = useState([]);
-  const [cashDeposits, setCashDeposits] = useState([]);
-  const [shares, setShares] = useState([]);
+
 
   useEffect(() => {
-    const user = userId;
-    if (!user) {
-      setIsLoading(false);
-      return;
-    }
-
-    // Reference to Firestore collections
-    const bondsCollection = collection(db, "user", user, "bondHoldings");
-    const termsCollection = collection(db, "user", user, "fixedTermDeposits");
-    const iposCollection = collection(db, "user", user, "ipos");
-    const cashDepositCollection = collection(db, "user", user, "cashDeposits");
-    const stocksCollection = collection(db, "user", user, "stocks");
-
-    // Real-time updates for cash deposits
-    const unsubscribeCashDeposits = onSnapshot(
-      cashDepositCollection,
-      async (snapshot) => {
-        const updatedCashDeposit = snapshot.docs.map((doc) => doc.data());
-        const totalCashDepositAmount =
-          await fetchAndCalculateTotalCashDepositAmount(
-            user,
-            updatedCashDeposit
-          );
-
-        // Ensure state is updated based on the calculated value
-        setCashDeposits(updatedCashDeposit);
-        setTotalDeposits(totalCashDepositAmount);
+    const fetchUserData = async () => {
+      try {
+        await dispatch(fetchUserBonds(userId));
+        await dispatch(fetchUserTerms(userId));
+        // await dispatch(fetchUserIpos(userId));
+        // await dispatch(fetchUserCashDeposits(userId));
+        // await dispatch(fetchUserStocks(userId));
+      } catch (error) {
+        console.error('Error fetching user data:', error);
       }
-    );
-
-    // Real-time updates for bonds
-    const unsubscribeBonds = onSnapshot(bondsCollection, async (snapshot) => {
-      const updatedBonds = snapshot.docs.map((doc) => doc.data());
-      setBonds(updatedBonds);
-      const totalBondAmount = await fetchAndCalculateTotalBondAmount(
-        user,
-        updatedBonds
-      );
-      setTotalBondAmount(totalBondAmount);
-    });
-
-    // Real-time updates for terms
-    const unsubscribeTerms = onSnapshot(termsCollection, async (snapshot) => {
-      const updatedTerms = snapshot.docs.map((doc) => doc.data());
-      setTerms(updatedTerms);
-      const totalTermAmount = await fetchAndCalculateTotalTermAmount(
-        user,
-        updatedTerms
-      );
-      setTotalTermAmount(totalTermAmount);
-    });
-
-    // Real-time updates for ipos
-    const unsubscribeIpos = onSnapshot(iposCollection, async (snapshot) => {
-      const updatedIpos = snapshot.docs.map((doc) => doc.data());
-      setIpos(updatedIpos);
-      const totalIpoAmount = await fetchAndCalculateTotalIpoAmount(
-        user,
-        updatedIpos
-      );
-      setTotalIpoAmount(totalIpoAmount);
-    });
-
-    // Real-time updates for shares
-    const unsubscribeShares = onSnapshot(stocksCollection, async (snapshot) => {
-      const updatedShares = snapshot.docs.map((doc) => doc.data());
-      setShares(updatedShares);
-      const totalSharesAmount = await fetchAndCalculateTotalSharesAmount(
-        user,
-        updatedShares
-      );
-      setTotalShares(totalSharesAmount);
-    });
-
-    setIsLoading(false);
-
-    // Unsubscribe when the component unmounts
-    return () => {
-      unsubscribeCashDeposits();
-      unsubscribeBonds();
-      unsubscribeTerms();
-      unsubscribeIpos();
-      unsubscribeShares();
     };
-  }, []);
+
+    fetchUserData();
+  }, [dispatch, userId]);
+
+  const terms = useSelector(state => state.terms.userTerms);
+  const ipos = useSelector(state => state.ipos.userIpos);
+  const cashDeposits = useSelector(state => state.cashDeposits.userCashDeposits);
+  const stocks = useSelector(state => state.stocks.userStocks);
+  const userBonds = useSelector(state => state.bonds.userBonds);
+
+  useEffect(() => {
+    if (terms.length > 0) {
+      setTotalTermAmount(calculateTotalTermAmount(terms));
+    }
+  }, [terms]);
+
+  useEffect(() => {
+    if (ipos.length > 0) {
+      setTotalIpoAmount(calculateTotalIpoAmount(ipos));
+    }
+  }, [ipos]);
+
+  useEffect(() => {
+    if (cashDeposits.length > 0) {
+      setTotalDeposits(calculateTotalCashBalance(cashDeposits));
+    }
+  }, [cashDeposits]);
+
+  useEffect(() => {
+    if (stocks.length > 0) {
+      setTotalShares(calculateTotalSharesAmount(stocks));
+    }
+  }, [stocks]);
+
+  useEffect(() => {
+    if (userBonds.length > 0) {
+      setTotalBondAmount(calculateTotalBondAmount(userBonds));
+    }
+  }, [userBonds]);
 
   // Calculate total balance
   useEffect(() => {
@@ -129,52 +87,6 @@ export default function PortfolioInfo({ initialUser }) {
     totalShares,
   ]);
 
-  // Assuming getCashDeposit, getStockFromUserDB, getUserIpos, and getUserBonds are async functions that fetch data from a database or an API.
-  const fetchAndCalculateTotalCashDepositAmount = async (userId) => {
-    try {
-      // Fetch all necessary data
-      const cashDepositData = await getUserCashDeposits(userId);
-      const sharesData = await getStockFromUserDB(userId);
-      const ipoData = await getUserIpos(userId);
-      const bondData = await getUserBonds(userId);
-      // Calculate total cash deposits amount including proceeds from sales
-      const totalCashDeposits = await calculateTotalCashBalance(
-        cashDepositData,
-        sharesData,
-        ipoData,
-        bondData
-      );
-
-      return totalCashDeposits;
-    } catch (error) {
-      console.error("Error calculating total cash deposit amount:", error);
-      return 0; // Return 0 or handle the error as appropriate
-    }
-  };
-
-  // Fetch and calculate the total shares amount
-  const fetchAndCalculateTotalSharesAmount = async (user, shares) => {
-    const sharesData = await getStockFromUserDB(user, shares);
-    return calculateTotalSharesAmount(sharesData);
-  };
-
-  // Fetch and calculate the total bond amount
-  const fetchAndCalculateTotalBondAmount = async (user, bonds) => {
-    const bondData = await getUserBonds(user);
-    return calculateTotalBondAmount(bondData);
-  };
-
-  // Fetch and calculate the total term amount
-  const fetchAndCalculateTotalTermAmount = async (user, terms) => {
-    const termData = await getUserFixedTerm(user, terms); // Use your function to get term data
-    return calculateTotalTermAmount(termData);
-  };
-
-  // Fetch and calculate the total IPO amount
-  const fetchAndCalculateTotalIpoAmount = async (user, ipos) => {
-    const ipoData = await getUserIpos(user, ipos); // Use your function to get IPO data
-    return calculateTotalIpoAmount(ipoData);
-  };
 
   // Calculate the total shares amount
   const calculateTotalSharesAmount = (shares) => {

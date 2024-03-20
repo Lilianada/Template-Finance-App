@@ -52,8 +52,7 @@ export async function getBondRequests() {
     return [];
   }
 }
-
-export async function getUserBonds(userUid) {
+export async function getUserBonds(userUid, callback) {
   try {
     // Create a reference directly to the specific user's cash deposits
     const bondDepositsRef = collection(
@@ -62,20 +61,20 @@ export async function getUserBonds(userUid) {
       userUid,
       HOLDINGS_SUB_COLLECTION
     );
-    const bondDepositsSnapshot = await getDocs(bondDepositsRef);
 
-    // Map through the bond deposits and prepare the data
-    const userBondDeposits = bondDepositsSnapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
+    // Subscribe to real-time updates using onSnapshot
+    const unsubscribe = onSnapshot(bondDepositsRef, (snapshot) => {
+      const userBondDeposits = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      
+      // Call the callback function with the updated bond deposits
+      callback(userBondDeposits);
+    });
 
-    // If there are no bond deposits, return null
-    if (userBondDeposits.length === 0) {
-      return null;
-    }
-
-    return userBondDeposits;
+    // Return the unsubscribe function
+    return unsubscribe;
   } catch (error) {
     console.error("Error in getUserBondDeposits:", error);
     throw new Error(

@@ -18,8 +18,8 @@ export const fetchBondRequests = createAsyncThunk(
 
 export const fetchUserBonds = createAsyncThunk(
   'bonds/fetchUserBonds',
-  async (userUid) => {
-    const response = await getUserBonds(userUid);
+  async (userId) => {
+    const response = await getUserBonds(userId);
     return response;
   }
 );
