@@ -25,6 +25,7 @@ import EditBankDetails from "./pages/RegisteredUsers/BankDetails/Edit";
 import ClientCashPage from "./pages/RegisteredUsers/AccountOverview/ClientCashBalance";
 import EditPortfolio from "./pages/RegisteredUsers/AccountOverview/ClientCashBalance/Edit";
 import AddCashBalance from "./pages/RegisteredUsers/AccountOverview/ClientCashBalance/Add";
+import ClientBondsPage from "./pages/RegisteredUsers/AccountOverview/ClientBonds";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -127,6 +128,14 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
+                 <Route
+                  path="registered_users/view/view_bonds_details/:userId"
+                  element={
+                    <ProtectedRoute>
+                      <ClientBondsPage />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route
                   path="bonds"
                   element={
@@ -151,6 +160,8 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
+               
+
               </Route>
               <Route path="/" index element={<Login />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />

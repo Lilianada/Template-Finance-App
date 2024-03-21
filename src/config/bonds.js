@@ -79,7 +79,6 @@ export async function getUserBonds(userUid) {
   }
 }
 
-
 // Sum of bond requests
 export async function sumBondRequests(db, setBondRequestsCount) {
   const adminDashRef = collection(db, ADMINDASH_COLLECTION);
@@ -325,7 +324,7 @@ export async function updateBondUser(userId, bondId, bondData) {
   }
 }
 
-export const deleteBondUser = async (uid, requestId) => {
+export const deleteUserBond = async (uid, requestId) => {
   try {
     const requestRef = doc(
       db,
