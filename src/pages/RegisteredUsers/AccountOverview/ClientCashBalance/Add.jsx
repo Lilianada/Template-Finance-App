@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import DotLoader from "../../../../components/DotLoader";
 import { convertDateToISO } from "../../../../config/utils";
@@ -10,7 +10,10 @@ import {
   CheckIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
-import { addNewCashDeposit, deleteExistingCashDeposit } from "../../../../store/cash/cashSlice";
+import {
+  addNewCashDeposit,
+  deleteExistingCashDeposit,
+} from "../../../../store/cash/cashSlice";
 
 export default function AddCashBalance() {
   const { userId } = useParams();
@@ -30,22 +33,25 @@ export default function AddCashBalance() {
     e.preventDefault();
     setIsAdding(true);
 
-    const {amount, type, reference, status, date} = formData;
+    const { amount, type, reference, status, date } = formData;
     const newData = {
-        amount, type, reference, status, date
-    }
+      amount,
+      type,
+      reference,
+      status,
+      date,
+    };
 
     try {
-      const resultAction = dispatch(
+      const resultAction = await dispatch(
         addNewCashDeposit({
           userId,
-          depositdata: newData,
+          depositData: newData,
         })
       );
       const result = resultAction.payload;
 
-
-      if (result.success) {
+      if (result && result.success) {
         customModal({
           showModal,
           title: "Updated!",
@@ -120,7 +126,7 @@ export default function AddCashBalance() {
   const confirmDelete = async (id) => {
     setIsDeleting(true);
     try {
-      dispatch(deleteExistingCashDeposit({userId, depositId: id}));
+      dispatch(deleteExistingCashDeposit({ userId, depositId: id }));
       customModal({
         showModal,
         title: "Success!",
@@ -245,13 +251,13 @@ export default function AddCashBalance() {
                 Status
               </label>
               <div className="mt-2">
-              <select
+                <select
                   name="status"
                   value={formData.status}
                   onChange={handleChange}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 >
-                  <option value="" >Select status</option>
+                  <option value="">Select status</option>
                   <option value="cleared">Cleared</option>
                 </select>
               </div>

@@ -55,7 +55,7 @@ export default function EditCashBalance() {
     setIsEditing(true);
 
     try {
-      const resultAction = dispatch(
+      const resultAction = await dispatch(
         updateExistingCashDeposit({
           userId,
           depositId: details,
@@ -134,10 +134,10 @@ export default function EditCashBalance() {
     });
   };
 
-  const confirmDelete = async (id) => {
+  const confirmDelete = async () => {
     setIsDeleting(true);
     try {
-      dispatch(deleteExistingCashDeposit({userId, depositId: id}));
+      dispatch(deleteExistingCashDeposit({userId, depositId: details.id}));
       customModal({
         showModal,
         title: "Success!",

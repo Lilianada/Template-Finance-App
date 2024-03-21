@@ -35,10 +35,16 @@ export const fetchUserCashDeposits = createAsyncThunk(
 export const addNewCashDeposit = createAsyncThunk(
   'cashDeposits/addNewCashDeposit',
   async ({ userId, depositData }) => {
-    const response = await addCashDeposit(userId, depositData);
-    return response;
+    try {
+      const response = await addCashDeposit(userId, depositData);
+      return response;
+    } catch (error) {
+      console.error('Error adding new cash deposit:', error);
+      throw error;
+    }
   }
 );
+
 
 export const updateExistingCashDeposit = createAsyncThunk(
   'cashDeposits/updateExistingCashDeposit',
@@ -77,6 +83,7 @@ const cashDepositsSlice = createSlice({
       })
       .addCase(addNewCashDeposit.fulfilled, (state, action) => {
         state.cashDeposits.push(action.payload);
+        state.status= 'succeeded';
       })
       .addCase(updateExistingCashDeposit.fulfilled, (state, action) => {
         const index = state.cashDeposits.findIndex(
