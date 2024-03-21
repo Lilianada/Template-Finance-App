@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  deleteCashDeposit,
-  getUserCashDeposits,
-} from "../../../../config/cashBalance";
+import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { formatNumber } from "../../../../config/utils";
 import { useModal } from "../../../../context/ModalContext";
@@ -12,23 +9,21 @@ import {
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 import LoadingScreen from "../../../../components/LoadingScreen";
+import { deleteExistingCashDeposit, fetchUserCashDeposits } from "../../../../store/cash/cashSlice";
 
 export default function ClientCashPage() {
   const { showModal, hideModal } = useModal();
-  const [cashTransaction, setCashTransaction] = useState([]);
   const [selectedId, setSelectedId] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const navigate = useNavigate();
   const { userId } = useParams();
+  const cashTransaction = useSelector(state => state.cashDeposits.userCashDeposits);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    getCashBalance();
-  });
+    dispatch(fetchUserCashDeposits(userId));
+  }, [dispatch, userId])
 
-  const getCashBalance = async () => {
-    const result = await getUserCashDeposits(userId);
-    setCashTransaction(result);
-  };
 
   const handleEdit = async (id) => {
     navigate(`/dashboard/registered_users/view/edit_cash_details/${userId}`, {
@@ -67,8 +62,8 @@ export default function ClientCashPage() {
     setIsDeleting(true);
     console.log(userId, selectedId);
     try {
-      await deleteCashDeposit(userId, selectedId);
-
+       dispatch(deleteExistingCashDeposit(userId, selectedId));
+     
       customModal({
         showModal,
         title: "Success!",

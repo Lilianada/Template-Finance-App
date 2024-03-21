@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
 import DotLoader from "../../../../components/DotLoader";
 import { convertDateToISO, formatNumber } from "../../../../config/utils";
@@ -17,6 +18,7 @@ import {
 export default function EditPortfolio() {
   const location = useLocation();
   const { userId } = useParams();
+  const dispatch = useDispatch();
   const { details } = location.state || {};
   const [isDeleting, setIsDeleting] = useState(false);
   const { showModal, hideModal } = useModal();
