@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import DotLoader from "../../../../components/DotLoader";
 import { convertDateToISO, formatNumber } from "../../../../config/utils";
@@ -19,11 +19,11 @@ export default function EditBondsDetails () {
   const { showModal, hideModal } = useModal();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    amount: details.amount,
-    type: details.type,
-    reference: details.reference,
-    status: details.status,
-    date: details.date,
+    issuerName: details.issuerName,
+    currentValue: details.currentValue,
+    quantity: details.quantity,
+    purchaseDate: details.purchaseDate,
+    maturityDate: details.maturityDate,
   });
 
   const handleUpdate = async (e) => {
@@ -158,19 +158,19 @@ export default function EditBondsDetails () {
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-3">
               <label
-                htmlFor="amount"
+                htmlFor="issuerName"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Amount
+                Issuer Name
               </label>
               <div className="mt-2">
                 <input
                   type="text"
-                  name="amount"
-                  id="amount"
+                  name="issuerName"
+                  id="issuerName"
                   onChange={handleChange}
-                  value={`$ ${formatNumber(formData.amount)}` || ""}
-                  autoComplete="amount"
+                  value={`$ ${formatNumber(formData.issuerName)}` || ""}
+                  autoComplete="issuerName"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
@@ -178,20 +178,20 @@ export default function EditBondsDetails () {
 
             <div className="sm:col-span-3">
               <label
-                htmlFor="type"
+                htmlFor="currentValue"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Type
+                Current Value
               </label>
               <div className="mt-2">
                 <input
                   type="text"
-                  name="type"
-                  id="type"
+                  name="currentValue"
+                  id="currentValue"
                   required
                   onChange={handleChange}
-                  value={formData.type || ""}
-                  autoComplete="type"
+                  value={formData.currentValue || ""}
+                  autoComplete="currentValue"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 capitalize"
                 />
               </div>
@@ -199,20 +199,20 @@ export default function EditBondsDetails () {
 
             <div className="sm:col-span-3">
               <label
-                htmlFor="reference"
+                htmlFor="quantity"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Reference
+                Quantity
               </label>
               <div className="mt-2">
                 <input
-                  id="reference"
-                  name="reference"
+                  id="quantity"
+                  name="quantity"
                   type="text"
                   onChange={handleChange}
-                  value={formData.reference || ""}
+                  value={formData.quantity || ""}
                   required
-                  autoComplete="reference"
+                  autoComplete="quantity"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 capitalize"
                 />
               </div>
@@ -220,39 +220,38 @@ export default function EditBondsDetails () {
 
             <div className="sm:col-span-3">
               <label
-                htmlFor="status"
+                htmlFor="purchaseDate"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Status
-              </label>
-              <div className="mt-2">
-                <select
-                  name="status"
-                  value={formData.status}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                >
-                  <option value="">Select status</option>
-                  <option value="cleared">Cleared</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="sm:col-span-3">
-              <label
-                htmlFor="date"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Date
+                Purchase Date
               </label>
               <div className="mt-2">
                 <input
-                  type="date"
-                  name="date"
-                  id="date"
+                  type="purchaseDate"
+                  name="purchaseDate"
+                  id="purchaseDate"
                   onChange={handleChange}
-                  value={formData.date ? convertDateToISO(formData.date) : ""}
+                  value={formData.purchaseDate ? convertDateToISO(formData.purchaseDate) : ""}
                   autoComplete="date"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                />
+              </div>
+            </div>
+            <div className="sm:col-span-3">
+              <label
+                htmlFor="maturityDate"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Maturity Date
+              </label>
+              <div className="mt-2">
+                <input
+                  type="maturityDate"
+                  name="maturityDate"
+                  id="maturityDate"
+                  onChange={handleChange}
+                  value={formData.maturityDate ? convertDateToISO(formData.maturityDate) : ""}
+                  autoComplete="maturityDate"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
