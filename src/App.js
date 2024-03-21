@@ -26,6 +26,8 @@ import ClientCashPage from "./pages/RegisteredUsers/AccountOverview/ClientCashBa
 import EditPortfolio from "./pages/RegisteredUsers/AccountOverview/ClientCashBalance/Edit";
 import AddCashBalance from "./pages/RegisteredUsers/AccountOverview/ClientCashBalance/Add";
 import ClientBondsPage from "./pages/RegisteredUsers/AccountOverview/ClientBonds";
+import EditBondsDetails from "./pages/RegisteredUsers/AccountOverview/ClientBonds/Edit";
+import AddUserBonds from "./pages/RegisteredUsers/AccountOverview/ClientBonds/Add";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -136,11 +138,19 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
+                  <Route
+                    path="registered_users/view/add_user_bonds/:userId"
+                    element={
+                      <ProtectedRoute>
+                        <AddUserBonds />
+                      </ProtectedRoute>
+                    }
+                  />
                  <Route
                   path="registered_users/view/edit_user_bond/:userId"
                   element={
                     <ProtectedRoute>
-                      <ClientBondsPage />
+                      <EditBondsDetails />
                     </ProtectedRoute>
                   }
                 />
