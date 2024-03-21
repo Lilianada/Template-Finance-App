@@ -9,7 +9,7 @@ import { fetchUserIpos } from "../../../store/ipos/iposSlice";
 import { fetchUserCashDeposits } from "../../../store/cash/cashSlice";
 import { fetchUserStocks } from "../../../store/stocks/stocksSlice";
 
-export default function PortfolioInfo({ initialUser }) {
+export default function AccountOverview({ initialUser }) {
   const userId = initialUser.uid;
   const dispatch = useDispatch();
 
@@ -19,7 +19,6 @@ export default function PortfolioInfo({ initialUser }) {
   const [totalShares, setTotalShares] = useState(0);
   const [totalDeposits, setTotalDeposits] = useState(0);
   const [balance , setBalance] = useState(0);
-
 
   useEffect(() => {
     const fetchUserData = () => {
@@ -43,7 +42,6 @@ export default function PortfolioInfo({ initialUser }) {
   const ipos = useSelector(state => state.ipos.userIpos);
   const cashDeposits = useSelector(state => state.cashDeposits.userCashDeposits);
   const stocks = useSelector(state => state.stocks.userStocks);
-  console.log(cashDeposits)
 
   useEffect(() => {
     if (bonds.length > 0) {
@@ -75,7 +73,6 @@ export default function PortfolioInfo({ initialUser }) {
     }
   }, [stocks]);
 
-
   // Calculate total balance
   useEffect(() => {
     const totalBalance =
@@ -92,7 +89,6 @@ export default function PortfolioInfo({ initialUser }) {
     totalIpoAmount,
     totalShares,
   ]);
-
 
   // Calculate the total shares amount
   const calculateTotalSharesAmount = (shares) => {
@@ -147,7 +143,6 @@ export default function PortfolioInfo({ initialUser }) {
     return cashBalance;
   };
   
-
   // Calculate the total bond amount
   const calculateTotalBondAmount = (bonds) => {
     let totalAmount = 0;

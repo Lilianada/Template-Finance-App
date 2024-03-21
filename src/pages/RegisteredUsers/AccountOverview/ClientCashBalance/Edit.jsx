@@ -1,45 +1,59 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
-import DotLoader from "../../../components/DotLoader";
-import { convertDateToISO, formatNumber } from "../../../config/utils";
-import { customModal } from "../../../config/modalUtils";
-import { useModal } from "../../../context/ModalContext";
-import CurrencyInput from "react-currency-input-field";
-import { addCashDeposit, deleteCashDeposit } from "../../../config/cashBalance";
+import React, { useEffect, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import DotLoader from "../../../../components/DotLoader";
+import { convertDateToISO, formatNumber } from "../../../../config/utils";
+import { customModal } from "../../../../config/modalUtils";
+import { useModal } from "../../../../context/ModalContext";
+import {
+  deleteCashDeposit,
+  getCashTransaction,
+  updateCashDeposit,
+} from "../../../../config/cashBalance";
 import {
   CheckIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 
-export default function AddToPortfolio() {
+export default function EditPortfolio() {
+  const location = useLocation();
   const { userId } = useParams();
+  const { details } = location.state || {};
   const [isDeleting, setIsDeleting] = useState(false);
   const { showModal, hideModal } = useModal();
-  const [isAdding, setIsAdding] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    amount: 0.0,
-    type: "",
-    reference: "",
-    status: "",
-    date: "",
+    amount: details.amount,
+    type: details.type,
+    reference: details.reference,
+    status: details.status,
+    date: details.date,
   });
 
-  const handleCreate = async (e) => {
-    e.preventDefault();
-    setIsAdding(true);
-    const {amount, type, reference, status, date} = formData;
-    const newData = {
-        amount, type, reference, status, date
-    }
-    console.log(newData)
+  useEffect(() => {
+    fetchTransaction();
+  }, []);
+
+  const fetchTransaction = async () => {
     try {
-      const result = await addCashDeposit(userId, newData);
+      const result = await getCashTransaction(userId, details);
+      setFormData(result);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    setIsEditing(true);
+
+    try {
+      const result = await updateCashDeposit(userId, details, formData);
 
       if (result.success) {
         customModal({
           showModal,
           title: "Updated!",
-          text: `The Cash transaction details has been created.`,
+          text: `The Cash transaction details has been updated.`,
           showConfirmButton: false,
           icon: CheckIcon,
           iconBgColor: "bg-green-100",
@@ -48,7 +62,7 @@ export default function AddToPortfolio() {
           timer: 2000,
         });
       } else {
-        throw new Error("Failed to create the cash deposit.");
+        throw new Error("Failed to update the cash deposit.");
       }
     } catch (error) {
       console.error(error);
@@ -64,7 +78,7 @@ export default function AddToPortfolio() {
         timer: 2000,
       });
     } finally {
-      setIsAdding(false);
+      setIsEditing(false);
     }
   };
 
@@ -75,10 +89,8 @@ export default function AddToPortfolio() {
       const formattedDate = `${day}-${month}-${year}`;
       setFormData({ ...formData, [name]: formattedDate });
     } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
+      // For all other fields
+      setFormData({ ...formData, [name]: value });
     }
   };
 
@@ -146,15 +158,16 @@ export default function AddToPortfolio() {
   };
 
   return (
-    <form className="text-left bg-gray-50 px-6 py-8" onSubmit={handleCreate}>
+    <form className="text-left bg-gray-50 px-6 py-8" onSubmit={handleUpdate}>
       <div className="space-y-12">
         <div className="">
           <h2 className="text-xl font-semibold leading-7 text-gray-900">
-            Add new transaction
+            Edit Portfolio Information
           </h2>
           <p className="mt-1 text-sm leading-6 text-gray-600">
-            Any fields left blank will not be updated as the current data will
-            be retained.
+            If you wish to remove any information, please do so below by
+            updating the field to "Nil" or "N/A." Any fields left blank will not
+            be updated as the current data will be retained.
           </p>
         </div>
 
@@ -168,20 +181,14 @@ export default function AddToPortfolio() {
                 Amount
               </label>
               <div className="mt-2">
-                <CurrencyInput
-                  decimalSeparator="."
-                  prefix="$"
+                <input
+                  type="text"
                   name="amount"
-                  placeholder="0"
-                  defaultValue={0}
-                  decimalsLimit={2}
+                  id="amount"
+                  onChange={handleChange}
+                  value={`$ ${formatNumber(formData.amount)}` || ""}
+                  autoComplete="amount"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  onValueChange={(value) => {
-                    setFormData((prevState) => ({
-                      ...prevState,
-                      amount: value,
-                    }));
-                  }}
                 />
               </div>
             </div>
@@ -200,7 +207,7 @@ export default function AddToPortfolio() {
                   id="type"
                   required
                   onChange={handleChange}
-                  value={formData.type}
+                  value={formData.type || ""}
                   autoComplete="type"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 capitalize"
                 />
@@ -220,7 +227,7 @@ export default function AddToPortfolio() {
                   name="reference"
                   type="text"
                   onChange={handleChange}
-                  value={formData.reference}
+                  value={formData.reference || ""}
                   required
                   autoComplete="reference"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 capitalize"
@@ -236,13 +243,13 @@ export default function AddToPortfolio() {
                 Status
               </label>
               <div className="mt-2">
-              <select
+                <select
                   name="status"
                   value={formData.status}
                   onChange={handleChange}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 >
-                  <option value="" >Select status</option>
+                  <option value="">Select status</option>
                   <option value="cleared">Cleared</option>
                 </select>
               </div>
@@ -283,7 +290,7 @@ export default function AddToPortfolio() {
           type="submit"
           className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
         >
-          {isAdding ? <DotLoader /> : "Add Details"}
+          {isEditing ? <DotLoader /> : "Update Details"}
         </button>
         <button
           type="button"

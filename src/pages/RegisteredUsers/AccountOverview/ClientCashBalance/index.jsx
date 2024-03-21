@@ -2,17 +2,16 @@ import { useEffect, useState } from "react";
 import {
   deleteCashDeposit,
   getUserCashDeposits,
-} from "../../../config/cashBalance";
+} from "../../../../config/cashBalance";
 import { useParams, useNavigate } from "react-router-dom";
-import { formatNumber } from "../../../config/utils";
-import { useModal } from "../../../context/ModalContext";
-import { customModal } from "../../../config/modalUtils";
+import { formatNumber } from "../../../../config/utils";
+import { useModal } from "../../../../context/ModalContext";
+import { customModal } from "../../../../config/modalUtils";
 import {
   CheckIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
-import DotLoader from "../../../components/DotLoader";
-import LoadingScreen from "../../../components/LoadingScreen";
+import LoadingScreen from "../../../../components/LoadingScreen";
 
 export default function ClientCashPage() {
   const { showModal, hideModal } = useModal();

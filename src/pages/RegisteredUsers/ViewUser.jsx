@@ -2,7 +2,7 @@ import { PaperClipIcon } from "@heroicons/react/20/solid";
 import React from "react";
 import { useLocation } from "react-router-dom";
 import ClientInfo from "./ClientInfo";
-import PortfolioInfo from "./PortfolioInfo/index";
+import AccountOverview from "./AccountOverview/index";
 import ClientKyc from "./KYC";
 import BankDetails from "./BankDetails";
 
@@ -99,7 +99,7 @@ export default function ViewUser() {
       <BankDetails initialUser={initialUser}/>
 
       {/* Portfolio Information */}
-      <PortfolioInfo initialUser={initialUser}/>
+      <AccountOverview initialUser={initialUser}/>
     </>
   );
 }

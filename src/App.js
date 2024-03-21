@@ -22,9 +22,9 @@ import ViewUser from "./pages/RegisteredUsers/ViewUser";
 import Edit from "./pages/RegisteredUsers/ClientInfo/Edit";
 import EditKyc from "./pages/RegisteredUsers/KYC/edit";
 import EditBankDetails from "./pages/RegisteredUsers/BankDetails/Edit";
-import ClientCashPage from "./pages/RegisteredUsers/PortfolioInfo/ClientCashPage";
-import EditPortfolio from "./pages/RegisteredUsers/PortfolioInfo/Edit";
-import AddToPortfolio from "./pages/RegisteredUsers/PortfolioInfo/Add";
+import ClientCashPage from "./pages/RegisteredUsers/AccountOverview/ClientCashBalance";
+import EditPortfolio from "./pages/RegisteredUsers/AccountOverview/ClientCashBalance/Edit";
+import AddCashBalance from "./pages/RegisteredUsers/AccountOverview/ClientCashBalance/Add";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -115,7 +115,7 @@ function App() {
                   path="registered_users/view/add_cash_details/:userId"
                   element={
                     <ProtectedRoute>
-                      <AddToPortfolio />
+                      <AddCashBalance />
                     </ProtectedRoute>
                   }
                 />
