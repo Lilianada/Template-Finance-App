@@ -60,10 +60,8 @@ export default function ClientCashPage() {
 
   const confirmDelete = async () => {
     setIsDeleting(true);
-    console.log(userId, selectedId);
     try {
-       dispatch(deleteExistingCashDeposit(userId, selectedId));
-     
+      dispatch(deleteExistingCashDeposit({userId, depositId: selectedId}));
       customModal({
         showModal,
         title: "Success!",

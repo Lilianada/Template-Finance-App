@@ -6,20 +6,23 @@ import { convertDateToISO, formatNumber } from "../../../../config/utils";
 import { customModal } from "../../../../config/modalUtils";
 import { useModal } from "../../../../context/ModalContext";
 import {
-  deleteCashDeposit,
-  getCashTransaction,
-  updateCashDeposit,
-} from "../../../../config/cashBalance";
-import {
   CheckIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
+import {
+  deleteExistingCashDeposit,
+  fetchUserCashDeposits,
+  updateExistingCashDeposit,
+} from "../../../../store/cash/cashSlice";
 
-export default function EditPortfolio() {
+export default function EditCashBalance() {
   const location = useLocation();
   const { userId } = useParams();
-  const dispatch = useDispatch();
   const { details } = location.state || {};
+  const dispatch = useDispatch();
+  const cashTransaction = useSelector(
+    (state) => state.cashDeposits.userCashDeposits
+  );
   const [isDeleting, setIsDeleting] = useState(false);
   const { showModal, hideModal } = useModal();
   const [isEditing, setIsEditing] = useState(false);
@@ -32,12 +35,15 @@ export default function EditPortfolio() {
   });
 
   useEffect(() => {
+    dispatch(fetchUserCashDeposits(userId));
     fetchTransaction();
-  }, []);
+  }, [dispatch, userId]);
 
   const fetchTransaction = async () => {
     try {
-      const result = await getCashTransaction(userId, details);
+      const result = cashTransaction.find(
+        (transaction) => transaction.id === details
+      );
       setFormData(result);
     } catch (error) {
       console.error(error);
@@ -49,7 +55,14 @@ export default function EditPortfolio() {
     setIsEditing(true);
 
     try {
-      const result = await updateCashDeposit(userId, details, formData);
+      const resultAction = dispatch(
+        updateExistingCashDeposit({
+          userId,
+          depositId: details,
+          updatedData: formData,
+        })
+      );
+      const result = resultAction.payload;
 
       if (result.success) {
         customModal({
@@ -124,8 +137,7 @@ export default function EditPortfolio() {
   const confirmDelete = async (id) => {
     setIsDeleting(true);
     try {
-      await deleteCashDeposit(userId, id);
-
+      dispatch(deleteExistingCashDeposit({userId, depositId: id}));
       customModal({
         showModal,
         title: "Success!",

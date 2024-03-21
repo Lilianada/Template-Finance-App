@@ -43,8 +43,12 @@ export const addNewCashDeposit = createAsyncThunk(
 export const updateExistingCashDeposit = createAsyncThunk(
   'cashDeposits/updateExistingCashDeposit',
   async ({ userId, depositId, updatedData }) => {
-    const response = await updateCashDeposit(userId, depositId, updatedData);
-    return response;
+    try {
+      const response = await updateCashDeposit(userId, depositId, updatedData);
+      return response;
+    } catch (error) {
+      throw error;
+    }
   }
 );
 

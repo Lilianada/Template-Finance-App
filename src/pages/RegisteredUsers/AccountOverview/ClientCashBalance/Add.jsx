@@ -1,18 +1,20 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import DotLoader from "../../../../components/DotLoader";
-import { convertDateToISO, formatNumber } from "../../../../config/utils";
+import { convertDateToISO } from "../../../../config/utils";
 import { customModal } from "../../../../config/modalUtils";
 import { useModal } from "../../../../context/ModalContext";
 import CurrencyInput from "react-currency-input-field";
-import { addCashDeposit, deleteCashDeposit } from "../../../../config/cashBalance";
 import {
   CheckIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
+import { addNewCashDeposit, deleteExistingCashDeposit } from "../../../../store/cash/cashSlice";
 
 export default function AddCashBalance() {
   const { userId } = useParams();
+  const dispatch = useDispatch();
   const [isDeleting, setIsDeleting] = useState(false);
   const { showModal, hideModal } = useModal();
   const [isAdding, setIsAdding] = useState(false);
@@ -27,13 +29,21 @@ export default function AddCashBalance() {
   const handleCreate = async (e) => {
     e.preventDefault();
     setIsAdding(true);
+
     const {amount, type, reference, status, date} = formData;
     const newData = {
         amount, type, reference, status, date
     }
-    console.log(newData)
+
     try {
-      const result = await addCashDeposit(userId, newData);
+      const resultAction = dispatch(
+        addNewCashDeposit({
+          userId,
+          depositdata: newData,
+        })
+      );
+      const result = resultAction.payload;
+
 
       if (result.success) {
         customModal({
@@ -110,8 +120,7 @@ export default function AddCashBalance() {
   const confirmDelete = async (id) => {
     setIsDeleting(true);
     try {
-      await deleteCashDeposit(userId, id);
-
+      dispatch(deleteExistingCashDeposit({userId, depositId: id}));
       customModal({
         showModal,
         title: "Success!",
