@@ -92,7 +92,7 @@ export async function getUserCashDeposits(userUid) {
     // If there are no cash deposits, return null
     if (userCashDeposits.length === 0) {
       return null;
-    }
+    }console.log(userCashDeposits)
 
     return userCashDeposits;
   } catch (error) {

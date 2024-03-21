@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 import { fetchUserTerms } from "../../../store/terms/termsSlice";
 import { fetchUserBonds } from "../../../store/bonds/bondsSlice";
 import { fetchUserIpos } from "../../../store/ipos/iposSlice";
+import { fetchUserCashDeposits } from "../../../store/cash/cashSlice";
+import { fetchUserStocks } from "../../../store/stocks/stocksSlice";
 
 export default function PortfolioInfo({ initialUser }) {
   const userId = initialUser.uid;
@@ -25,8 +27,8 @@ export default function PortfolioInfo({ initialUser }) {
         dispatch(fetchUserBonds(userId));
         dispatch(fetchUserTerms(userId));
         dispatch(fetchUserIpos(userId));
-      //   dispatch(fetchUserCashDeposits(userId));
-      //   dispatch(fetchUserStocks(userId));
+        dispatch(fetchUserCashDeposits(userId));
+        dispatch(fetchUserStocks(userId));
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -39,9 +41,9 @@ export default function PortfolioInfo({ initialUser }) {
   const bonds = useSelector(state => state.bonds.userBonds);
   const terms = useSelector(state => state.terms.userTerms);
   const ipos = useSelector(state => state.ipos.userIpos);
-  // const cashDeposits = useSelector(state => state.cashDeposits.userCashDeposits);
-  // const stocks = useSelector(state => state.stocks.userStocks);
-  // console.log(ipos)
+  const cashDeposits = useSelector(state => state.cashDeposits.userCashDeposits);
+  const stocks = useSelector(state => state.stocks.userStocks);
+  console.log(cashDeposits)
 
   useEffect(() => {
     if (bonds.length > 0) {
@@ -61,17 +63,17 @@ export default function PortfolioInfo({ initialUser }) {
     }
   }, [ipos]);
 
-  // useEffect(() => {
-  //   if (cashDeposits.length > 0) {
-  //     setTotalDeposits(calculateTotalCashBalance(cashDeposits));
-  //   }
-  // }, [cashDeposits]);
+  useEffect(() => {
+    if (cashDeposits.length > 0) {
+      setTotalDeposits(calculateTotalCashBalance(cashDeposits));
+    }
+  }, [cashDeposits]);
 
-  // useEffect(() => {
-  //   if (stocks.length > 0) {
-  //     setTotalShares(calculateTotalSharesAmount(stocks));
-  //   }
-  // }, [stocks]);
+  useEffect(() => {
+    if (stocks.length > 0) {
+      setTotalShares(calculateTotalSharesAmount(stocks));
+    }
+  }, [stocks]);
 
 
   // Calculate total balance
@@ -111,73 +113,40 @@ export default function PortfolioInfo({ initialUser }) {
   };
 
   // Revised function to include sales from shares, IPOs, bonds, and cash deposit withdrawals
-  const calculateTotalCashBalance = async (
-    cashDepositData = [],
-    sharesData = [],
-    ipoData = [],
-    bondData = []
-  ) => {
-    // Ensure that each data set is an array, even if the input is null or undefined
-    cashDepositData = cashDepositData || [];
-    sharesData = sharesData || [];
-    ipoData = ipoData || [];
-    bondData = bondData || [];
-    let cashBalance = 0; // Renamed from totalCashDeposits for clarity
-
-    // Add proceeds from cleared cash deposits
-    const updateCashFromDeposits = (data) => {
-      data.forEach((item) => {
-        if (
-          item &&
-          item.status &&
-          item.status.trim().toUpperCase() === "CLEARED"
-        ) {
-          cashBalance += convertToNumber(item.amount);
-        }
-      });
-    };
-
-    // Add proceeds from selling IPOs
-    const updateCashFromIpoSales = (data) => {
-      data.forEach((item) => {
-        if (item && item.type && item.type.trim().toUpperCase() === "SELL") {
-          cashBalance +=
-            convertToNumber(item.numberOfShares) *
-            convertToNumber(item.sharePrice);
-        }
-      });
-    };
-
-    // Add proceeds from selling shares
-    const updateCashFromShareSales = (data) => {
-      data.forEach((item) => {
-        if (item && item.type && item.type.trim().toUpperCase() === "SELL") {
-          cashBalance += convertToNumber(item.tradeAmount);
-        }
-      });
-    };
-
-    // Add proceeds from selling bonds
-    const updateCashFromBondSales = (data) => {
-      data.forEach((item) => {
-        if (
-          item &&
-          item.typeOfRequest &&
-          item.typeOfRequest.trim().toUpperCase() === "SELL"
-        ) {
-          cashBalance += convertToNumber(item.currentValue);
-        }
-      });
-    };
-
-    // Update cash balance for each type of transaction
-    updateCashFromDeposits(cashDepositData);
-    updateCashFromShareSales(sharesData);
-    updateCashFromIpoSales(ipoData);
-    updateCashFromBondSales(bondData);
-
+  const calculateTotalCashBalance = (cashDepositData = [], sharesData = [], ipoData = [], bondData = []) => {
+    let cashBalance = 0;
+  
+    // Calculate total cash deposits
+    cashDepositData.forEach((deposit) => {
+      if (deposit.status.trim().toUpperCase() === 'CLEARED') {
+        cashBalance += convertToNumber(deposit.amount);
+      }
+    });
+  
+    // Calculate cash balance from share sales
+    sharesData.forEach((share) => {
+      if (share.type.trim().toUpperCase() === 'SELL') {
+        cashBalance += convertToNumber(share.tradeAmount);
+      }
+    });
+  
+    // Calculate cash balance from IPO sales
+    ipoData.forEach((ipo) => {
+      if (ipo.type.trim().toUpperCase() === 'SELL') {
+        cashBalance += convertToNumber(ipo.numberOfShares) * convertToNumber(ipo.sharePrice);
+      }
+    });
+  
+    // Calculate cash balance from bond sales
+    bondData.forEach((bond) => {
+      if (bond.typeOfRequest.trim().toUpperCase() === 'SELL') {
+        cashBalance += convertToNumber(bond.currentValue);
+      }
+    });
+  
     return cashBalance;
   };
+  
 
   // Calculate the total bond amount
   const calculateTotalBondAmount = (bonds) => {
