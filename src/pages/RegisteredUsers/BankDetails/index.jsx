@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../../../context/ModalContext";
-import { deleteBankingDetails, getBankingDetails } from "../../../config/bankDetails";
+import {
+  deleteBankingDetails,
+  getBankingDetails,
+} from "../../../config/bankDetails";
 import { customModal } from "../../../config/modalUtils";
 import {
   CheckIcon,
@@ -19,21 +22,26 @@ export default function BankDetails({ initialUser }) {
   const navigate = useNavigate();
   const [bankingDetailId, setBankingDetailId] = useState(null);
   const [userCountry, setUserCountry] = useState({
-    country: '',
+    country: "",
   });
   const country = userCountry.country;
+
+  useEffect(() => {
+    fetchBankDetails();
+    fetchUserCountry();
+  }, []);
+
   const fetchBankDetails = async () => {
-    setIsLoading(true);
     try {
-        const fetchedDetails = await getBankingDetails(user);
-        setBankingDetails(fetchedDetails[0]); 
-        setBankingDetailId(fetchedDetails[0].id)
-      } catch (error) {
-        console.error(error);
-      } finally{
-        setIsLoading(false);
+      const fetchedDetails = await getBankingDetails(user);
+      if (fetchedDetails && fetchedDetails.length > 0) {
+        setBankingDetails(fetchedDetails[0]);
+        setBankingDetailId(fetchedDetails[0]?.id);
       }
-  } 
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const fetchUserCountry = async () => {
     setIsLoading(true);
@@ -57,13 +65,8 @@ export default function BankDetails({ initialUser }) {
     }
   };
 
-  useEffect(() => {
-    fetchBankDetails();
-    fetchUserCountry();
-  }, []);
-
   const handleDelete = async () => {
-    console.log(user)
+    console.log(user);
     setIsDeleting(true);
     try {
       customModal({
@@ -71,7 +74,7 @@ export default function BankDetails({ initialUser }) {
         title: "Are you sure?",
         text: `You are about to delete ${initialUser.fullName}'s banking Details. This action cannot be undone.`,
         showConfirmButton: true,
-        confirmButtonText: isDeleting ? <DotLoader/> : 'Yes, delete',
+        confirmButtonText: isDeleting ? <DotLoader /> : "Yes, delete",
         cancelButtonText: "Cancel",
         confirmButtonBgColor: "bg-red-600",
         confirmButtonTextColor: "text-white",
@@ -127,16 +130,16 @@ export default function BankDetails({ initialUser }) {
     } catch (error) {
       console.error(error);
     } finally {
-        setIsDeleting(false);
+      setIsDeleting(false);
     }
   };
 
   const handleEdit = async (bankingDetails) => {
     navigate(`/dashboard/registered_users/view/edit_bank_details/${user}`, {
-        state: { editBank: bankingDetails },
-      });
-  }
- 
+      state: { editBank: bankingDetails },
+    });
+  };
+
   return (
     <div className="py-6 bg-gray-50 px-4 my-8 rounded-md shadow">
       <div className="px-4 sm:px-0 text-left">
@@ -144,6 +147,7 @@ export default function BankDetails({ initialUser }) {
           Banking Details
         </h3>
       </div>
+        {bankingDetails ? ( 
       <div className="mt-6 text-left">
         <dl className="grid grid-cols-1 sm:grid-cols-2">
           <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
@@ -159,7 +163,7 @@ export default function BankDetails({ initialUser }) {
               Bank Name
             </dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-            {bankingDetails.bankName || "N/A"}
+              {bankingDetails.bankName || "N/A"}
             </dd>
           </div>
           <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
@@ -188,24 +192,24 @@ export default function BankDetails({ initialUser }) {
           </div>
           {country !== "AU" && (
             <>
-            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+              <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
                 <dt className="text-sm font-medium leading-6 text-gray-900">
-                Swift Code
+                  Swift Code
                 </dt>
                 <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                {bankingDetails.swiftCode || "N/A"}
+                  {bankingDetails.swiftCode || "N/A"}
                 </dd>
-            </div>
-            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+              </div>
+              <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
                 <dt className="text-sm font-medium leading-6 text-gray-900">
-                IBAN
+                  IBAN
                 </dt>
                 <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                {bankingDetails.iban || 'N/A'}
+                  {bankingDetails.iban || "N/A"}
                 </dd>
-            </div>
+              </div>
             </>
-            )}
+          )}
         </dl>
         <div className="mt-6 flex space-x-3 justify-end">
           <button
@@ -224,6 +228,9 @@ export default function BankDetails({ initialUser }) {
           </button>
         </div>
       </div>
+      ) : (
+        <div>No banking details found</div> // Render a message if bankingDetails is null
+      )}
     </div>
   );
 }

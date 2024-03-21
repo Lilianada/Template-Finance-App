@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import { ScaleIcon } from "@heroicons/react/24/outline";
 import { convertToNumber, formatNumber } from "../../../config/utils";
 import { Link } from "react-router-dom";
@@ -18,7 +18,7 @@ export default function AccountOverview({ initialUser }) {
   const [totalIpoAmount, setTotalIpoAmount] = useState(0);
   const [totalShares, setTotalShares] = useState(0);
   const [totalDeposits, setTotalDeposits] = useState(0);
-  const [balance , setBalance] = useState(0);
+  const [balance, setBalance] = useState(0);
 
   useEffect(() => {
     const fetchUserData = () => {
@@ -29,46 +29,47 @@ export default function AccountOverview({ initialUser }) {
         dispatch(fetchUserCashDeposits(userId));
         dispatch(fetchUserStocks(userId));
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error("Error fetching user data:", error);
       }
     };
-   
 
     fetchUserData();
   }, [dispatch, userId]);
 
-  const bonds = useSelector(state => state.bonds.userBonds);
-  const terms = useSelector(state => state.terms.userTerms);
-  const ipos = useSelector(state => state.ipos.userIpos);
-  const cashDeposits = useSelector(state => state.cashDeposits.userCashDeposits);
-  const stocks = useSelector(state => state.stocks.userStocks);
+  const bonds = useSelector((state) => state.bonds.userBonds);
+  const terms = useSelector((state) => state.terms.userTerms);
+  const ipos = useSelector((state) => state.ipos.userIpos);
+  const cashDeposits = useSelector(
+    (state) => state.cashDeposits.userCashDeposits
+  );
+  const stocks = useSelector((state) => state.stocks.userStocks);
 
   useEffect(() => {
-    if (bonds.length > 0) {
+    if (bonds && bonds.length > 0) {
       setTotalBondAmount(calculateTotalBondAmount(bonds));
     }
   }, [bonds]);
 
   useEffect(() => {
-    if (terms.length > 0) {
+    if (terms && terms.length > 0) {
       setTotalTermAmount(calculateTotalTermAmount(terms));
     }
   }, [terms]);
 
   useEffect(() => {
-    if (ipos.length > 0) {
+    if (ipos && ipos.length > 0) {
       setTotalIpoAmount(calculateTotalIpoAmount(ipos));
     }
   }, [ipos]);
 
   useEffect(() => {
-    if (cashDeposits.length > 0) {
+    if (cashDeposits && cashDeposits.length > 0) {
       setTotalDeposits(calculateTotalCashBalance(cashDeposits));
     }
   }, [cashDeposits]);
 
   useEffect(() => {
-    if (stocks.length > 0) {
+    if (stocks && stocks.length > 0) {
       setTotalShares(calculateTotalSharesAmount(stocks));
     }
   }, [stocks]);
@@ -109,40 +110,46 @@ export default function AccountOverview({ initialUser }) {
   };
 
   // Revised function to include sales from shares, IPOs, bonds, and cash deposit withdrawals
-  const calculateTotalCashBalance = (cashDepositData = [], sharesData = [], ipoData = [], bondData = []) => {
+  const calculateTotalCashBalance = (
+    cashDepositData = [],
+    sharesData = [],
+    ipoData = [],
+    bondData = []
+  ) => {
     let cashBalance = 0;
-  
+
     // Calculate total cash deposits
     cashDepositData.forEach((deposit) => {
-      if (deposit.status.trim().toUpperCase() === 'CLEARED') {
+      if (deposit.status.trim().toUpperCase() === "CLEARED") {
         cashBalance += convertToNumber(deposit.amount);
       }
     });
-  
+
     // Calculate cash balance from share sales
     sharesData.forEach((share) => {
-      if (share.type.trim().toUpperCase() === 'SELL') {
+      if (share.type.trim().toUpperCase() === "SELL") {
         cashBalance += convertToNumber(share.tradeAmount);
       }
     });
-  
+
     // Calculate cash balance from IPO sales
     ipoData.forEach((ipo) => {
-      if (ipo.type.trim().toUpperCase() === 'SELL') {
-        cashBalance += convertToNumber(ipo.numberOfShares) * convertToNumber(ipo.sharePrice);
+      if (ipo.type.trim().toUpperCase() === "SELL") {
+        cashBalance +=
+          convertToNumber(ipo.numberOfShares) * convertToNumber(ipo.sharePrice);
       }
     });
-  
+
     // Calculate cash balance from bond sales
     bondData.forEach((bond) => {
-      if (bond.typeOfRequest.trim().toUpperCase() === 'SELL') {
+      if (bond.typeOfRequest.trim().toUpperCase() === "SELL") {
         cashBalance += convertToNumber(bond.currentValue);
       }
     });
-  
+
     return cashBalance;
   };
-  
+
   // Calculate the total bond amount
   const calculateTotalBondAmount = (bonds) => {
     let totalAmount = 0;
@@ -238,32 +245,31 @@ export default function AccountOverview({ initialUser }) {
         </h2>
         <div className="py-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {/* Card */}
-          <div className="overflow-hidden rounded-lg bg-white shadow" >
-              <div className="p-5">
-                <div className="flex items-center">
-                  <div className="w-0 flex-1">
-                    <dl>
-                      <dt className="truncate text-sm font-medium text-gray-500">
-                        Total Balance
-                      </dt>
-                      <dd>
-                        <div className="text-lg font-medium text-gray-900">
-                          ${formatNumber(balance)}
-                        </div>
-                      </dd>
-                    </dl>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-gray-50 px-5 py-3">
-                <div className="text-sm">
-                  <div className="font-medium text-indigo-700 hover:text-indigo-900"
-                  >
-                    Total value of all accounts
-                  </div>
+          <div className="overflow-hidden rounded-lg bg-white shadow">
+            <div className="p-5">
+              <div className="flex items-center">
+                <div className="w-0 flex-1">
+                  <dl>
+                    <dt className="truncate text-sm font-medium text-gray-500">
+                      Total Balance
+                    </dt>
+                    <dd>
+                      <div className="text-lg font-medium text-gray-900">
+                        ${formatNumber(balance)}
+                      </div>
+                    </dd>
+                  </dl>
                 </div>
               </div>
             </div>
+            <div className="bg-gray-50 px-5 py-3">
+              <div className="text-sm">
+                <div className="font-medium text-indigo-700 hover:text-indigo-900">
+                  Total value of all accounts
+                </div>
+              </div>
+            </div>
+          </div>
           {cards.map((card, index) => (
             <div
               key={index}
@@ -302,4 +308,3 @@ export default function AccountOverview({ initialUser }) {
     </div>
   );
 }
- 

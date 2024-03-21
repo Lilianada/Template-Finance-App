@@ -136,6 +136,14 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
+                 <Route
+                  path="registered_users/view/edit_user_bond/:userId"
+                  element={
+                    <ProtectedRoute>
+                      <ClientBondsPage />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route
                   path="bonds"
                   element={

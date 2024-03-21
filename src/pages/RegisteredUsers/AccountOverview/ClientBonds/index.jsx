@@ -40,7 +40,6 @@ export default function ClientBondsPage() {
 
   const handleDelete = (id) => {
     setSelectedId(id);
-    console.log(selectedId);
     customModal({
       showModal,
       title: "Are you sure?",
