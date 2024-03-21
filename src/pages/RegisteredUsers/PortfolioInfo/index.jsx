@@ -41,7 +41,7 @@ export default function PortfolioInfo({ initialUser }) {
   const ipos = useSelector(state => state.ipos.userIpos);
   // const cashDeposits = useSelector(state => state.cashDeposits.userCashDeposits);
   // const stocks = useSelector(state => state.stocks.userStocks);
-  console.log(ipos)
+  // console.log(ipos)
 
   useEffect(() => {
     if (bonds.length > 0) {

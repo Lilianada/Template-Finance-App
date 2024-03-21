@@ -3,9 +3,9 @@ import {
   Bars3Icon,
   BanknotesIcon,
   CalendarIcon,
-  ChartPieIcon,
-  ChatBubbleLeftRightIcon,
-  DocumentDuplicateIcon,
+  // ChartPieIcon,
+  // ChatBubbleLeftRightIcon,
+  // DocumentDuplicateIcon,
   FolderIcon,
   HomeIcon,
   UsersIcon,
@@ -52,24 +52,24 @@ const navigation = [
     icon: CalendarIcon, 
     current: false 
   },
-  {
-    name: "Documents",
-    to: "/dashboard/documents",
-    icon: DocumentDuplicateIcon,
-    current: false,
-  },
-  {
-    name: "Banking Details",
-    to: "/dashboard/banking_details",
-    icon: ChartPieIcon,
-    current: false,
-  },
-  {
-    name: "Chat Users",
-    to: "/dashboard/chat",
-    icon: ChatBubbleLeftRightIcon,
-    current: false,
-  },
+  // {
+  //   name: "Documents",
+  //   to: "/dashboard/documents",
+  //   icon: DocumentDuplicateIcon,
+  //   current: false,
+  // },
+  // {
+  //   name: "Banking Details",
+  //   to: "/dashboard/banking_details",
+  //   icon: ChartPieIcon,
+  //   current: false,
+  // },
+  // {
+  //   name: "Chat Users",
+  //   to: "/dashboard/chat",
+  //   icon: ChatBubbleLeftRightIcon,
+  //   current: false,
+  // },
 ];
 
 const requests = [
