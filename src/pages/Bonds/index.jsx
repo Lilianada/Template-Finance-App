@@ -34,9 +34,10 @@ export default function Bonds() {
     });
   };
 
+
   const handleDelete = (bondId) => {
-    setSelectedBondId(bondId); // set the bond ID you want to delete
-    setIsDeleteModalOpen(true); // open the delete confirmation modal
+    setSelectedBondId(bondId);
+    setIsDeleteModalOpen(true);
   };
 
   const confirmDelete = async () => {
