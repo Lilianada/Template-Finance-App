@@ -28,6 +28,7 @@ import AddCashBalance from "./pages/RegisteredUsers/AccountOverview/ClientCashBa
 import ClientBondsPage from "./pages/RegisteredUsers/AccountOverview/ClientBonds";
 import EditBondsDetails from "./pages/RegisteredUsers/AccountOverview/ClientBonds/Edit";
 import AddUserBonds from "./pages/RegisteredUsers/AccountOverview/ClientBonds/Add";
+import BondCards from "./pages/RegisteredUsers/AccountOverview/ClientBonds/BondCards";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -138,8 +139,16 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
+                 <Route
+                  path="registered_users/view/view_bonds/:userId"
+                  element={
+                    <ProtectedRoute>
+                      <BondCards />
+                    </ProtectedRoute>
+                  }
+                />
                   <Route
-                    path="registered_users/view/add_user_bonds/:userId"
+                    path="registered_users/view/add_user_bond/:userId"
                     element={
                       <ProtectedRoute>
                         <AddUserBonds />

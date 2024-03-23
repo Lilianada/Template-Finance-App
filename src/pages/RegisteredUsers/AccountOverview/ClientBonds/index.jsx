@@ -8,7 +8,6 @@ import {
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 import LoadingScreen from "../../../../components/LoadingScreen";
-import { removeBond } from "../../../../store/bonds/bondsSlice";
 import { deleteUserBond, getUserBonds } from "../../../../config/bonds";
 
 export default function ClientBondsPage() {
@@ -122,7 +121,7 @@ export default function ClientBondsPage() {
             className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             onClick={() =>
               navigate(
-                `/dashboard/bonds`
+                `/dashboard/registered_users/view/view_bonds/${userId}`
               )
             }
           >
