@@ -9,7 +9,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import CurrencyInput from "react-currency-input-field";
-import { addBondUser, deleteUserBond, updateBondUser } from "../../../../config/bonds";
+import { deleteUserBond, updateBondUser } from "../../../../config/bonds";
 import { Dialog, Transition } from "@headlessui/react";
 
 export default function EditBondsDetails ({ setOpen, open, bond, setBond, userId, refreshDetails }) {

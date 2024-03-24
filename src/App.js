@@ -22,13 +22,13 @@ import ViewUser from "./pages/RegisteredUsers/ViewUser";
 import Edit from "./pages/RegisteredUsers/ClientInfo/Edit";
 import EditKyc from "./pages/RegisteredUsers/KYC/edit";
 import EditBankDetails from "./pages/RegisteredUsers/BankDetails/Edit";
-import ClientCashPage from "./pages/RegisteredUsers/AccountOverview/ClientCashBalance";
-import EditPortfolio from "./pages/RegisteredUsers/AccountOverview/ClientCashBalance/Edit";
-import AddCashBalance from "./pages/RegisteredUsers/AccountOverview/ClientCashBalance/Add";
-import ClientBondsPage from "./pages/RegisteredUsers/AccountOverview/ClientBonds";
-import EditBondsDetails from "./pages/RegisteredUsers/AccountOverview/ClientBonds/Edit";
-import AddUserBonds from "./pages/RegisteredUsers/AccountOverview/ClientBonds/Add";
-import BondCards from "./pages/RegisteredUsers/AccountOverview/ClientBonds/BondCards";
+import ClientCashPage from "./pages/RegisteredUsers/ClientAccountOverview/ClientCashBalance";
+import EditPortfolio from "./pages/RegisteredUsers/ClientAccountOverview/ClientCashBalance/Edit";
+import AddCashBalance from "./pages/RegisteredUsers/ClientAccountOverview/ClientCashBalance/Add";
+import ClientBondsPage from "./pages/RegisteredUsers/ClientAccountOverview/ClientBonds";
+import EditBondsDetails from "./pages/RegisteredUsers/ClientAccountOverview/ClientBonds/Edit";
+import AddUserBonds from "./pages/RegisteredUsers/ClientAccountOverview/ClientBonds/Add";
+import BondCards from "./pages/RegisteredUsers/ClientAccountOverview/ClientBonds/BondCards";
 
 function App() {
   const { loadingAuthState } = useAuth();

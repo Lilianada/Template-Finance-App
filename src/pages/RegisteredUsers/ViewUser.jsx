@@ -2,7 +2,7 @@ import { PaperClipIcon } from "@heroicons/react/20/solid";
 import React from "react";
 import { useLocation } from "react-router-dom";
 import ClientInfo from "./ClientInfo";
-import AccountOverview from "./AccountOverview/index";
+import AccountOverview from "./ClientAccountOverview/index";
 import ClientKyc from "./KYC";
 import BankDetails from "./BankDetails";
 
