@@ -82,6 +82,7 @@ export default function EditBondsDetails ({ setOpen, open, bond, setBond, userId
       setIsLoading(false);
     }
   };
+
   const handleDelete = () => {
     customModal({
       showModal,
@@ -106,10 +107,11 @@ export default function EditBondsDetails ({ setOpen, open, bond, setBond, userId
       timer: 0,
     });
   };
+
   const confirmDelete = async () => {
     setIsDeleting(true);
     try {
-      await deleteUserBond(userId.userId, bond.id);
+      await deleteUserBond(userId, bond.id);
       customModal({
         showModal,
         title: "Success",
