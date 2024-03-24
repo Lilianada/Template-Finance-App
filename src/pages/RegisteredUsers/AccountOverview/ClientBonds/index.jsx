@@ -9,10 +9,12 @@ import {
 } from "@heroicons/react/24/outline";
 import LoadingScreen from "../../../../components/LoadingScreen";
 import { deleteUserBond, getUserBonds } from "../../../../config/bonds";
+import EditBondsDetails from "./Edit";
 
 export default function ClientBondsPage() {
   const { showModal, hideModal } = useModal();
   const [bonds, setBonds] = useState([]);
+  const [open, setOpen] = useState(false);
   const [selectedId, setSelectedId] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const navigate = useNavigate();
@@ -31,10 +33,9 @@ export default function ClientBondsPage() {
     }
   };
 
-  const handleEdit = async (id) => {
-    navigate(`/dashboard/registered_users/view/edit_user_bond/${userId}`, {
-      state: { details: id },
-    });
+  const handleEdit = async (bond) => {
+    setOpen(true);
+    setSelectedId(bond);
   };
 
   const handleDelete = (id) => {
@@ -42,7 +43,7 @@ export default function ClientBondsPage() {
     customModal({
       showModal,
       title: "Are you sure?",
-      text: `You are about to delete this cash transaction. This action cannot be undone.`,
+      text: `You are about to delete this bond investment. This action cannot be undone.`,
       showConfirmButton: true,
       confirmButtonText: "Yes, delete",
       cancelButtonText: "Cancel",
@@ -65,6 +66,7 @@ export default function ClientBondsPage() {
 
   const confirmDelete = async () => {
     setIsDeleting(true);
+    console.log(selectedId);
     try {
       await deleteUserBond(userId, selectedId);
       customModal({
@@ -120,9 +122,7 @@ export default function ClientBondsPage() {
             type="button"
             className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             onClick={() =>
-              navigate(
-                `/dashboard/registered_users/view/view_bonds/${userId}`
-              )
+              navigate(`/dashboard/registered_users/view/view_bonds/${userId}`)
             }
           >
             Add bonds
@@ -205,7 +205,7 @@ export default function ClientBondsPage() {
                   </td>
                   <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                     <button
-                      onClick={() => handleEdit(item.id)}
+                      onClick={() => handleEdit(item)}
                       className="text-indigo-600 hover:text-indigo-900"
                     >
                       Edit<span className="sr-only">, {item.issuerName}</span>
@@ -225,6 +225,14 @@ export default function ClientBondsPage() {
             </tbody>
           </table>
         )}
+      <EditBondsDetails
+        userId={userId}
+        bond={selectedId}
+        setBond={setSelectedId}
+        open={open}
+        setOpen={setOpen}
+        refreshDetails={fetchBonds}
+      />
       </div>
     </div>
   );

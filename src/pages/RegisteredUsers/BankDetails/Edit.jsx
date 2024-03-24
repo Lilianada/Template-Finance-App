@@ -12,7 +12,7 @@ import {
 } from "@heroicons/react/24/outline";
 import DotLoader from "../../../components/DotLoader";
 import { getUser } from "../../../config/user";
-import { useParams } from "react-router-dom"
+import { useParams } from "react-router-dom";
 
 export default function EditBankDetails({ initialUser }) {
   const { showModal, hideModal } = useModal();
@@ -31,7 +31,7 @@ export default function EditBankDetails({ initialUser }) {
     iban: "",
   });
   const [userCountry, setUserCountry] = useState({
-    country: '',
+    country: "",
   });
   const country = userCountry.country;
 
@@ -46,8 +46,15 @@ export default function EditBankDetails({ initialUser }) {
   const handleUpdate = async (e) => {
     e.preventDefault();
     setIsEditing(true);
-    const { accountName, bankName, bsbNumber, accountNumber, branch, swiftCode, iban } =
-      formData;
+    const {
+      accountName,
+      bankName,
+      bsbNumber,
+      accountNumber,
+      branch,
+      swiftCode,
+      iban,
+    } = formData;
 
     if (!accountName || !bankName || !bsbNumber || !accountNumber || !branch) {
       return customModal({
@@ -65,11 +72,7 @@ export default function EditBankDetails({ initialUser }) {
     }
 
     try {
-      await manageBankingDetails(
-        userId,
-        formData,
-        bankingDetailId
-      );
+      await manageBankingDetails(userId, formData, bankingDetailId);
       customModal({
         showModal,
         title: "Success!",
@@ -167,7 +170,7 @@ export default function EditBankDetails({ initialUser }) {
     } catch (error) {
       console.error(error);
     } finally {
-        setIsDeleting(false);
+      setIsDeleting(false);
     }
   };
 
@@ -196,21 +199,20 @@ export default function EditBankDetails({ initialUser }) {
     setIsLoading(true);
 
     try {
-        const details = await getBankingDetails(userId);
-        setFormData(details[0])
-        setBankingDetailId(details[0].id)
+      const details = await getBankingDetails(userId);
+      setFormData(details[0]);
+      setBankingDetailId(details[0].id);
     } catch (error) {
-        console.error(error);
+      console.error(error);
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     fetchDetails();
     fetchUserCountry();
-  }, [])
-
+  }, []);
 
   return (
     <form className="text-left bg-gray-50 px-6 py-8" onSubmit={handleUpdate}>
@@ -394,13 +396,13 @@ export default function EditBankDetails({ initialUser }) {
           className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
         >
           {isEditing ? (
-              <div className="flex w-full justify-center align-middle gap-2">
-                <span>Updating</span>
-                <DotLoader />
-              </div>
-            ) : (
-              "Update Details"
-            )}
+            <div className="flex w-full justify-center align-middle gap-2">
+              <span>Updating</span>
+              <DotLoader />
+            </div>
+          ) : (
+            "Update Details"
+          )}
         </button>
         <button
           type="button"
@@ -408,13 +410,13 @@ export default function EditBankDetails({ initialUser }) {
           onClick={() => handleDelete(bankingDetailId)}
         >
           {isDeleting ? (
-              <div className="flex w-full justify-center align-middle gap-2">
-                <span>Deleting</span>
-                <DotLoader />
-              </div>
-            ) : (
-              "Delete Details"
-            )}
+            <div className="flex w-full justify-center align-middle gap-2">
+              <span>Deleting</span>
+              <DotLoader />
+            </div>
+          ) : (
+            "Delete Details"
+          )}
         </button>
       </div>
     </form>

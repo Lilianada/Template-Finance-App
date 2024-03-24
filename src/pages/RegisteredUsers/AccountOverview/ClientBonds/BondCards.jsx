@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import { Menu, Transition } from "@headlessui/react";
 import { Link } from "react-router-dom";
 import { PlusIcon } from "@heroicons/react/24/outline";
@@ -8,20 +8,15 @@ import LoadingScreen from "../../../../components/LoadingScreen";
 import { getAllBonds } from "../../../../config/bonds";
 import AddUserBonds from "./Add";
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
 export default function BondCards() {
-  const {userId} = useParams();
+  const { userId } = useParams();
   const [open, setOpen] = useState(false);
-  const [isLoading, setIsLoading] =  useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [bonds, setBonds] = useState([]);
-  const [selectedBond, setSelectedBond] = useState('')
-  const navigate = useNavigate();
+  const [selectedBond, setSelectedBond] = useState("");
 
   useEffect(() => {
-    async function fetchBonds () {
+    async function fetchBonds() {
       try {
         setIsLoading(true);
         const fetchedBonds = await getAllBonds();
@@ -31,19 +26,19 @@ export default function BondCards() {
       } finally {
         setIsLoading(false);
       }
-    };
+    }
     fetchBonds();
-  }, [])
-  
+  }, []);
+
   const sortedBonds = [...bonds].sort((a, b) => a.index - b.index);
 
   const handleInvest = (bond) => {
     setSelectedBond(bond);
     setOpen(true);
-  }
+  };
 
   return (
-    <ul className="grid grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-3 xl:gap-x-8 w-full">
+    <ul className="grid grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-3 sm:grid-cols-2 xl:gap-x-8 w-full">
       {isLoading && <LoadingScreen />}
       {!bonds || bonds.length === 0 ? (
         <div className="w-full grid place-items-center rounded-xl border border-gray-200 p-4">
@@ -56,40 +51,13 @@ export default function BondCards() {
             className="overflow-hidden rounded-xl border border-gray-200"
           >
             <div className="flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-50 p-4 flex-col">
-              <Menu as="div" className="relative ml-auto">
-                <Menu.Button
-                  className="block text-gray-400 hover:text-indigo-500"
-                  onClick={() => handleInvest(bond)}
-                >
-                  <span className="sr-only">Open options</span>
-                  <PlusIcon className="h-5 w-5" aria-hidden="true" />
-                </Menu.Button>
-                <Transition
-                  as={Fragment}
-                  enter="transition ease-out duration-100"
-                  enterFrom="transform opacity-0 scale-95"
-                  enterTo="transform opacity-100 scale-100"
-                  leave="transition ease-in duration-75"
-                  leaveFrom="transform opacity-100 scale-100"
-                  leaveTo="transform opacity-0 scale-95"
-                >
-                  <Menu.Items className="absolute right-0 z-10 mt-0.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
-                    <Menu.Item>
-                      {({ active }) => (
-                        <div
-                          onClick={() => navigate(`/dashboard/registered_users/view/add_user_bond/${userId}`, { state: { bond: bond } })}
-                          className={classNames(
-                            active ? "bg-gray-50" : "",
-                            "block px-3 py-1 text-sm leading-6 text-gray-900"
-                          )}
-                        >
-                          Add User Bond<span className="sr-only">, {bond.name}</span>
-                        </div>
-                      )}
-                    </Menu.Item>
-                  </Menu.Items>
-                </Transition>
-              </Menu>
+              <button
+                className="block text-gray-400 hover:text-indigo-500 relative ml-auto"
+                onClick={() => handleInvest(bond)}
+              >
+                <span className="sr-only">Open options</span>
+                <PlusIcon className="h-5 w-5" aria-hidden="true" />
+              </button>
               <img
                 src={bond.image}
                 alt={bond.issuerName}
@@ -170,6 +138,13 @@ export default function BondCards() {
           </li>
         ))
       )}
+      <AddUserBonds
+        bond={selectedBond}
+        setBond={setSelectedBond}
+        open={open}
+        setOpen={setOpen}
+        userId={userId}
+      />
     </ul>
   );
 }
