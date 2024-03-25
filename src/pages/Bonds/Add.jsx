@@ -153,7 +153,7 @@ export default function Add() {
                   type="file"
                   name="image"
                   id="file"
-                  style={{ display: "none" }}
+                  className="hidden"
                   onChange={handleChange}
                   accept="image/*"
                 />

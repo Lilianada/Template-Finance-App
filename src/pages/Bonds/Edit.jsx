@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { PhotoIcon } from "@heroicons/react/24/solid";
-import { CheckIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import {
+  CheckIcon,
+  ExclamationTriangleIcon,
+} from "@heroicons/react/24/outline";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { updateBond } from "../../config/bonds";
 import DotLoader from "../../components/DotLoader";
 import { formatNumber } from "../../config/utils";
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 import { customModal } from "../../config/modalUtils";
 import { useModal } from "../../context/ModalContext";
 
 export default function Edit() {
   const location = useLocation();
-  const { bondToEdit } = location.state || {}; 
-  const {showModal, hideModal} = useModal();
+  const { bondToEdit } = location.state || {};
+  const { showModal, hideModal } = useModal();
   const [formData, setFormData] = useState({ ...bondToEdit, imagePreview: "" });
   const [loading, setLoading] = useState(false);
   const [isPerpetual, setIsPerpetual] = useState(false);
@@ -197,9 +200,9 @@ export default function Edit() {
                 Company Logo
               </label>
               <div className="mt-2 flex items-center gap-x-3">
-                {formData.image ? (
+                {formData.imagePreview ? (
                   <img
-                    src={formData.imagePreview || "defaultImageURL"}
+                    src={formData.imagePreview}
                     alt="preview"
                     className="h-12 w-12 rounded-lg bg-white ring-1 ring-gray-900/10 object-contain"
                   />
@@ -211,8 +214,9 @@ export default function Edit() {
                 )}
                 <input
                   type="file"
+                  name="image"
                   id="file"
-                  style={{ display: "none" }}
+                  className="hidden"
                   onChange={handleChange}
                   accept="image/*"
                 />
@@ -262,7 +266,6 @@ export default function Edit() {
                   onChange={handleChange}
                   autoComplete="companyWebsite"
                   className="block w-full rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                 
                 />
               </div>
             </div>
