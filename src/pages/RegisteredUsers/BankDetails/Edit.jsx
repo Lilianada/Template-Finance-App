@@ -72,6 +72,7 @@ export default function EditBankDetails({ initialUser }) {
     }
 
     try {
+      console.log(userId, formData, bankingDetailId)
       await manageBankingDetails(userId, formData, bankingDetailId);
       customModal({
         showModal,

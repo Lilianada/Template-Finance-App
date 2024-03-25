@@ -11,8 +11,6 @@ function classNames(...classes) {
 
 export default function Cards({ bonds, isLoading, handleEdit }) {
   const [open, setOpen] = useState(false);
-
-  // Sort IPOs based on the index property
   const sortedBonds = [...bonds].sort((a, b) => a.index - b.index);
 
   return (
