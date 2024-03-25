@@ -95,7 +95,6 @@ export default function Add() {
         formData.image = imageUrl;
       }
       await addNewBond(formData);
-      console.log(formData);
       setFormData({
         companyWebsite: "",
         couponFrequency: 0,
@@ -111,6 +110,7 @@ export default function Add() {
         type: "",
         index: 0,
       });
+
     } catch (error) {
       console.error(error);
     }
@@ -162,7 +162,7 @@ export default function Add() {
                   className="rounded-md bg-white px-2.5 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                   onClick={() => document.getElementById("file").click()}
                 >
-                  Change
+                  Add Image
                 </button>
               </div>
             </div>
@@ -451,7 +451,7 @@ export default function Add() {
           className="text-sm font-semibold leading-6 text-gray-900"
           onClick={() => window.history.back()}
         >
-          Cancel
+          Close
         </button>
         <button
           type="submit"

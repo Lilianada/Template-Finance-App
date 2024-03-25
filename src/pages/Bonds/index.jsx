@@ -34,7 +34,6 @@ export default function Bonds() {
     });
   };
 
-
   const handleDelete = (bondId) => {
     setSelectedBondId(bondId);
     setIsDeleteModalOpen(true);
@@ -70,6 +69,7 @@ export default function Bonds() {
         handleDelete={handleDelete}
         confirmDelete={confirmDelete}
         isDeleteModalOpen={isDeleteModalOpen}
+        refreshBonds={fetchBonds}
       />
     </div>
   );

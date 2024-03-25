@@ -15,7 +15,7 @@ import { useModal } from "../../context/ModalContext";
 export default function Edit() {
   const location = useLocation();
   const { bondToEdit } = location.state || {};
-  const { showModal, hideModal } = useModal();
+  const { showModal } = useModal();
   const [formData, setFormData] = useState({ ...bondToEdit, imagePreview: "" });
   const [loading, setLoading] = useState(false);
   const [isPerpetual, setIsPerpetual] = useState(false);

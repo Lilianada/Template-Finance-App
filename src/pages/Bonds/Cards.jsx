@@ -12,13 +12,15 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Cards({ bonds, isLoading, handleEdit }) {
+export default function Cards({ bonds, isLoading, handleEdit, refreshBonds }) {
   const [open, setOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { showModal, hideModal} = useModal();
+  const [selectedBond, setSelectedBond] = useState(null)
   const sortedBonds = [...bonds].sort((a, b) => a.index - b.index);
 
-  const handleDelete = () => {
+  const handleDelete = (bond) => {
+    setSelectedBond(bond)
     customModal({
       showModal,
       title: "Are you sure?",
@@ -46,7 +48,7 @@ export default function Cards({ bonds, isLoading, handleEdit }) {
   const confirmDelete = async () => {
     setIsDeleting(true);
     try {
-      await deleteBond(bonds.id);
+      await deleteBond(selectedBond);
       customModal({
         showModal,
         title: "Success",
@@ -59,6 +61,7 @@ export default function Cards({ bonds, isLoading, handleEdit }) {
         timer: 2000,
       });
       setOpen(false);
+      refreshBonds();
     } catch (error) {
       customModal({
         showModal,
@@ -116,10 +119,10 @@ export default function Cards({ bonds, isLoading, handleEdit }) {
                     <Menu.Item>
                       {({ active }) => (
                         <div
-                          onClick={() => handleEdit(bond)}
+                          onClick={() => handleEdit(bond) }
                           className={classNames(
                             active ? "bg-gray-50" : "",
-                            "block px-3 py-1 text-sm leading-6 text-gray-900"
+                            "block px-3 py-1 text-sm leading-6 text-gray-900 cursor-pointer"
                           )}
                         >
                           Edit<span className="sr-only">, {bond.name}</span>
@@ -129,10 +132,10 @@ export default function Cards({ bonds, isLoading, handleEdit }) {
                     <Menu.Item>
                       {({ active }) => (
                         <button
-                          onClick={handleDelete}
+                          onClick={() => handleDelete(bond)}
                           className={classNames(
                             active ? "bg-gray-50" : "",
-                            "block px-3 py-1 text-sm leading-6 text-gray-900 w-full"
+                            "block px-3 py-1 text-sm leading-6 text-gray-900 w-full cursor-pointer"
                           )}
                         >
                           Delete<span className="sr-only">, {bond.name}</span>
