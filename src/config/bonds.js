@@ -325,6 +325,7 @@ export async function updateBondUser(userId, bondId, bondData) {
 }
 
 export const deleteUserBond = async (uid, requestId) => {
+  console.log(uid, requestId)
   try {
     const requestRef = doc(
       db,
@@ -335,7 +336,7 @@ export const deleteUserBond = async (uid, requestId) => {
     );
     await deleteDoc(requestRef);
   } catch (error) {
-    console.error("Error deleting IPO: ", error);
+    console.error("Error deleting bonds: ", error);
     throw error;
   }
 };

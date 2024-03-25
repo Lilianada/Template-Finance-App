@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { PhotoIcon } from "@heroicons/react/24/solid";
+import { CheckIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { updateBond } from "../../config/bonds";
 import DotLoader from "../../components/DotLoader";
 import { formatNumber } from "../../config/utils";
 import { useLocation } from 'react-router-dom';
+import { customModal } from "../../config/modalUtils";
+import { useModal } from "../../context/ModalContext";
 
 export default function Edit() {
   const location = useLocation();
   const { bondToEdit } = location.state || {}; 
-
+  const {showModal, hideModal} = useModal();
   const [formData, setFormData] = useState({ ...bondToEdit, imagePreview: "" });
   const [loading, setLoading] = useState(false);
   const [isPerpetual, setIsPerpetual] = useState(false);
@@ -144,23 +147,31 @@ export default function Edit() {
       }
 
       await updateBond(updatedFormData.id, updatedFormData);
-      // Swal.fire({
-      //   icon: "success",
-      //   title: "Updated!",
-      //   text: `Bond has been updated.`,
-      //   showConfirmButton: false,
-      //   timer: 2000,
-      // });
+      customModal({
+        showModal,
+        title: "Success",
+        text: "You have successfully updated this bond.",
+        showConfirmButton: false,
+        icon: CheckIcon,
+        iconBgColor: "bg-green-100",
+        iconTextColor: "text-green-600",
+        buttonBgColor: "bg-green-600",
+        timer: 2000,
+      });
       setLoading(false);
     } catch (error) {
       console.error(error);
-      // Swal.fire({
-      //   icon: "error",
-      //   title: "Error!",
-      //   text: `Error updating bond: ${error}`,
-      //   showConfirmButton: true,
-      //   timer: 2000,
-      // });
+      customModal({
+        showModal,
+        title: "Error!",
+        text: "There was an error in updating this bond. Please try again.",
+        showConfirmButton: false,
+        icon: ExclamationTriangleIcon,
+        iconBgColor: "bg-red-100",
+        iconTextColor: "text-red-600",
+        buttonBgColor: "bg-red-600",
+        timer: 2000,
+      });
     } finally {
       setLoading(false);
     }
