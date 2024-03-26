@@ -47,6 +47,7 @@ export default function Cards({ bonds, isLoading, handleEdit, refreshBonds }) {
 
   const confirmDelete = async () => {
     setIsDeleting(true);
+    console.log(selectedBond)
     try {
       await deleteBond(selectedBond);
       customModal({
@@ -132,7 +133,7 @@ export default function Cards({ bonds, isLoading, handleEdit, refreshBonds }) {
                     <Menu.Item>
                       {({ active }) => (
                         <button
-                          onClick={() => handleDelete(bond)}
+                          onClick={() => handleDelete(bond.id)}
                           className={classNames(
                             active ? "bg-gray-50" : "",
                             "block px-3 py-1 text-sm leading-6 text-gray-900 w-full cursor-pointer"

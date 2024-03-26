@@ -1,10 +1,13 @@
 import React, { useState } from "react";
-import { PhotoIcon } from "@heroicons/react/24/solid";
+import { PhotoIcon, CheckIcon, ExclamationTriangleIcon } from "@heroicons/react/24/solid";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { addNewBond } from "../../config/bonds";
 import DotLoader from "../../components/DotLoader";
+import { customModal } from "../../config/modalUtils";
+import { useModal } from "../../context/ModalContext";
 
 export default function Add() {
+  const { showModal } = useModal();
   const [isLoading, setIsLoading] = useState(false);
   const [isPerpetual, setIsPerpetual] = useState(false);
   const [formData, setFormData] = useState({
@@ -71,51 +74,73 @@ export default function Add() {
       try {
         await uploadBytes(storageRef, imageFile);
         const downloadURL = await getDownloadURL(storageRef);
-        console.log("Image uploaded to Firebase Storage:", downloadURL);
         return downloadURL;
       } catch (error) {
         console.error("Error uploading image to Firebase Storage:", error);
         throw error;
       }
     } else if (typeof imageFile === "string") {
-      // Image is already a URL, no need to re-upload
       return imageFile;
     } else {
-      return null; // Handle other cases (e.g., null) as needed
+      return null;
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
     try {
       if (formData.image) {
         const imageUrl = await handleUploadImage(formData.image);
         formData.image = imageUrl;
       }
       await addNewBond(formData);
-      setFormData({
-        companyWebsite: "",
-        couponFrequency: 0,
-        couponRate: 0,
-        currentValue: 0,
-        image: null,
-        isin: "",
-        issuerName: "",
-        maturityDate: "",
-        minimumAmount: 0,
-        quantity: 0,
-        sector: "",
-        type: "",
-        index: 0,
+      customModal({
+        showModal,
+        title: "Success",
+        text: "You have successfully added a new bond.",
+        showConfirmButton: false,
+        icon: CheckIcon,
+        iconBgColor: "bg-green-100",
+        iconTextColor: "text-green-600",
+        buttonBgColor: "bg-green-600",
+        timer: 2000,
       });
-
+      reset();
     } catch (error) {
       console.error(error);
+      customModal({
+        showModal,
+        title: "Error!",
+        text: "There was an error adding bond. Please try again.",
+        showConfirmButton: false,
+        icon: ExclamationTriangleIcon,
+        iconBgColor: "bg-red-100",
+        iconTextColor: "text-red-600",
+        buttonBgColor: "bg-red-600",
+        timer: 2000,
+      });
     }
     setIsLoading(false);
   };
+
+  const reset = () => {
+    setFormData({
+      companyWebsite: "",
+      couponFrequency: 0,
+      couponRate: 0,
+      currentValue: 0,
+      image: null,
+      isin: "",
+      issuerName: "",
+      maturityDate: "",
+      minimumAmount: 0,
+      quantity: 0,
+      sector: "",
+      type: "",
+      index: 0,
+    });
+  }
 
   return (
     <form className="m-2" onSubmit={handleSubmit}>
@@ -459,7 +484,7 @@ export default function Add() {
         >
           {isLoading ? (
             <div className="flex w-full justify-center align-middle gap-2">
-              <span>Sumitting</span>
+              <span>Submitting</span>
               <DotLoader />
             </div>
           ) : (
