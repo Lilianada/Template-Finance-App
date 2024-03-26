@@ -92,7 +92,7 @@ export default function Cards({
 
   return (
     <ul className="grid grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-3 sm:grid-cols-2 xl:gap-x-8 w-full">
-    {isLoading && <LoadingScreen />}
+    {/* {isLoading && <LoadingScreen />} */}
     {!ipos || ipos.length === 0 ? (
       <div className="w-full grid place-items-center rounded-xl border border-gray-200 p-4">
         <h5 className="text-gray-400 text-lg ">NO IPOS FOUND.</h5>
@@ -153,79 +153,51 @@ export default function Cards({
             </Menu>
             <img
               src={ipos.imagePreview}
-              alt={ipos.issuerName}
+              alt={ipos.name}
               className="h-12 w-12 flex-none rounded-lg bg-white ring-1 ring-gray-900/10 object-contain"
             />
             <div className="text-sm font-medium leading-6 text-gray-900 pt-2">
-              {ipos.issuerName}
+              {ipos.name}
             </div>
           </div>
           <dl className="divide-y divide-gray-100 px-4 py-4 text-sm leading-6">
             <div className="flex justify-between gap-x-4 py-3">
-              <dt className="text-gray-500">Type</dt>
+              <dt className="text-gray-500 truncate">{ipos.description}</dt>
+            </div>
+            <div className="flex justify-between gap-x-4 py-3">
+              <dt className="text-gray-500">Expected IPO Date</dt>
               <dd className="flex items-start gap-x-2">
-                <div className="font-medium text-gray-900">{ipos.type}</div>
+              <div className="font-medium text-gray-900">{ipos.expectedDate}</div>
               </dd>
             </div>
             <div className="flex justify-between gap-x-4 py-3">
-              <dt className="text-gray-500">Company Website</dt>
+              <dt className="text-gray-500">Pre-IPO Share Price</dt>
               <dd className="flex items-start gap-x-2">
-                <Link
-                  to={ipos.companyWebsite}
-                  className="font-medium text-indigo-700 cursor-pointer hover:text-indigo-400 rounded-md py-1 px-2 text-xs ring-1 ring-inset"
-                >
-                  URL
-                </Link>
+                <div className="font-medium text-gray-900">{ipos.preSharePrice}</div>
               </dd>
             </div>
             <div className="flex justify-between gap-x-4 py-3">
-              <dt className="text-gray-500">Sector</dt>
-              <dd className="flex items-start gap-x-2">
-                <div className="font-medium text-gray-900">{ipos.sector}</div>
-              </dd>
-            </div>
-            <div className="flex justify-between gap-x-4 py-3">
-              <dt className="text-gray-500">Maturity Date</dt>
+              <dt className="text-gray-500">Minimum Investment</dt>
               <dd className="flex items-start gap-x-2">
                 <div className="font-medium text-gray-900">
-                  {ipos.maturityDate}
+                  {ipos.minInvestment}
                 </div>
               </dd>
             </div>
             <div className="flex justify-between gap-x-4 py-3">
-              <dt className="text-gray-500">Minimum Amount</dt>
+              <dt className="text-gray-500">Pre Allocation</dt>
               <dd className="flex items-start gap-x-2">
-                <div className="font-medium text-gray-900">
-                  ${formatNumber(ipos.minimumAmount)}
-                </div>
-              </dd>
-            </div>
-            <div className="flex justify-between gap-x-4 py-3">
-              <dt className="text-gray-500">ISIN</dt>
-              <dd className="flex items-start gap-x-2">
-                <div className="font-medium text-gray-900">{ipos.isin}</div>
+                <div className="font-medium text-gray-900">{ipos.preAllocation}</div>
               </dd>
             </div>
 
             <div className="flex justify-between gap-x-4 py-3">
-              <dt className="text-gray-500">Coupon Frequency</dt>
+              <dt className="text-gray-500">Share Price</dt>
               <dd className="flex items-start gap-x-2">
                 <div className="font-medium text-gray-900">
-                  {ipos.couponFrequency}
+                  {ipos.sharePrice}
                 </div>
               </dd>
-            </div>
-            <div className="col-span-1 flex shadow-sm">
-              <div className="flex flex-1 items-center justify-between rounded-md truncate  bg-black mt-6">
-                <div className="flex-1 truncate px-4 py-2 text-sm">
-                  <p className="text-white font-bold text-xl">
-                    {ipos.couponRate}%
-                  </p>
-                  <p className="font-medium text-white hover:text-white">
-                    Coupon
-                  </p>
-                </div>
-              </div>
             </div>
           </dl>
         </li>

@@ -197,7 +197,7 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-                <Route
+                {/* <Route
                   path="ipos/add"
                   element={
                     <ProtectedRoute>
@@ -212,7 +212,7 @@ function App() {
                       <EditIpos />
                     </ProtectedRoute>
                   }
-                />
+                /> */}
                
 
               </Route>
