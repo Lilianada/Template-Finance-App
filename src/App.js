@@ -29,6 +29,7 @@ import ClientBondsPage from "./pages/RegisteredUsers/ClientAccountOverview/Clien
 import EditBondsDetails from "./pages/RegisteredUsers/ClientAccountOverview/ClientBonds/Edit";
 import AddUserBonds from "./pages/RegisteredUsers/ClientAccountOverview/ClientBonds/Add";
 import BondCards from "./pages/RegisteredUsers/ClientAccountOverview/ClientBonds/BondCards";
+import Ipos from "./pages/Ipos";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -184,6 +185,31 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <EditBond />
+                    </ProtectedRoute>
+                  }
+                />
+               
+                <Route
+                  path="ipos"
+                  element={
+                    <ProtectedRoute>
+                      <Ipos />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="ipos/add"
+                  element={
+                    <ProtectedRoute>
+                      <AddIpos />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="ipos/edit/:iposId"
+                  element={
+                    <ProtectedRoute>
+                      <EditIpos />
                     </ProtectedRoute>
                   }
                 />
