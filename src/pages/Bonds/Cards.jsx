@@ -19,8 +19,7 @@ export default function Cards({ bonds, isLoading, handleEdit, refreshBonds }) {
   const [selectedBond, setSelectedBond] = useState(null)
   const sortedBonds = [...bonds].sort((a, b) => a.index - b.index);
 
-  const handleDelete = (bond) => {
-    setSelectedBond(bond)
+  const handleDelete = () => {
     customModal({
       showModal,
       title: "Are you sure?",
@@ -47,8 +46,8 @@ export default function Cards({ bonds, isLoading, handleEdit, refreshBonds }) {
 
   const confirmDelete = async () => {
     setIsDeleting(true);
-    console.log(selectedBond)
     try {
+      console.log(selectedBond)
       await deleteBond(selectedBond);
       customModal({
         showModal,
@@ -133,7 +132,7 @@ export default function Cards({ bonds, isLoading, handleEdit, refreshBonds }) {
                     <Menu.Item>
                       {({ active }) => (
                         <button
-                          onClick={() => handleDelete(bond.id)}
+                          onClick={() => { setSelectedBond(bond.id); handleDelete(); }}
                           className={classNames(
                             active ? "bg-gray-50" : "",
                             "block px-3 py-1 text-sm leading-6 text-gray-900 w-full cursor-pointer"
@@ -147,7 +146,7 @@ export default function Cards({ bonds, isLoading, handleEdit, refreshBonds }) {
                 </Transition>
               </Menu>
               <img
-                src={bond.image}
+                src={bond.imagePreview}
                 alt={bond.issuerName}
                 className="h-12 w-12 flex-none rounded-lg bg-white ring-1 ring-gray-900/10 object-contain"
               />
