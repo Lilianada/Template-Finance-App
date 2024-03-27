@@ -30,7 +30,7 @@ import DotLoader from '../../components/DotLoader';
       };
     
       const handleAddUser = () => {
-        navigate(`/dashboard/registered_users/add_new_user`);
+        navigate(`/dashboard/add_new_user`);
       };
 
       const handleViewUser = (userId) => {

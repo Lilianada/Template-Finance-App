@@ -114,7 +114,7 @@ export default function RequestsTable() {
   };
 
   const handleAddUser = () => {
-    navigate(`/dashboard/registered_users/add_new_user`);
+    navigate(`/dashboard/add_new_user`);
   };
 
   return (
@@ -216,7 +216,7 @@ export default function RequestsTable() {
                       onClick={() => handleApproval(user.id, user)}
                       className="text-green-600 hover:text-green-800"
                     >
-                      Accept<span className="sr-only">, {user.fullName}</span>
+                      Approve<span className="sr-only">, {user.fullName}</span>
                     </button>
                   </td>
                   <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">

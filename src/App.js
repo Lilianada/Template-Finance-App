@@ -72,7 +72,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="registered_users/add_new_user"
+                  path="add_new_user"
                   element={
                     <ProtectedRoute>
                       <AddNewUser />
