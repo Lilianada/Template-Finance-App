@@ -32,6 +32,7 @@ import BondCards from "./pages/RegisteredUsers/ClientAccountOverview/ClientBonds
 import Ipos from "./pages/Ipos";
 import AddIpos from "./pages/Ipos/Add";
 import EditIpos from "./pages/Ipos/Edit";
+import RequestsTable from "./pages/UsersRequests";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -216,7 +217,14 @@ function App() {
                   }
                 />
                
-
+               <Route
+                  path="user_requests"
+                  element={
+                    <ProtectedRoute>
+                      <RequestsTable />
+                    </ProtectedRoute>
+                  }
+                />
               </Route>
               <Route path="/" index element={<Login />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />

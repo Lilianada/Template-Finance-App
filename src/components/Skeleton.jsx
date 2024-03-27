@@ -3,9 +3,6 @@ import {
   Bars3Icon,
   BanknotesIcon,
   CalendarIcon,
-  // ChartPieIcon,
-  // ChatBubbleLeftRightIcon,
-  // DocumentDuplicateIcon,
   FolderIcon,
   HomeIcon,
   UsersIcon,
@@ -73,7 +70,7 @@ const navigation = [
 ];
 
 const requests = [
-  { id: 1, name: "Users Request", to: "#", initial: "U", current: false },
+  { id: 1, name: "Users Request", to: "/dashboard/user_requests", initial: "U", current: false },
   { id: 1, name: "Bonds Request", to: "#", initial: "B", current: false },
   { id: 2, name: "Ipos Request", to: "#", initial: "I", current: false },
   { id: 3, name: "Fixed Term Requests", to: "#", initial: "F", current: false, },

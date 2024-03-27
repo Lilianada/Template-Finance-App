@@ -104,7 +104,7 @@ const updatedRequests = requests.map((item) => ({
                       {updatedRequests.map((item) => (
                         <li key={item.name}>
                           <Link
-                            to={item.href}
+                            to={item.to}
                             className={classNames(
                               item.current
                                 ? 'bg-gray-800 text-white'
