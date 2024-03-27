@@ -13,7 +13,7 @@ export default function Ipos() {
 
   useEffect(() => {
     fetchIpos();
-  });
+  }, []);
 
   const fetchIpos = async () => {
     try {

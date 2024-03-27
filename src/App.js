@@ -33,6 +33,7 @@ import Ipos from "./pages/Ipos";
 import AddIpos from "./pages/Ipos/Add";
 import EditIpos from "./pages/Ipos/Edit";
 import RequestsTable from "./pages/UsersRequests";
+import ClientIposPage from "./pages/RegisteredUsers/ClientAccountOverview/ClientIpos";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -164,6 +165,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <EditBondsDetails />
+                    </ProtectedRoute>
+                  }
+                />
+                 <Route
+                  path="registered_users/view/view_ipos_details/:userId"
+                  element={
+                    <ProtectedRoute>
+                      <ClientIposPage />
                     </ProtectedRoute>
                   }
                 />

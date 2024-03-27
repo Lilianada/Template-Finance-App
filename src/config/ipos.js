@@ -140,7 +140,7 @@ export async function getUserIpos(uid) {
   };
   
   // 3. Delete IPO from user's ipos sub-collection
-  export const deleteIposFromUserCollection = async (uid, requestId) => {
+  export const deleteUserIpo = async (uid, requestId) => {
     const requestRef = doc(db, USERS_COLLECTION, uid, IPOS_COLLECTION, requestId);
     await deleteDoc(requestRef);
   };
