@@ -30,6 +30,7 @@ import EditBondsDetails from "./pages/RegisteredUsers/ClientAccountOverview/Clie
 import AddUserBonds from "./pages/RegisteredUsers/ClientAccountOverview/ClientBonds/Add";
 import BondCards from "./pages/RegisteredUsers/ClientAccountOverview/ClientBonds/BondCards";
 import Ipos from "./pages/Ipos";
+import AddIpos from "./pages/Ipos/Add";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -197,7 +198,7 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-                {/* <Route
+                <Route
                   path="ipos/add"
                   element={
                     <ProtectedRoute>
@@ -205,7 +206,7 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-                <Route
+                {/* <Route
                   path="ipos/edit/:iposId"
                   element={
                     <ProtectedRoute>
