@@ -119,7 +119,7 @@ export default function AddIpos() {
       customModal({
         showModal,
         title: "Success",
-        text: "You have successfully added a new Ipos.",
+        text: "You have successfully added a new IPOS.",
         showConfirmButton: false,
         icon: CheckIcon,
         iconBgColor: "bg-green-100",
@@ -133,7 +133,7 @@ export default function AddIpos() {
       customModal({
         showModal,
         title: "Error!",
-        text: "There was an error adding Ipos. Please try again.",
+        text: "There was an error adding IPOS. Please try again.",
         showConfirmButton: false,
         icon: ExclamationTriangleIcon,
         iconBgColor: "bg-red-100",
@@ -165,10 +165,10 @@ export default function AddIpos() {
       <div className="space-y-12">
         <div className="border-b border-gray-900/10 pb-12 text-left">
           <h2 className="text-base font-semibold leading-7 text-gray-900">
-            Add New Bond
+            Add New IPOS
           </h2>
           <p className="mt-1 text-sm leading-6 text-gray-600">
-            Confirm the details before submitting the bond.
+            Confirm the details before submitting the IPOS.
           </p>
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">

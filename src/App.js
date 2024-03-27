@@ -31,6 +31,7 @@ import AddUserBonds from "./pages/RegisteredUsers/ClientAccountOverview/ClientBo
 import BondCards from "./pages/RegisteredUsers/ClientAccountOverview/ClientBonds/BondCards";
 import Ipos from "./pages/Ipos";
 import AddIpos from "./pages/Ipos/Add";
+import EditIpos from "./pages/Ipos/Edit";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -206,14 +207,14 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-                {/* <Route
+                <Route
                   path="ipos/edit/:iposId"
                   element={
                     <ProtectedRoute>
                       <EditIpos />
                     </ProtectedRoute>
                   }
-                /> */}
+                />
                
 
               </Route>
