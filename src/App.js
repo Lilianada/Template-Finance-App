@@ -34,6 +34,7 @@ import AddIpos from "./pages/Ipos/Add";
 import EditIpos from "./pages/Ipos/Edit";
 import RequestsTable from "./pages/UsersRequests";
 import ClientIposPage from "./pages/RegisteredUsers/ClientAccountOverview/ClientIpos";
+import IposCards from "./pages/RegisteredUsers/ClientAccountOverview/ClientIpos/IposCards";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -173,6 +174,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <ClientIposPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="registered_users/view/view_ipos/:userId"
+                  element={
+                    <ProtectedRoute>
+                      <IposCards />
                     </ProtectedRoute>
                   }
                 />

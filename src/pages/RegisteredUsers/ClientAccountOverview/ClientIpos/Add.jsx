@@ -75,7 +75,6 @@ export default function AddUserIpos({ setOpen, open, setIpos, ipos, userId}) {
     setNumberOfShares(isNaN(value) ? 0 : value);
   };
 
-  const totalCost = numberOfShares * (ipos.sharePrice || 0);
 
   const handleChange = (event) => {
     const { name, value } = event.target;

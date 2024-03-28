@@ -65,6 +65,7 @@ export default function Cards({
         buttonBgColor: "bg-green-600",
         timer: 2000,
       });
+      refreshIpos();
       setOpen(false);
     } catch (error) {
       customModal({
