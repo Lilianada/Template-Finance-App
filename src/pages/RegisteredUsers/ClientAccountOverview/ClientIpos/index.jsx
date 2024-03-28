@@ -37,8 +37,7 @@ export default function ClientIposPage() {
     setSelectedId(Ipos);
   };
 
-  const handleDelete = (id) => {
-    setSelectedId(id);
+  const handleDelete = () => {
     customModal({
       showModal,
       title: "Are you sure?",
@@ -80,8 +79,7 @@ export default function ClientIposPage() {
         timer: 2000,
         onClose: hideModal,
       });
-
-      window.history.back();
+      fetchIpos();
     } catch (error) {
       console.error("Failed to delete user:", error);
       customModal({
@@ -192,7 +190,7 @@ export default function ClientIposPage() {
                         {item.type}
                       </dd>
                       <dd className="mt-1 truncate text-gray-500 lg:hidden">
-                        $ {item.sharePrice}
+                        $ {formatNumber(item.sharePrice)}
                       </dd>
                       <dt className="sr-only lg:hidden">Purchase Date</dt>
                       <dd className="mt-1 truncate text-gray-700 lg:hidden">
@@ -210,7 +208,7 @@ export default function ClientIposPage() {
                     $ {formatNumber(item.sharePrice)}
                   </td>
                   <td className=" px-3 py-4 text-sm text-gray-500 sm:table-cell">
-                    $ {formatNumber(item.numberOfShares) * item.sharePrice}
+                    $ {formatNumber(item.numberOfShares * item.sharePrice)}
                   </td>
                   <td className="hidden px-3 py-4 text-sm text-gray-500  lg:table-cell">
                     {item.date}
@@ -225,7 +223,7 @@ export default function ClientIposPage() {
                   </td>
                   <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                     <button
-                      onClick={() => handleDelete(item.id)}
+                      onClick={() => {setSelectedId(item.id); handleDelete();}}
                       className="text-red-600 hover:text-red-900"
                     >
                       Delete
