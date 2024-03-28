@@ -17,7 +17,7 @@ import {
 export default function RequestsTable() {
   const [requests, setRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { showModal, hideeModal } = useModal();
+  const { showModal, hideModal } = useModal();
   const navigate = useNavigate();
 
   const fetchUsersRequest = async () => {
@@ -40,7 +40,6 @@ export default function RequestsTable() {
     setIsLoading(true);
     try {
       await handleUserApproval(db, auth, userId, requestData);
-      // Update UI based on the response
       fetchUsersRequest(db);
       customModal({
         showModal,
@@ -52,7 +51,7 @@ export default function RequestsTable() {
         iconBgColor: "bg-green-100",
         iconTextColor: "text-green-600",
         buttonBgColor: "bg-green-600",
-        onClose: hideeModal,
+        onClose: hideModal,
       });
     } catch (error) {
       // Handle any errors
@@ -67,7 +66,7 @@ export default function RequestsTable() {
         iconBgColor: "bg-red-100",
         iconTextColor: "text-red-600",
         buttonBgColor: "bg-red-600",
-        onClose: hideeModal,
+        onClose: hideModal,
       });
     } finally {
       setIsLoading(false);
@@ -90,7 +89,7 @@ export default function RequestsTable() {
         iconBgColor: "bg-green-100",
         iconTextColor: "text-green-600",
         buttonBgColor: "bg-green-600",
-        onClose: hideeModal,
+        onClose: hideModal,
       });
       fetchUsersRequest(db);
     } catch (error) {
@@ -106,7 +105,7 @@ export default function RequestsTable() {
         iconBgColor: "bg-red-100",
         iconTextColor: "text-red-600",
         buttonBgColor: "bg-red-600",
-        onClose: hideeModal,
+        onClose: hideModal,
       });
     } finally {
       setIsLoading(false);
@@ -116,6 +115,13 @@ export default function RequestsTable() {
   const handleAddUser = () => {
     navigate(`/dashboard/add_new_user`);
   };
+
+
+  if (isLoading) {
+    <div className="mt-8">
+      <DotLoader />
+    </div>
+}
 
   return (
     <div className="lg:px-4">
@@ -139,12 +145,12 @@ export default function RequestsTable() {
           </button>
         </div>
       </div>
-      {isLoading ? (
-        <div className="mt-8">
-          <DotLoader />
-        </div>
+        {!requests || requests.length === 0 ? (
+          <div className="w-full grid place-items-center rounded-xl border border-gray-200 p-4 mt-6">
+            <h5 className="text-gray-400 text-lg ">NO REQUESTS FOUND.</h5>
+          </div>
       ) : (
-        
+
         <div className="-mx-4 mt-8 sm:-mx-0">
           <table className="min-w-full divide-y divide-gray-300 text-left">
             <thead>

@@ -18,7 +18,6 @@ export default function IposCards() {
         setIsLoading(true);
         const fetchedIpos = await getAllIpos();
         setIpos(fetchedIpos);
-        console.log('fetched ipos', fetchedIpos)
       } catch (error) {
         console.error("Error fetching Ipos:", error);
       } finally {
@@ -58,23 +57,23 @@ export default function IposCards() {
                   <PlusIcon className="h-5 w-5" aria-hidden="true" />
                 </button>
                 <img
-                  src={ipos.imagePreview}
-                  alt={ipos.name}
+                  src={ipo.imagePreview}
+                  alt={ipo.name}
                   className="h-12 w-12 flex-none rounded-lg bg-white ring-1 ring-gray-900/10 object-contain"
                 />
                 <div className="text-sm font-medium leading-6 text-gray-900 pt-2">
-                  {ipos.name}
+                  {ipo.name}
                 </div>
               </div>
               <dl className="divide-y divide-gray-100 px-4 py-4 text-sm leading-6">
                 <div className="flex justify-between gap-x-4 py-3">
-                  <dt className="text-gray-500 truncate">{ipos.description}</dt>
+                  <dt className="text-gray-500 truncate">{ipo.description}</dt>
                 </div>
                 <div className="flex justify-between gap-x-4 py-3">
                   <dt className="text-gray-500">Expected IPO Date</dt>
                   <dd className="flex items-start gap-x-2">
                     <div className="font-medium text-gray-900">
-                      {ipos.expectedDate}
+                      {ipo.expectedDate}
                     </div>
                   </dd>
                 </div>
@@ -82,7 +81,7 @@ export default function IposCards() {
                   <dt className="text-gray-500">Pre-IPO Share Price</dt>
                   <dd className="flex items-start gap-x-2">
                     <div className="font-medium text-gray-900">
-                      {ipos.preSharePrice}
+                      {ipo.preSharePrice}
                     </div>
                   </dd>
                 </div>
@@ -90,7 +89,7 @@ export default function IposCards() {
                   <dt className="text-gray-500">Minimum Investment</dt>
                   <dd className="flex items-start gap-x-2">
                     <div className="font-medium text-gray-900">
-                      {ipos.minInvestment}
+                      {ipo.minInvestment}
                     </div>
                   </dd>
                 </div>
@@ -98,7 +97,7 @@ export default function IposCards() {
                   <dt className="text-gray-500">Pre Allocation</dt>
                   <dd className="flex items-start gap-x-2">
                     <div className="font-medium text-gray-900">
-                      {ipos.preAllocation}
+                      {ipo.preAllocation}
                     </div>
                   </dd>
                 </div>
@@ -107,7 +106,7 @@ export default function IposCards() {
                   <dt className="text-gray-500">Share Price</dt>
                   <dd className="flex items-start gap-x-2">
                     <div className="font-medium text-gray-900">
-                      {ipos.sharePrice}
+                      {ipo.sharePrice}
                     </div>
                   </dd>
                 </div>
@@ -115,13 +114,13 @@ export default function IposCards() {
             </li>
           ))
         )}
-        {/* <AddUserIpos
+        <AddUserIpos
           ipo={selectedIpo}
           setIpo={setSelectedIpo}
           open={open}
           setOpen={setOpen}
           userId={userId}
-        /> */}
+        />
       </ul>
     </div>
   );
