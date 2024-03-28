@@ -10,11 +10,12 @@ import {
 } from "@heroicons/react/24/outline";
 import CurrencyInput from "react-currency-input-field";
 import { Dialog, Transition } from "@headlessui/react";
-import { addIposToUserCollection, deleteUserIpo } from "../../../../config/ipos";
+import { addIposToUserCollection, deleteUserIpo, updateIposToUserCollection } from "../../../../config/ipos";
 
 export default function EditUserIpos({ setOpen, open, ipo, userId, refreshDetails }) {
     const [isLoading, setIsLoading] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [purschaseDate, setPurchaseDate] = useState(ipo.date)
     const [numberOfShares, setNumberOfShares] = useState(0);
     const { showModal, hideModal }  = useModal();
   
@@ -34,11 +35,11 @@ export default function EditUserIpos({ setOpen, open, ipo, userId, refreshDetail
       refreshDetails();
       setIsLoading(true);
       try {
-       await addIposToUserCollection(userId, investmentData);
+       await updateIposToUserCollection(userId, ipo.id, investmentData);
         customModal({
             showModal,
           title: "Success!",
-          text: `You have successfully made an investment on behalf of this user.`,
+          text: `You have successfully updated thus investment on behalf of this user.`,
           showConfirmButton: false,
           icon: CheckIcon,
           iconBgColor: "bg-green-100",
@@ -252,7 +253,8 @@ export default function EditUserIpos({ setOpen, open, ipo, userId, refreshDetail
                         type="date"
                         name="date"
                         id="date"
-                        value={ipo.date}
+                        value={purschaseDate}
+                        onChange={(e) => setPurchaseDate(e.target.value)}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     </div>
@@ -260,6 +262,17 @@ export default function EditUserIpos({ setOpen, open, ipo, userId, refreshDetail
   
                   {/* Form Actions */}
                   <div className="mt-8 flex space-x-6 justify-end">
+                  <button
+                    type="submit"
+                    className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+                  >
+                    {isLoading ? (
+                       <div className="flex w-full justify-center align-middle gap-2">
+                       <span>Submitting</span>
+                       <DotLoader />
+                     </div>
+                    ) : "Submit"}
+                  </button>
                   <button
                     type="button"
                     className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
@@ -271,17 +284,6 @@ export default function EditUserIpos({ setOpen, open, ipo, userId, refreshDetail
                        <DotLoader />
                      </div>
                     ) : "Delete"}
-                  </button>
-                  <button
-                    type="submit"
-                    className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
-                  >
-                    {isLoading ? (
-                       <div className="flex w-full justify-center align-middle gap-2">
-                       <span>Submitting</span>
-                       <DotLoader />
-                     </div>
-                    ) : "Submit"}
                   </button>
                 </div>
                 </div>
