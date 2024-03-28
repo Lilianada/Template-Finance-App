@@ -18,7 +18,7 @@ export default function EditBondsDetails ({ setOpen, open, bond, setBond, userId
   const [isDeleting, setIsDeleting] = useState(false);
   const { showModal, hideModal } = useModal();
 
-  const handleBuyBonds = async (event) => {
+  const handleUpdateBonds = async (event) => {
     event.preventDefault();
 
     const minimumInvestmentAmount = bond.minimumAmount;
@@ -206,7 +206,7 @@ export default function EditBondsDetails ({ setOpen, open, bond, setBond, userId
 
               <form
                 className="text-left px-4 pt-10 pb-4"
-                onSubmit={handleBuyBonds}
+                onSubmit={handleUpdateBonds}
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="space-y-6">

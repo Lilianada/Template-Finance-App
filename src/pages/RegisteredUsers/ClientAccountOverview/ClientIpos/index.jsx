@@ -9,6 +9,7 @@ import {
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 import { formatNumber } from "../../../../config/utils";
+import EditUserIpos from "./Edit";
 
 export default function ClientIposPage() {
   const { showModal, hideModal } = useModal();
@@ -235,14 +236,14 @@ export default function ClientIposPage() {
             </tbody>
           </table>
         )}
-        {/* <EditBondsDetails
+        <EditUserIpos
         userId={userId}
-        bond={selectedId}
-        setBond={setSelectedId}
+        ipo={selectedId}
+        setipo={setSelectedId}
         open={open}
         setOpen={setOpen}
-        refreshDetails={fetchBonds}
-      /> */}
+        refreshDetails={fetchIpos}
+      />
       </div>
     </div>
   );
