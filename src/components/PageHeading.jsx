@@ -26,7 +26,7 @@ export default function PageHeading({title, placeholder, onclick}) {
           {title}
         </Link>
       </div>
-      <div className="mt-3 sm:ml-4 sm:mt-0">
+      {/* <div className="mt-3 sm:ml-4 sm:mt-0">
         <label htmlFor="mobile-search-candidate" className="sr-only">
           Search
         </label>
@@ -65,7 +65,7 @@ export default function PageHeading({title, placeholder, onclick}) {
             <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
           </button>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

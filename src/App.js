@@ -35,6 +35,7 @@ import EditIpos from "./pages/Ipos/Edit";
 import RequestsTable from "./pages/UsersRequests";
 import ClientIposPage from "./pages/RegisteredUsers/ClientAccountOverview/ClientIpos";
 import IposCards from "./pages/RegisteredUsers/ClientAccountOverview/ClientIpos/IposCards";
+import FixedTerms from "./pages/FixedTerm";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -137,7 +138,7 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-                 <Route
+                <Route
                   path="registered_users/view/view_bonds_details/:userId"
                   element={
                     <ProtectedRoute>
@@ -145,7 +146,7 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-                 <Route
+                <Route
                   path="registered_users/view/view_bonds/:userId"
                   element={
                     <ProtectedRoute>
@@ -153,15 +154,15 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-                  <Route
-                    path="registered_users/view/add_user_bond/:userId"
-                    element={
-                      <ProtectedRoute>
-                        <AddUserBonds />
-                      </ProtectedRoute>
-                    }
-                  />
-                 <Route
+                <Route
+                  path="registered_users/view/add_user_bond/:userId"
+                  element={
+                    <ProtectedRoute>
+                      <AddUserBonds />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
                   path="registered_users/view/edit_user_bond/:userId"
                   element={
                     <ProtectedRoute>
@@ -169,7 +170,7 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-                 <Route
+                <Route
                   path="registered_users/view/view_ipos_details/:userId"
                   element={
                     <ProtectedRoute>
@@ -209,7 +210,6 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-               
                 <Route
                   path="ipos"
                   element={
@@ -234,8 +234,16 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-               
-               <Route
+                <Route
+                  path="fixed_term_deposits"
+                  element={
+                    <ProtectedRoute>
+                      <FixedTerms />
+                    </ProtectedRoute>
+                  }
+                />
+
+                <Route
                   path="user_requests"
                   element={
                     <ProtectedRoute>
