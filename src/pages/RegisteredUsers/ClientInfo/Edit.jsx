@@ -65,7 +65,6 @@ export default function Edit() {
     try {
       const usersData = await getUser(editUser.uid);
       setFormData(...usersData);
-      console.log("usersData", usersData);
     } catch (error) {
       console.error("Error fetching users:", error);
     }

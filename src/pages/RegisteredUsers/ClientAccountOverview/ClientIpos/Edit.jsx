@@ -111,6 +111,7 @@ export default function EditUserIpos({ setOpen, open, ipo, userId, refreshDetail
             buttonBgColor: "bg-green-600",
             timer: 2000,
           });
+          refreshDetails();
           setOpen(false);
         } catch (error) {
           customModal({

@@ -219,7 +219,7 @@ export default function ClientIposPage() {
                       onClick={() => handleEdit(item)}
                       className="text-indigo-600 hover:text-indigo-900"
                     >
-                      Edit<span className="sr-only">, {item.issuerName}</span>
+                      Edit<span className="sr-only">, {item.name}</span>
                     </button>
                   </td>
                   <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
@@ -228,7 +228,7 @@ export default function ClientIposPage() {
                       className="text-red-600 hover:text-red-900"
                     >
                       Delete
-                      <span className="sr-only">, {item.issuerName}</span>
+                      <span className="sr-only">, {item.name}</span>
                     </button>
                   </td>
                 </tr>
