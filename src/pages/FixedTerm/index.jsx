@@ -66,7 +66,7 @@ export default function FixedTerms() {
         sort={true}
       />
       <Cards
-        terms={terms}
+        fixedTerms={terms}
         handleEdit={handleEdit}
         isLoading={isLoading}
         handleDelete={handleDelete}
