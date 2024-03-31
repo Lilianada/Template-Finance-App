@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { deleteTerm, getAllTerms } from '../../config/terms';
 import PageHeading from '../../components/PageHeading';
+import { useModal } from '../../context/ModalContext';
+import { CheckIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import Cards from './Cards';
+import { customModal } from '../../config/modalUtils';
 
 export default function FixedTerms() {
     const [terms, setTerms] = useState([]);
@@ -11,6 +14,7 @@ export default function FixedTerms() {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedTermId, setSelectedTermId] = useState(null);
     const navigate = useNavigate();
+    const { showModal } = useModal();
     
   const fetchTerms = async () => {
     try {
@@ -46,16 +50,35 @@ export default function FixedTerms() {
     setIsLoading(true);
     try {
       await deleteTerm(selectedTermId);
+      customModal({
+        showModal,
+        title: "Success",
+        text: "You have successfully deleted this term.",
+        showConfirmButton: false,
+        icon: CheckIcon,
+        iconBgColor: "bg-green-100",
+        iconTextColor: "text-green-600",
+        buttonBgColor: "bg-green-600",
+        timer: 2000,
+      });
       setTerms((terms) => terms.filter((term) => term.id !== selectedTermId));
     } catch (error) {
-      console.error("Failed to delete Bond:", error);
+      customModal({
+        showModal,
+        title: "Error!",
+        text: "There was an error deleting this term. Please try again.",
+        showConfirmButton: false,
+        icon: ExclamationTriangleIcon,
+        iconBgColor: "bg-red-100",
+        iconTextColor: "text-red-600",
+        buttonBgColor: "bg-red-600",
+        timer: 2000,
+      });
+      console.error(error);
     } finally {
-      setIsDeleteModalOpen(false);
       setIsLoading(false);
-      setSelectedTerm(null); 
     }
   };
-
   return (
     <div>
       <PageHeading

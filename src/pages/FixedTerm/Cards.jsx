@@ -2,18 +2,16 @@ import React, { Fragment, useState } from 'react';
 import { useModal } from '../../context/ModalContext';
 import { PencilIcon, CheckIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { customModal } from '../../config/modalUtils';
-import { deleteIpos, deleteTerm } from '../../config/terms';
 import LoadingScreen from '../../components/LoadingScreen';
 import { Menu, Transition } from '@headlessui/react';
-import { Link } from 'react-router-dom';
 import { formatNumber } from '../../config/utils';
+import { deleteTerm } from '../../config/terms';
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
 }
 
 export default function Cards({fixedTerms, isLoading, handleEdit, refreshTerms}) {
-    console.log(fixedTerms)
     const [open, setOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const { showModal, hideModal} = useModal();
