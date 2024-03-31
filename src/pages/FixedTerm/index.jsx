@@ -79,6 +79,7 @@ export default function FixedTerms() {
       setIsLoading(false);
     }
   };
+  
   return (
     <div>
       <PageHeading

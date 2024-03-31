@@ -8,38 +8,39 @@ const menus = [
     href: '/dashboard/registered_users'
   },
   {
+    title: 'Transactions',
+    icon: <EnvelopeIcon className=' w-16' />,
+    href: '/dashboard/transactions'
+  },
+  {
+    title: 'Cash Deposits',
+    icon: <EnvelopeIcon className=' w-16' />,
+    href: '/dashboard/cash_deposits'
+  },
+  {
     title: 'Bonds',
     icon: <EnvelopeIcon className=' w-16' />,
     href: '/dashboard/bonds'
   },
   {
-    title: 'Regional Paradigm Technician',
+    title: 'Fixed Terms',
     icon: <EnvelopeIcon className=' w-16'/>,
+    href: '/dashboard/fixed_terms_deposit'
   },
   {
-    title: 'Regional Paradigm Technician',
+    title: 'IPOs',
     icon: <EnvelopeIcon className=' w-16' />,
-    href: '/lol'
+    href: '/dashboard/ipos'
   },
   {
-    title: 'Regional Paradigm Technician',
+    title: 'Stocks',
     icon: <EnvelopeIcon className=' w-16' />,
-    href: '/lol'
+    href: '/dashboard/stocks'
   },
   {
-    title: 'Regional Paradigm Technician',
+    title: 'Settings',
     icon: <EnvelopeIcon className=' w-16' />,
-    href: '/lol'
-  },
-  {
-    title: 'Regional Paradigm Technician',
-    icon: <EnvelopeIcon className=' w-16' />,
-    href: '/lol'
-  },
-  {
-    title: 'Regional Paradigm Technician',
-    icon: <EnvelopeIcon className=' w-16' />,
-    href: '/lol'
+    href: '/dashboard/settings'
   },
 ]
 

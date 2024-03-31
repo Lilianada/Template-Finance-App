@@ -101,7 +101,7 @@ export default function AddFixedTerm() {
         term: "",
         index: 0,
       });
-      // window.
+      window.history.back();
     } catch (error) {
       console.error(error);
       customModal({
