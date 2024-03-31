@@ -6,6 +6,7 @@ import { deleteIpos, deleteTerm } from '../../config/terms';
 import LoadingScreen from '../../components/LoadingScreen';
 import { Menu, Transition } from '@headlessui/react';
 import { Link } from 'react-router-dom';
+import { formatNumber } from '../../config/utils';
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -148,81 +149,39 @@ export default function Cards({fixedTerms, isLoading, handleEdit, refreshTerms})
               </Menu>
               <img
                 src={term.imagePreview}
-                alt={term.name}
+                alt={term.bankName}
                 className="h-12 w-12 flex-none rounded-lg bg-white ring-1 ring-gray-900/10 object-contain"
               />
               <div className="text-sm font-medium leading-6 text-gray-900 pt-2">
-                {term.name}
+                {term.bankName}
               </div>
             </div>
-            {/* <dl className="divide-y divide-gray-100 px-4 py-4 text-sm leading-6">
+            <dl className="divide-y divide-gray-100 px-4 py-4 text-sm leading-6">
               <div className="flex justify-between gap-x-4 py-3">
-                <dt className="text-gray-500">Type</dt>
+                <dt className="text-gray-500">Term</dt>
                 <dd className="flex items-start gap-x-2">
-                  <div className="font-medium text-gray-900">{term.type}</div>
+                  <div className="font-medium text-gray-900">{term.term}</div>
                 </dd>
               </div>
               <div className="flex justify-between gap-x-4 py-3">
-                <dt className="text-gray-500">Company Website</dt>
+                <dt className="text-gray-500">Principal Amount</dt>
                 <dd className="flex items-start gap-x-2">
-                  <Link
-                    to={term.companyWebsite}
-                    className="font-medium text-indigo-700 cursor-pointer hover:text-indigo-400 rounded-md py-1 px-2 text-xs ring-1 ring-inset"
-                  >
-                    URL
-                  </Link>
-                </dd>
-              </div>
-              <div className="flex justify-between gap-x-4 py-3">
-                <dt className="text-gray-500">Sector</dt>
-                <dd className="flex items-start gap-x-2">
-                  <div className="font-medium text-gray-900">{term.sector}</div>
-                </dd>
-              </div>
-              <div className="flex justify-between gap-x-4 py-3">
-                <dt className="text-gray-500">Maturity Date</dt>
-                <dd className="flex items-start gap-x-2">
-                  <div className="font-medium text-gray-900">
-                    {term.maturityDate}
-                  </div>
-                </dd>
-              </div>
-              <div className="flex justify-between gap-x-4 py-3">
-                <dt className="text-gray-500">Minimum Amount</dt>
-                <dd className="flex items-start gap-x-2">
-                  <div className="font-medium text-gray-900">
-                    ${formatNumber(term.minimumAmount)}
-                  </div>
-                </dd>
-              </div>
-              <div className="flex justify-between gap-x-4 py-3">
-                <dt className="text-gray-500">ISIN</dt>
-                <dd className="flex items-start gap-x-2">
-                  <div className="font-medium text-gray-900">{term.isin}</div>
-                </dd>
-              </div>
-
-              <div className="flex justify-between gap-x-4 py-3">
-                <dt className="text-gray-500">Coupon Frequency</dt>
-                <dd className="flex items-start gap-x-2">
-                  <div className="font-medium text-gray-900">
-                    {term.couponFrequency}
-                  </div>
+                  <div className="font-medium text-gray-900">{formatNumber(term.minAmount)}</div>
                 </dd>
               </div>
               <div className="col-span-1 flex shadow-sm">
                 <div className="flex flex-1 items-center justify-between rounded-md truncate  bg-black mt-6">
                   <div className="flex-1 truncate px-4 py-2 text-sm">
                     <p className="text-white font-bold text-xl">
-                      {term.couponRate}%
+                      {term.interestRate}%
                     </p>
                     <p className="font-medium text-white hover:text-white">
-                      Coupon
+                      Fixed Term Interest
                     </p>
                   </div>
                 </div>
               </div>
-            </dl> */}
+            </dl>
           </li>
         ))
       )}
