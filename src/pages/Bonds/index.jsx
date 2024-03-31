@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PageHeading from "../../components/PageHeading";
-import { deleteBond, getAllBonds } from "../../config/bonds";
+import { getAllBonds } from "../../config/bonds";
 import Cards from "./Cards";
 
 export default function Bonds() {
