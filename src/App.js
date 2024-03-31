@@ -37,6 +37,7 @@ import ClientIposPage from "./pages/RegisteredUsers/ClientAccountOverview/Client
 import IposCards from "./pages/RegisteredUsers/ClientAccountOverview/ClientIpos/IposCards";
 import FixedTerms from "./pages/FixedTerm";
 import AddFixedTerm from "./pages/FixedTerm/Add";
+import EditFixedTerm from "./pages/FixedTerm/Edit";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -248,6 +249,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <AddFixedTerm />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="fixed_term_deposits/edit/:termId"
+                  element={
+                    <ProtectedRoute>
+                      <EditFixedTerm />
                     </ProtectedRoute>
                   }
                 />

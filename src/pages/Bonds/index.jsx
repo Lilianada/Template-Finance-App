@@ -7,8 +7,6 @@ import Cards from "./Cards";
 export default function Bonds() {
   const [bonds, setBonds] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedBondId, setSelectedBondId] = useState(null);
   const navigate = useNavigate();
 
   //Function to fetch bonds
@@ -34,25 +32,6 @@ export default function Bonds() {
     });
   };
 
-  const handleDelete = (bondId) => {
-    setSelectedBondId(bondId);
-    setIsDeleteModalOpen(true);
-  };
-
-  const confirmDelete = async () => {
-    setIsLoading(true);
-    try {
-      await deleteBond(selectedBondId);
-      setBonds((bonds) => bonds.filter((bond) => bond.id !== selectedBondId));
-    } catch (error) {
-      console.error("Failed to delete Bond:", error);
-    } finally {
-      setIsDeleteModalOpen(false);
-      setIsLoading(false);
-      setSelectedBondId(null); // Reset the selected bond ID
-    }
-  };
-
   return (
     <div>
       <PageHeading
@@ -66,9 +45,6 @@ export default function Bonds() {
         bonds={bonds}
         handleEdit={handleEdit}
         isLoading={isLoading}
-        handleDelete={handleDelete}
-        confirmDelete={confirmDelete}
-        isDeleteModalOpen={isDeleteModalOpen}
         refreshBonds={fetchBonds}
       />
     </div>

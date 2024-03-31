@@ -125,10 +125,10 @@ export default function AddFixedTerm() {
       <div className="space-y-12">
         <div className="border-b border-gray-900/10 pb-12 text-left">
           <h2 className="text-base font-semibold leading-7 text-gray-900">
-            Add New IPOS
+            Add New IPOs
           </h2>
           <p className="mt-1 text-sm leading-6 text-gray-600">
-            Confirm the details before submitting the IPOS.
+            Confirm the details before submitting the IPOs.
           </p>
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
