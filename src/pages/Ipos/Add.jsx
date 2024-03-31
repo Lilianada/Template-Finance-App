@@ -326,7 +326,7 @@ export default function AddIpos() {
 
             <div className="sm:col-span-3">
               <label
-                htmlFor="isin"
+                htmlFor="minimumInvestment"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Minimum Investment

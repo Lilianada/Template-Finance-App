@@ -36,7 +36,7 @@ export default function FixedTerms() {
   }, []);
 
   const handleEdit = (term) => {
-    navigate(`/dashboard/terms/edit/${term.id}`, {
+    navigate(`/dashboard/fixed_term_deposits/edit/${term.id}`, {
       state: { termToEdit: term },
     });
   };
@@ -79,12 +79,12 @@ export default function FixedTerms() {
       setIsLoading(false);
     }
   };
-  
+
   return (
     <div>
       <PageHeading
         title="Add new Fixed Term Deposit"
-        onclick="/dashboard/terms/add"
+        onclick="/dashboard/fixed_term_deposits/add"
         placeholder="Search bonds"
         search={true}
         sort={true}
