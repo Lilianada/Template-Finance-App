@@ -15,7 +15,7 @@ import { Dialog, Transition } from "@headlessui/react";
 export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
   const [bondAmount, setBondAmount] = useState(0)
   const [isLoading, setIsLoading] = useState(false);
-  const { showModal, hideModal } = useModal();
+  const { showModal } = useModal();
 
   const handleBuyBonds = async (event) => {
     event.preventDefault();

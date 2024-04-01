@@ -99,7 +99,7 @@ export default function FixedTermCards() {
       <AddUserTerms
         open={open}
         setOpen={setOpen}
-        setFixedTerms={setFixedTerms}
+        setFixedTerms={setSelectedTerm}
         fixedTerm={selectedTerms}
         userId={userId}
       />
