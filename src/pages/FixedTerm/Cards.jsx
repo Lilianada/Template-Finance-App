@@ -46,7 +46,6 @@ export default function Cards({fixedTerms, isLoading, handleEdit, refreshTerms})
     const confirmDelete = async () => {
       setIsDeleting(true);
       try {
-        console.log(selectedTerms)
         await deleteTerm(selectedTerms);
         customModal({
           showModal,
