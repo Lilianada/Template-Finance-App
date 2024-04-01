@@ -185,7 +185,6 @@ export default function ClientIposPage() {
                   <td className="w-2/5 max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0 capitalize">
                     {item.name}
                     <dl className="font-normal lg:hidden">
-                      <dt className="sr-only sm:hidden">Share Price</dt>
                       <dt className="sr-only lg:hidden">Type</dt>
                       <dd className="mt-1 truncate text-gray-700 sm:hidden">
                         {item.type}
@@ -211,7 +210,7 @@ export default function ClientIposPage() {
                   <td className=" px-3 py-4 text-sm text-gray-500 sm:table-cell">
                     $ {formatNumber(item.numberOfShares * item.sharePrice)}
                   </td>
-                  <td className="hidden px-3 py-4 text-sm text-gray-500  lg:table-cell">
+                  <td className="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
                     {item.date}
                   </td>
                   <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
