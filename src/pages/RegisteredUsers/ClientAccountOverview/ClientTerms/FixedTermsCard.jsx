@@ -4,6 +4,7 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 import { formatNumber } from '../../../../config/utils';
 import LoadingScreen from '../../../../components/LoadingScreen';
 import { getAllTerms } from '../../../../config/terms';
+import AddUserTerms from './Add';
 
 
 export default function FixedTermCards() {
@@ -95,6 +96,13 @@ export default function FixedTermCards() {
           </li>
         ))
       )}
+      <AddUserTerms
+        open={open}
+        setOpen={setOpen}
+        setFixedTerms={setFixedTerms}
+        fixedTerm={selectedTerms}
+        userId={userId}
+      />
     </ul>
     </div>
   )
