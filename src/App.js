@@ -38,6 +38,7 @@ import IposCards from "./pages/RegisteredUsers/ClientAccountOverview/ClientIpos/
 import FixedTerms from "./pages/FixedTerm";
 import AddFixedTerm from "./pages/FixedTerm/Add";
 import EditFixedTerm from "./pages/FixedTerm/Edit";
+import FixedTermCards from "./pages/RegisteredUsers/ClientAccountOverview/ClientTerms/FixedTermsCard";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -260,7 +261,14 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-
+<Route
+                  path="registered_users/view/view_fixed_term/:userId"
+                  element={
+                    <ProtectedRoute>
+                      <FixedTermCards />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route
                   path="user_requests"
                   element={

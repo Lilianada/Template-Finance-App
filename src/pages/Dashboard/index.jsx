@@ -4,7 +4,7 @@ import {
   CreditCardIcon,
   BanknotesIcon,
   ChartBarSquareIcon,
-  ArrowTrendingUpIcon,
+  BellIcon,
   CalculatorIcon,
   CircleStackIcon,
 } from "@heroicons/react/24/outline";
@@ -42,9 +42,9 @@ const menus = [
     href: "/dashboard/ipos",
   },
   {
-    title: "Stocks",
-    icon: <ArrowTrendingUpIcon className=" w-12" />,
-    href: "/dashboard/stocks",
+    title: "Notification",
+    icon: <BellIcon className=" w-12" />,
+    href: "/dashboard/notifications",
   },
   {
     title: "Settings",

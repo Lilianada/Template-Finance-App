@@ -89,7 +89,7 @@ export default function Cards({fixedTerms, isLoading, handleEdit, refreshTerms})
       {isLoading && <LoadingScreen />}
       {!fixedTerms || fixedTerms.length === 0 ? (
         <div className="w-full grid place-items-center rounded-xl border border-gray-200 p-4">
-          <h5 className="text-gray-400 text-lg ">NO BONDS FOUND.</h5>
+          <h5 className="text-gray-400 text-lg ">NO FIXED TERM DEPOSITS FOUND.</h5>
         </div>
       ) : (
         sortedTerms.map((term) => (
