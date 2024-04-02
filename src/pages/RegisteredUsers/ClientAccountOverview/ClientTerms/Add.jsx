@@ -7,6 +7,7 @@ import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import DotLoader from "../../../../components/DotLoader";
 import { Dialog, Transition } from "@headlessui/react";
 import CurrencyInput from "react-currency-input-field";
+import { getUser } from "../../../../config/user";
 
 export default function AddUserTerms({ setOpen, open, fixedTerm, userId }) {
   const { showModal } = useModal();
@@ -22,6 +23,7 @@ e.preventDefault()
         console.error("No selected fixed term deposit.");
         return;
       }
+      const user = await getUser(userId);
       const newDeposit = {
         date: getCurrentDate(),
         principalAmount: parseFloat(depositAmount),
@@ -32,6 +34,8 @@ e.preventDefault()
         interestRate: fixedTerm.interestRate,
         type: "Deposit",
         image: fixedTerm.image,
+        userId: userId,
+        userName: user[0].fullName
       };
       console.log(newDeposit)
       await addTermToUserCollection(userId, newDeposit);

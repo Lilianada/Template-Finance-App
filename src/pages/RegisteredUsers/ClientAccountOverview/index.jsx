@@ -156,9 +156,9 @@ export default function AccountOverview({ initialUser }) {
 
     if (bonds) {
       bonds.forEach((bond) => {
-        if (bond && bond.typeOfRequest === "buy") {
+        if (bond && bond.typeOfRequest.trim().toUpperCase() === "BUY") {
           totalAmount += convertToNumber(bond.currentValue);
-        } else if (bond && bond.typeOfRequest === "sell") {
+        } else if (bond && bond.typeOfRequest === "SELL") {
           totalAmount -= convertToNumber(bond.currentValue);
         }
       });
@@ -173,9 +173,9 @@ export default function AccountOverview({ initialUser }) {
 
     if (terms) {
       terms.forEach((term) => {
-        if (term && term.type === "deposit") {
+        if (term && term.type.trim().toUpperCase() === "DEPOSIT") {
           totalAmount += convertToNumber(term.principalAmount);
-        } else if (term && term.type === "withdrawal") {
+        } else if (term && term.type.trim().toUpperCase() === "WITHDRAWAL") {
           totalAmount -= convertToNumber(term.principalAmount);
         }
       });

@@ -11,6 +11,7 @@ import {
 import CurrencyInput from "react-currency-input-field";
 import { addBondUser } from "../../../../config/bonds";
 import { Dialog, Transition } from "@headlessui/react";
+import { getUser } from "../../../../config/user";
 
 export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
   const [bondAmount, setBondAmount] = useState(0);
@@ -26,6 +27,7 @@ export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
     const amountAsNumber = parseFloat(bondAmount);
     const numberOfBondsBought = amountAsNumber / minimumInvestmentAmount;
 
+    const user = await getUser(userId);
     // Create bond data
     const bondData = {
       amountRequested: amountAsNumber,
@@ -43,6 +45,8 @@ export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
       minimumAmount: bond.minimumAmount,
       typeOfRequest: "buy",
       quantity: numberOfBondsBought,
+      userId: userId,
+      userName: user[0].fullName,
     };
     setIsLoading(true);
     try {

@@ -10,6 +10,7 @@ import {
 import CurrencyInput from "react-currency-input-field";
 import { Dialog, Transition } from "@headlessui/react";
 import { addIposToUserCollection } from "../../../../config/ipos";
+import { getUser } from "../../../../config/user";
 
 export default function AddUserIpos({ setOpen, open, ipo, userId }) {
     const [isLoading, setIsLoading] = useState(false);
@@ -18,6 +19,7 @@ export default function AddUserIpos({ setOpen, open, ipo, userId }) {
   
     const handleInvestInIpo = async (e) => {
       e.preventDefault();
+      const user = await getUser(userId);
       const investmentData = {
         logo: ipo.logo,
         name: ipo.name,
@@ -28,10 +30,12 @@ export default function AddUserIpos({ setOpen, open, ipo, userId }) {
         minInvestment: ipo.minInvestment,
         numberOfShares: numberOfShares,
         type: "invest",
+        userId: userId,
+        userName: user[0].fullName,
       };
       setIsLoading(true);
       try {
-        const result = await addIposToUserCollection(userId, investmentData);
+        await addIposToUserCollection(userId, investmentData);
         customModal({
             showModal,
           title: "Success!",
