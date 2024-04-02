@@ -40,6 +40,7 @@ import AddFixedTerm from "./pages/FixedTerm/Add";
 import EditFixedTerm from "./pages/FixedTerm/Edit";
 import FixedTermCards from "./pages/RegisteredUsers/ClientAccountOverview/ClientTerms/FixedTermsCard";
 import ClientTermPage from "./pages/RegisteredUsers/ClientAccountOverview/ClientTerms";
+import ClientStock from "./pages/RegisteredUsers/ClientAccountOverview/ClientStock";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -275,6 +276,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <FixedTermCards />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="registered_users/view/view_stocks_details/:userId"
+                  element={
+                    <ProtectedRoute>
+                      <ClientStock />
                     </ProtectedRoute>
                   }
                 />
