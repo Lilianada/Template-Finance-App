@@ -32,12 +32,11 @@ export default function EditUserIpos({ setOpen, open, ipo, userId, refreshDetail
         numberOfShares: numberOfShares,
         type: "invest",
       };
-      refreshDetails();
       setIsLoading(true);
       try {
-       await updateIposToUserCollection(userId, ipo.id, investmentData);
+        await updateIposToUserCollection(userId, ipo.id, investmentData);
         customModal({
-            showModal,
+          showModal,
           title: "Success!",
           text: `You have successfully updated thus investment on behalf of this user.`,
           showConfirmButton: false,
@@ -48,6 +47,7 @@ export default function EditUserIpos({ setOpen, open, ipo, userId, refreshDetail
           timer: 2000,
         });
         setNumberOfShares(0);
+        refreshDetails();
         setOpen(false);
       } catch (error) {
         customModal({

@@ -13,6 +13,7 @@ import {
   getUserFixedTerm,
 } from "../../../../config/terms";
 import EditUserTerms from "./Edit";
+import DotLoader from "../../../../components/DotLoader";
 
 export default function ClientTermPage() {
   const { showModal, hideModal } = useModal();
@@ -25,20 +26,21 @@ export default function ClientTermPage() {
   const { userId } = useParams();
 
   useEffect(() => {
-    async function fetchTerms() {
-      try {
-        setIsLoading(true);
-        const fetchedTerms = await getUserFixedTerm(userId);
-        setFixedTerms(fetchedTerms);
-        console.log(fixedTerms);
-      } catch (error) {
-        console.error("Error fetching Terms:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
     fetchTerms();
   }, []);
+
+ const fetchTerms = async () => {
+    try {
+      setIsLoading(true);
+      const fetchedTerms = await getUserFixedTerm(userId);
+      setFixedTerms(fetchedTerms);
+      console.log(fixedTerms);
+    } catch (error) {
+      console.error("Error fetching Terms:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   const handleEdit = async (term) => {
     setOpen(true);
@@ -132,6 +134,9 @@ export default function ClientTermPage() {
           </button>
         </div>
       </div>
+      {
+        isLoading && <DotLoader/>
+      }
       <div className="-mx-4 mt-8 sm:-mx-0">
         {fixedTerms === null ? (
           <div className="w-full grid place-items-center rounded-xl border border-gray-200 p-4 mt-12">
@@ -240,14 +245,17 @@ export default function ClientTermPage() {
             </tbody>
           </table>
         )}
+        {
+          open &&
         <EditUserTerms
         userId={userId}
         bond={selectedId}
         setBond={setSelectedId}
         open={open}
         setOpen={setOpen}
-        // refreshDetails={fetchTerms}
+        refreshDetails={fetchTerms}
       />
+        }
       </div>
     </div>
   );

@@ -37,7 +37,6 @@ e.preventDefault()
         userId: userId,
         userName: user[0].fullName
       };
-      console.log(newDeposit)
       await addTermToUserCollection(userId, newDeposit);
       customModal({
         showModal,
