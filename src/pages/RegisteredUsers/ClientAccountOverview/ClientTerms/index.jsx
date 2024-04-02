@@ -12,6 +12,7 @@ import {
   deleteTermFromUserCollection,
   getUserFixedTerm,
 } from "../../../../config/terms";
+import EditUserTerms from "./Edit";
 
 export default function ClientTermPage() {
   const { showModal, hideModal } = useModal();
@@ -239,6 +240,14 @@ export default function ClientTermPage() {
             </tbody>
           </table>
         )}
+        <EditUserTerms
+        userId={userId}
+        bond={selectedId}
+        setBond={setSelectedId}
+        open={open}
+        setOpen={setOpen}
+        // refreshDetails={fetchTerms}
+      />
       </div>
     </div>
   );

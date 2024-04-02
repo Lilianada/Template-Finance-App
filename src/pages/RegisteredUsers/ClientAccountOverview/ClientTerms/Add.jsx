@@ -8,8 +8,7 @@ import DotLoader from '../../../../components/DotLoader';
 import { Dialog, Transition } from '@headlessui/react';
 import CurrencyInput from "react-currency-input-field";
 
-export default function AddUserTerms({ setOpen, open, fixedTerm, setFixedTerm, userId}) {
-  console.log(fixedTerm)
+export default function AddUserTerms({ setOpen, open, fixedTerm, userId}) {
   const {showModal} = useModal();
   const [isLoading, setIsLoading] = useState(false);
   const [depositAmount, setDepositAmount] = useState(0);
@@ -18,7 +17,6 @@ export default function AddUserTerms({ setOpen, open, fixedTerm, setFixedTerm, u
     try {
       setIsLoading(true);
 
-      // Check if there is a selectedFixedTerm before proceeding
       if (!fixedTerm) {
         console.error("No selected fixed term deposit.");
         return;
@@ -35,7 +33,7 @@ export default function AddUserTerms({ setOpen, open, fixedTerm, setFixedTerm, u
         logo: fixedTerm.logo,
       };
 
-      const result = await addTermToUserCollection(userId.userId, newDeposit);
+      await addTermToUserCollection(userId.userId, newDeposit);
       // const depositId = result.id;
       // onInvestSuccess(newDeposit, depositId);
       customModal({
@@ -50,11 +48,13 @@ export default function AddUserTerms({ setOpen, open, fixedTerm, setFixedTerm, u
       timer: 2000,
     });
       setDepositAmount(0);
+      setOpen(false);
       // refreshDetails();
     } catch (error) {
       console.error("Error adding deposit transaction: ", error);
     }
   };
+
 
   return (
     <div>

@@ -13,7 +13,7 @@ import { addBondUser } from "../../../../config/bonds";
 import { Dialog, Transition } from "@headlessui/react";
 
 export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
-  const [bondAmount, setBondAmount] = useState(0)
+  const [bondAmount, setBondAmount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const { showModal } = useModal();
 
@@ -49,19 +49,19 @@ export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
       const result = await addBondUser(userId, bondData);
       //   const bondId = result.id;
       if (result.success) {
-      customModal({
-        showModal,
-        title: "Success",
-        text: "You have successfully made an investment on behalf of this user.",
-        showConfirmButton: false,
-        icon: CheckIcon,
-        iconBgColor: "bg-green-100",
-        iconTextColor: "text-green-600",
-        buttonBgColor: "bg-green-600",
-        timer: 2000,
-      });
-    }
-    setOpen(false);
+        customModal({
+          showModal,
+          title: "Success",
+          text: "You have successfully made an investment on behalf of this user.",
+          showConfirmButton: false,
+          icon: CheckIcon,
+          iconBgColor: "bg-green-100",
+          iconTextColor: "text-green-600",
+          buttonBgColor: "bg-green-600",
+          timer: 2000,
+        });
+      }
+      setOpen(false);
       setBondAmount(0);
     } catch (error) {
       console.error(error.message);
@@ -97,7 +97,7 @@ export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
       }));
     }
   };
-  
+
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
@@ -234,9 +234,7 @@ export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
                             name="purchaseDate"
                             id="purchaseDate"
                             onChange={handleChange}
-                            value={
-                              bond.purchaseDate
-                            }
+                            value={bond.purchaseDate}
                             autoComplete="date"
                             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
@@ -259,11 +257,13 @@ export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
                     className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
                   >
                     {isLoading ? (
-                       <div className="flex w-full justify-center align-middle gap-2">
-                       <span>Sumitting</span>
-                       <DotLoader />
-                     </div>
-                    ) : "Submit"}
+                      <div className="flex w-full justify-center align-middle gap-2">
+                        <span>Sumitting</span>
+                        <DotLoader />
+                      </div>
+                    ) : (
+                      "Submit"
+                    )}
                   </button>
                 </div>
               </form>
