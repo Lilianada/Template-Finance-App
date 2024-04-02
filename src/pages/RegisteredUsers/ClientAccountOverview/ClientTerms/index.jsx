@@ -46,7 +46,8 @@ export default function ClientTermPage() {
     setSelectedId(term);
   };
 
-  const handleDelete = () => {
+  const handleDelete = (id) => {
+    setSelectedId(id)
     customModal({
       showModal,
       title: "Are you sure?",
@@ -74,7 +75,7 @@ export default function ClientTermPage() {
   const confirmDelete = async () => {
     setIsDeleting(true);
     try {
-      await deleteTermFromUserCollection(selectedId);
+      await deleteTermFromUserCollection(userId, selectedId);
       customModal({
         showModal,
         title: "Success",
@@ -87,7 +88,7 @@ export default function ClientTermPage() {
         timer: 2000,
       });
       setOpen(false);
-      //   refreshTerms();
+        fetchTerms();
     } catch (error) {
       customModal({
         showModal,
