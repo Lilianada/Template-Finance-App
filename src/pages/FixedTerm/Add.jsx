@@ -12,7 +12,7 @@ export default function AddFixedTerm() {
     const [isEditing, setIsEditing] = useState(false);
     const { showModal } = useModal();
     const [formData, setFormData] = useState({
-      logo: "",
+      image: "",
       bankName: "",
       minAmount: 0,
       interestRate: 0,
@@ -79,9 +79,9 @@ export default function AddFixedTerm() {
     setIsLoading(true);
     
     try {
-      if (formData.logo) {
-        const imageUrl = await handleUploadImage(formData.logo);
-        formData.logo = imageUrl; // Update the image field with the Firebase Storage URL
+      if (formData.image) {
+        const imageUrl = await handleUploadImage(formData.image);
+        formData.image = imageUrl; // Update the image field with the Firebase Storage URL
       }
       await addNewTerm(formData);
       customModal({
@@ -96,7 +96,7 @@ export default function AddFixedTerm() {
         timer: 2000,
       })
       setFormData({
-        logo: "",
+        image: "",
         bankName: "",
         minAmount: 0,
         interestRate: 0,
@@ -134,7 +134,7 @@ export default function AddFixedTerm() {
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
             <div className="sm:col-span-4">
               <label
-                htmlFor="logo"
+                htmlFor="image"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Company Logo
@@ -154,7 +154,7 @@ export default function AddFixedTerm() {
                 )}
                 <input
                   type="file"
-                  name="logo"
+                  name="image"
                   id="file"
                   className="hidden"
                   onChange={handleChange}

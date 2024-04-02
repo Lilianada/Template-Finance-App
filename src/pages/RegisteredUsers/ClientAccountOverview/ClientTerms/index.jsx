@@ -184,7 +184,7 @@ export default function ClientTermPage() {
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-gray-200 text-left">
               {fixedTerms.map((term) => (
                 <tr key={term.index}>
                  <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none capitalize sm:pl-0">

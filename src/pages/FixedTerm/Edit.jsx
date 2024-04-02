@@ -156,7 +156,7 @@ export default function EditFixedTerm() {
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
             <div className="sm:col-span-4">
               <label
-                htmlFor="logo"
+                htmlFor="image"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Company Logo
