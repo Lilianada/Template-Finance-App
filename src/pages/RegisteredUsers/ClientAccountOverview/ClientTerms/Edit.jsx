@@ -43,14 +43,11 @@ export default function EditUserTerms({
         userId: userId,
         userName: user[0].fullName,
       };
-      console.log(newDeposit);
       await addTermToUserCollection(userId, newDeposit);
       customModal({
         showModal,
         title: "Success!",
-        text: `You have successfully made a deposit of $${formatNumber(
-          depositAmount
-        )} on behalf of this user.`,
+        text: `You have successfully updated this transaction on behalf of this user.`,
         showConfirmButton: false,
         icon: CheckIcon,
         iconBgColor: "bg-green-100",
@@ -122,7 +119,7 @@ export default function EditUserTerms({
                   <div className="space-y-12">
                     <div className="">
                       <h2 className="text-xl font-semibold leading-7 text-gray-900">
-                        Add Fixed Term Deposit Information
+                          Edit Fixed Term Deposit Information
                       </h2>
                       <p className="mt-1 text-sm leading-6 text-gray-600">
                         Amount can not be less than minimum investment amount.

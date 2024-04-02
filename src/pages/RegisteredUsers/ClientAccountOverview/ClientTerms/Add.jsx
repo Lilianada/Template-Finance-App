@@ -15,7 +15,7 @@ export default function AddUserTerms({ setOpen, open, fixedTerm, userId }) {
   const [depositAmount, setDepositAmount] = useState(0);
 
   const onDeposit = async (e) => {
-e.preventDefault()
+    e.preventDefault();
     try {
       setIsLoading(true);
 
@@ -35,7 +35,7 @@ e.preventDefault()
         type: "Deposit",
         image: fixedTerm.image,
         userId: userId,
-        userName: user[0].fullName
+        userName: user[0].fullName,
       };
       await addTermToUserCollection(userId, newDeposit);
       customModal({

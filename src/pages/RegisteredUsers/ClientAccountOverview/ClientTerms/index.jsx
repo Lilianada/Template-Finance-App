@@ -29,18 +29,17 @@ export default function ClientTermPage() {
     fetchTerms();
   }, []);
 
- const fetchTerms = async () => {
+  const fetchTerms = async () => {
     try {
       setIsLoading(true);
       const fetchedTerms = await getUserFixedTerm(userId);
       setFixedTerms(fetchedTerms);
-      console.log(fixedTerms);
     } catch (error) {
       console.error("Error fetching Terms:", error);
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   const handleEdit = async (term) => {
     setOpen(true);
@@ -127,16 +126,16 @@ export default function ClientTermPage() {
             type="button"
             className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             onClick={() =>
-              navigate(`/dashboard/registered_users/view/view_fixed_terms/${userId}`)
+              navigate(
+                `/dashboard/registered_users/view/view_fixed_terms/${userId}`
+              )
             }
           >
             Add Deposits
           </button>
         </div>
       </div>
-      {
-        isLoading && <DotLoader/>
-      }
+      {isLoading && <DotLoader />}
       <div className="-mx-4 mt-8 sm:-mx-0">
         {fixedTerms === null ? (
           <div className="w-full grid place-items-center rounded-xl border border-gray-200 p-4 mt-12">
@@ -145,7 +144,7 @@ export default function ClientTermPage() {
             </h5>
           </div>
         ) : (
-            <table className="min-w-full divide-y divide-gray-300">
+          <table className="min-w-full divide-y divide-gray-300">
             <thead>
               <tr>
                 <th
@@ -190,10 +189,10 @@ export default function ClientTermPage() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200 text-left">
-              {fixedTerms.map((term) => (
-                <tr key={term.index}>
-                 <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none capitalize sm:pl-0">
-                   {term.bankName}
+              {fixedTerms.map((term, index) => (
+                <tr key={index}>
+                  <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none capitalize sm:pl-0">
+                    {term.bankName}
                     <dl className="font-normal lg:hidden">
                       <dt className="sr-only lg:hidden">Type</dt>
                       <dd className="mt-1 text-gray-700 capitalize">
@@ -245,17 +244,16 @@ export default function ClientTermPage() {
             </tbody>
           </table>
         )}
-        {
-          open &&
-        <EditUserTerms
-        userId={userId}
-        bond={selectedId}
-        setBond={setSelectedId}
-        open={open}
-        setOpen={setOpen}
-        refreshDetails={fetchTerms}
-      />
-        }
+        {open && (
+          <EditUserTerms
+            userId={userId}
+            fixedTerm={selectedId}
+            setFixedTerms={setSelectedId}
+            open={open}
+            setOpen={setOpen}
+            refreshDetails={fetchTerms}
+          />
+        )}
       </div>
     </div>
   );

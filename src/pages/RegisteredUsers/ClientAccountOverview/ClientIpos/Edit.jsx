@@ -38,7 +38,7 @@ export default function EditUserIpos({ setOpen, open, ipo, userId, refreshDetail
         customModal({
           showModal,
           title: "Success!",
-          text: `You have successfully updated thus investment on behalf of this user.`,
+          text: `You have successfully updated this investment on behalf of this user.`,
           showConfirmButton: false,
           icon: CheckIcon,
           iconBgColor: "bg-green-100",
