@@ -3,7 +3,7 @@ import { useModal } from "../../../../context/ModalContext";
 import { formatNumber, getCurrentDate } from "../../../../config/utils";
 import { addTermToUserCollection } from "../../../../config/terms";
 import { customModal } from "../../../../config/modalUtils";
-import { CheckIcon, XMarkIcon, ExclamationIcon } from "@heroicons/react/24/outline";
+import { CheckIcon, XMarkIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import DotLoader from "../../../../components/DotLoader";
 import { Dialog, Transition } from "@headlessui/react";
 import CurrencyInput from "react-currency-input-field";
@@ -61,7 +61,7 @@ export default function AddUserTerms({ setOpen, open, fixedTerm, userId }) {
         title: "Error!",
         text: `There was an error encountered when trying to add term deposit. Please tryy again.`,
         showConfirmButton: false,
-        icon: ExclamationIcon,
+        icon: ExclamationCircleIcon,
         iconBgColor: "bg-red-100",
         iconTextColor: "text-red-600",
         buttonBgColor: "bg-red-600",
@@ -212,7 +212,7 @@ export default function AddUserTerms({ setOpen, open, fixedTerm, userId }) {
                     >
                       {isLoading ? (
                         <div className="flex w-full justify-center align-middle gap-2">
-                          <span>Sumitting</span>
+                          <span>Submitting</span>
                           <DotLoader />
                         </div>
                       ) : (

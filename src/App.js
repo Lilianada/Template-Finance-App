@@ -41,6 +41,7 @@ import EditFixedTerm from "./pages/FixedTerm/Edit";
 import FixedTermCards from "./pages/RegisteredUsers/ClientAccountOverview/ClientTerms/FixedTermsCard";
 import ClientTermPage from "./pages/RegisteredUsers/ClientAccountOverview/ClientTerms";
 import ClientStock from "./pages/RegisteredUsers/ClientAccountOverview/ClientStock";
+import AddUserStock from "./pages/RegisteredUsers/ClientAccountOverview/ClientStock/Add";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -284,6 +285,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <ClientStock />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="registered_users/view/add_stock/:userId"
+                  element={
+                    <ProtectedRoute>
+                      <AddUserStock />
                     </ProtectedRoute>
                   }
                 />
