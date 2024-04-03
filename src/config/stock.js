@@ -103,19 +103,15 @@ import { getCurrentDate } from "./utils";
   export async function editStockPortfolio(userId, stockId, updatedStockData) {
     try {
       // Creating a reference to the user's document
-      const userDocRef = doc(db, USERS_COLLECTION, userId.userId); // Adjust collection name as needed
+      const userDocRef = doc(db, USERS_COLLECTION, userId);
+      
+      const stocksCollectionRef = collection(userDocRef, STOCKS_COLLECTION); 
   
-      // Creating a reference to the stocks sub-collection of the user's document
-      const stocksCollectionRef = collection(userDocRef, STOCKS_COLLECTION); // Adjust sub-collection name as needed
-  
-      // Constructing the updated stock data object
       const updatedStockDataObj = {
         ...updatedStockData,
-        // Include any additional fields you need for stocks
-        timestamp: getCurrentDate(), // Adding a timestamp to know when the stock was updated
+        timestamp: getCurrentDate(),
       };
   
-      // Updating the stock data in the stocks sub-collection
       await updateDoc(doc(stocksCollectionRef, stockId), updatedStockDataObj);
   
       const notificationData = {
@@ -124,10 +120,10 @@ import { getCurrentDate } from "./utils";
       };
       await addDoc(collection(db, ADMINUSERS_COLLECTION, 'notifications', 'stocksNotifications'), notificationData);
   
-      return stockId; // Returning the id of the updated document
+      return stockId; 
     } catch (error) {
       console.error('Error updating stock in portfolio: ', error);
-      throw error; // Rethrowing the error after logging it
+      throw error; 
     }
   }
   

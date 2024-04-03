@@ -2,23 +2,26 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useLocation } from "react-router-dom";
 import { useModal } from "../../../../context/ModalContext";
-import { getCurrentDate } from "../../../../config/utils";
-import { addStockToPortfolio, updateStockPortfolio } from "../../../../config/stock";
+import { editStockPortfolio } from "../../../../config/stock";
 import CurrencyInput from "react-currency-input-field";
 import { CheckIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { customModal } from "../../../../config/modalUtils";
 import DotLoader from "../../../../components/DotLoader";
 
 export default function EditUserStock() {
-    const location = useLocation();
+  const location = useLocation();
   const { userId } = useParams();
   const { stockToEdit } = location.state || {};
   const { showModal } = useModal();
   const [isLoading, setIsLoading] = useState(false);
-  const [stock, setStock] = useState([]);
   const [inputValue, setInputValue] = useState("");
+  const [companyName, setCompanyName] = useState(stockToEdit.companyName);
+  const [marketPrice, setMarketPrice] = useState(stockToEdit.marketPrice);
+  const [tradeAmount, setTradeAmount] = useState(stockToEdit.tradeAmount);
+  const [value, setValue] = useState(stockToEdit.value);
+  const [profitLoss, setProfitLoss] = useState(stockToEdit.profitLoss);
   const [formData, setFormData] = useState({
-    ...stockToEdit
+    ...stockToEdit,
   });
 
   const stockApiKey = process.env.REACT_APP_STOCK_API_KEY;
@@ -31,14 +34,14 @@ export default function EditUserStock() {
     if (exchangeIndex > -1) {
       exchange = inputValue.substring(exchangeIndex); // Extract exchange from input
     }
-      const options = {
-        method: 'GET',
-        url: 'https://real-time-finance-data.p.rapidapi.com/stock-quote',
-        params: { inputValue: `${inputValue}${exchange}`, language: 'en' },
-        headers: {
-            'X-RapidAPI-Key': stockApiKey, // Replace with your actual API Key
-            'X-RapidAPI-Host': 'real-time-finance-data.p.rapidapi.com'
-        }
+    const options = {
+      method: "GET",
+      url: "https://real-time-finance-data.p.rapidapi.com/stock-quote",
+      params: { inputValue: `${inputValue}${exchange}`, language: "en" },
+      headers: {
+        "X-RapidAPI-Key": stockApiKey, // Replace with your actual API Key
+        "X-RapidAPI-Host": "real-time-finance-data.p.rapidapi.com",
+      },
     };
 
     try {
@@ -79,18 +82,20 @@ export default function EditUserStock() {
     }
   };
 
-  // Simplified function to update the state based on latest stock data
+  // Inside the updateStateWithStockData function
   const updateStateWithStockData = (price, companyName) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      marketPrice: price,
-      companyName: companyName,
-    }));
+    setMarketPrice(price);
+    setCompanyName(companyName);
   };
 
   useEffect(() => {
     recalculateDependentFields();
-  }, [formData.type, formData.marketPrice, formData.shares, formData.tradePrice]);
+  }, [
+    formData.type,
+    formData.marketPrice,
+    formData.shares,
+    formData.tradePrice,
+  ]);
 
   const recalculateDependentFields = () => {
     const { shares, tradePrice, marketPrice, type } = formData;
@@ -122,7 +127,7 @@ export default function EditUserStock() {
   };
 
   // Centralized handling for input changes
-  const handleInputChange = (e) => {
+  const handleChange = (e) => {
     let name, value;
 
     if (e && e.target) {
@@ -133,68 +138,50 @@ export default function EditUserStock() {
       value = e;
     }
 
-    // Update the inputValue for symbol changes
     if (name === "symbol") {
       setInputValue(value);
       if (value) fetchStockData(value);
     } else {
-      // For other fields, update formData directly
       const newFormData = { ...formData, [name]: value };
-      setFormData(newFormData);
-      // If shares or tradePrice change, recalculate dependent fields
       if (name === "shares" || name === "tradePrice") {
         recalculateDependentFields();
       }
     }
+    if (name === "shares" && formData.type === "Sell") {
+      const inputShares = parseFloat(value);
+      if (inputShares > stockToEdit.shares) {
+        customModal({
+          showModal,
+          title: "Error!",
+          text: `Cannot sell more shares than you own. Please try adifferent number.`,
+          showConfirmButton: false,
+          icon: ExclamationCircleIcon,
+          iconBgColor: "bg-red-100",
+          iconTextColor: "text-red-600",
+          buttonBgColor: "bg-red-600",
+          timer: 2000,
+        });
+        return;
+      }
+    }
+
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleEditStock = async () => {
-    // Update formData with the symbol from inputValue
-    const updatedFormData = { ...formData, symbol: inputValue.toUpperCase() };
-
-    // Check if required fields are filled
-    const requiredFields = [
-      "symbol",
-      "companyName",
-      "type",
-      "shares",
-      "tradePrice",
-    ];
-
-    const isFormValid = requiredFields.every(
-      (field) => updatedFormData[field] !== "" && updatedFormData[field] !== 0
-    );
-
-    if (!isFormValid) {
-      customModal({
-        showModal,
-        title: "Error!",
-        text: `Invalid!`,
-        showConfirmButton: false,
-        icon: ExclamationCircleIcon,
-        iconBgColor: "bg-red-100",
-        iconTextColor: "text-red-600",
-        buttonBgColor: "bg-red-600",
-        timer: 2000,
+  const handleEditStock = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    const stockId = stockToEdit.id;
+    try {
+      await editStockPortfolio(userId, stockId, {
+        ...formData,
+        symbol: inputValue,
       });
 
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      const result = await updateStockPortfolio(userId, updatedFormData);
-
-      if (result) {
-        setStock([...stock, { ...updatedFormData, id: result.id }]);
-        resetForm();
-      }
       customModal({
         showModal,
         title: "Success!",
-        text: `Stock added successfully.`,
+        text: `Stock updates successfully.`,
         showConfirmButton: false,
         icon: CheckIcon,
         iconBgColor: "bg-green-100",
@@ -219,24 +206,6 @@ export default function EditUserStock() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  // Resets the form to initial state
-  const resetForm = () => {
-    setFormData({
-      symbol: "",
-      companyName: "",
-      type: "Buy",
-      shares: 0,
-      tradeDate: getCurrentDate(),
-      tradePrice: 0,
-      marketPrice: 0,
-      tradeAmount: 0,
-      value: 0,
-      profitLoss: 0,
-      status: "Pending",
-    });
-    setInputValue("");
   };
 
   return (
@@ -280,10 +249,6 @@ export default function EditUserStock() {
                 "Search"
               )}
             </button>
-
-            {/* {error === "No data available for the specified symbol." && (
-          <p className="error_msg">{error}</p>
-          )} */}
           </div>
         </div>
       </div>
@@ -307,8 +272,8 @@ export default function EditUserStock() {
                   type="text"
                   id="companyName"
                   name="companyName"
-                  value={formData.companyName}
-                  onChange={handleInputChange}
+                  value={companyName}
+                  onChange={handleChange}
                   required
                   readOnly
                   className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -377,7 +342,7 @@ export default function EditUserStock() {
                   name="tradePrice"
                   value={formData.tradePrice}
                   decimalsLimit={2}
-                  onValueChange={(value) => handleInputChange(value, 'tradePrice')}
+                  onValueChange={(value) => handleChange(value, "tradePrice")}
                   required
                   className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
@@ -404,11 +369,9 @@ export default function EditUserStock() {
                   decimalSeparator="."
                   prefix="$"
                   name="marketPrice"
-                  value={formData.marketPrice}
+                  value={marketPrice}
                   decimalsLimit={2}
-                  onValueChange={(value) =>
-                    handleInputChange(value, "marketPrice")
-                  }
+                  onValueChange={(value) => handleChange(value, "marketPrice")}
                   required
                   readOnly
                   className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -436,11 +399,9 @@ export default function EditUserStock() {
                   decimalSeparator="."
                   prefix="$"
                   name="tradeAmount"
-                  value={formData.tradeAmount}
+                  value={tradeAmount}
                   decimalsLimit={2}
-                  onValueChange={(value) =>
-                    handleInputChange(value, "tradeAmount")
-                  }
+                  onValueChange={(value) => handleChange(value, "tradeAmount")}
                   required
                   readOnly
                   className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -468,9 +429,9 @@ export default function EditUserStock() {
                   decimalSeparator="."
                   prefix="$"
                   name="value"
-                  value={formData.value}
+                  value={value}
                   decimalsLimit={2}
-                  onValueChange={(value) => handleInputChange(value, "value")}
+                  onValueChange={(value) => handleChange(value, "value")}
                   required
                   readOnly
                   className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -498,8 +459,8 @@ export default function EditUserStock() {
                   type="number"
                   id="profitLoss"
                   name="profitLoss"
-                  value={formData.profitLoss}
-                  onChange={handleInputChange}
+                  value={profitLoss}
+                  onChange={handleChange}
                   readOnly
                   className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
@@ -518,7 +479,7 @@ export default function EditUserStock() {
                   id="status"
                   name="status"
                   value={formData.status}
-                  onChange={handleInputChange}
+                  onChange={handleChange}
                   className="block w-full rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   required
                 >
@@ -560,7 +521,7 @@ export default function EditUserStock() {
           <button
             type="button"
             className="mt-3 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-            onClick={() => window.location.reload()}
+            onClick={() => window.history.back()}
           >
             Close
           </button>

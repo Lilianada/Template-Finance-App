@@ -38,7 +38,7 @@ export default function ClientStock() {
     };
   
     const handleEdit = async (stock) => {
-      navigate(`/dashboard/registered_users/view/edit_stock/${stock.id}`, {
+      navigate(`/dashboard/registered_users/view/edit_stock/${userId}`, {
         state: { stockToEdit: stock },
       });
     };
