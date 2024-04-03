@@ -128,7 +128,7 @@ export default function ClientStock() {
                 )
               }
             >
-              Add Deposits
+              Add Stock
             </button>
           </div>
         </div>
