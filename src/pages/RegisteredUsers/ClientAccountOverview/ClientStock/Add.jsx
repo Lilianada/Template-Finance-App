@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useModal } from "../../../../context/ModalContext";
 import { getCurrentDate } from "../../../../config/utils";
 import { addStockToPortfolio } from "../../../../config/stock";
 import CurrencyInput from "react-currency-input-field";
 import { CheckIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
-import axios from "axios";
 import { customModal } from "../../../../config/modalUtils";
 import DotLoader from "../../../../components/DotLoader";
 
@@ -30,19 +30,23 @@ export default function AddUserStock() {
   });
 
   const stockApiKey = process.env.REACT_APP_STOCK_API_KEY;
-  // Refactored function to fetch and update stock data
 
   const fetchStockData = async () => {
     setIsLoading(true);
 
-    const options = {
-      method: "GET",
-      url: "https://real-time-finance-data.p.rapidapi.com/stock-quote",
-      params: { symbol: `${inputValue}`, language: "en" },
-      headers: {
-        "X-RapidAPI-Key": stockApiKey, // Replace with your RapidAPI Key
-        "X-RapidAPI-Host": "real-time-finance-data.p.rapidapi.com",
-      },
+    let exchange = ":NASDAQ";
+    const exchangeIndex = inputValue.indexOf(":");
+    if (exchangeIndex > -1) {
+      exchange = inputValue.substring(exchangeIndex); // Extract exchange from input
+    }
+      const options = {
+        method: 'GET',
+        url: 'https://real-time-finance-data.p.rapidapi.com/stock-quote',
+        params: { inputValue: `${inputValue}${exchange}`, language: 'en' },
+        headers: {
+            'X-RapidAPI-Key': stockApiKey, // Replace with your actual API Key
+            'X-RapidAPI-Host': 'real-time-finance-data.p.rapidapi.com'
+        }
     };
 
     try {
@@ -83,6 +87,7 @@ export default function AddUserStock() {
     }
   };
 
+  
   // Simplified function to update the state based on latest stock data
   const updateStateWithStockData = (price, companyName) => {
     setFormData((prevFormData) => ({
@@ -94,12 +99,7 @@ export default function AddUserStock() {
 
   useEffect(() => {
     recalculateDependentFields();
-  }, [
-    formData.type,
-    formData.marketPrice,
-    formData.shares,
-    formData.tradePrice,
-  ]);
+  }, [formData.type, formData.marketPrice, formData.shares, formData.tradePrice]);
 
   const recalculateDependentFields = () => {
     const { shares, tradePrice, marketPrice, type } = formData;
@@ -170,6 +170,7 @@ export default function AddUserStock() {
       "shares",
       "tradePrice",
     ];
+
     const isFormValid = requiredFields.every(
       (field) => updatedFormData[field] !== "" && updatedFormData[field] !== 0
     );
@@ -249,53 +250,59 @@ export default function AddUserStock() {
 
   return (
     <div>
+      <div className="pb-12 text-left">
+        <h2 className="text-base font-semibold leading-7 text-gray-900">
+          Add New Stock
+        </h2>
+        <p className="mt-1 text-sm leading-6 text-gray-600">
+          Search and add new stock to user account.
+        </p>
+      </div>
+      <div className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6 text-left border-t border-gray-900/10">
+        {/* Symbol */}
+        <div className="sm:col-span-3 mt-6">
+          <label
+            htmlFor="symbol"
+            className="block text-sm font-medium leading-6 text-gray-900"
+          >
+            Search for Stock Symbol
+          </label>
+          <div className="mt-2 flex">
+            <input
+              type="text"
+              id="symbol"
+              name="symbol"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm uppercase"
+            />
+            <button
+              onClick={fetchStockData}
+              className="ml-2 inline-flex justify-center items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+            >
+              {isLoading ? (
+                <div className="flex w-full justify-center align-middle gap-2">
+                  <span>Searching</span>
+                  <DotLoader />
+                </div>
+              ) : (
+                "Search"
+              )}
+            </button>
+
+            {/* {error === "No data available for the specified symbol." && (
+          <p className="error_msg">{error}</p>
+          )} */}
+          </div>
+        </div>
+      </div>
       <form
         className="m-2"
         onSubmit={handleAddStock}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="space-y-12">
-          <div className="border-b border-gray-900/10 pb-12 text-left">
-            <h2 className="text-base font-semibold leading-7 text-gray-900">
-              Add New Stock
-            </h2>
-            <p className="mt-1 text-sm leading-6 text-gray-600">
-              Search and add new stock to user account.
-            </p>
-          </div>
-
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6 text-left">
-            {/* Symbol */}
-            <div className="sm:col-span-3">
-              <label
-                htmlFor="symbol"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Search for Stock Symbol
-              </label>
-              <div className="mt-2">
-                <input
-                  type="text"
-                  id="symbol"
-                  name="symbol"
-                  value={formData.symbol}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      symbol: e.target.value,
-                    })
-                  }
-                  className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-                 {isLoading && (
-         <DotLoader /> 
-        )}
-        {/* {error === "No data available for the specified symbol." && (
-          <p className="error_msg">{error}</p>
-          )} */}
-          <button onClick={fetchStockData} className="search_btn">Search</button>
-              </div>
-            </div>
+          <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6 text-left">
             {/* Company Name */}
             <div className="sm:col-span-3">
               <label
@@ -364,30 +371,6 @@ export default function AddUserStock() {
                 />
               </div>
             </div>
-            {/* Trade Date */}
-            <div className="sm:col-span-3">
-              <label
-                htmlFor="tradeDate"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Trade Date
-              </label>
-              <div className="mt-2">
-                <input
-                  type="date"
-                  id="tradeDate"
-                  name="tradeDate"
-                  value={formData.tradeDate}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      tradeDate: e.target.value,
-                    })
-                  }
-                  className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-              </div>
-            </div>
             {/* Trade Price */}
             <div className="sm:col-span-3">
               <label
@@ -396,20 +379,25 @@ export default function AddUserStock() {
               >
                 Trade Price
               </label>
-              <div className="mt-2">
-                <input
-                  type="number"
-                  id="tradePrice"
+              <div className="relative mt-2 rounded-md shadow-sm">
+                <CurrencyInput
+                  decimalSeparator="."
+                  prefix="$"
                   name="tradePrice"
                   value={formData.tradePrice}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      tradePrice: parseFloat(e.target.value) || 0,
-                    })
-                  }
+                  decimalsLimit={2}
+                  onValueChange={(value) => handleInputChange(value, 'tradePrice')}
+                  required
                   className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                  <span
+                    className="text-gray-500 sm:text-sm"
+                    id="price-currency"
+                  >
+                    USD
+                  </span>
+                </div>
               </div>
             </div>
             {/* Market Price  */}
@@ -420,46 +408,28 @@ export default function AddUserStock() {
               >
                 Market Price
               </label>
-              <div className="mt-2">
+              <div className="relative mt-2 rounded-md shadow-sm">
                 <CurrencyInput
                   decimalSeparator="."
                   prefix="$"
                   name="marketPrice"
-                  placeholder="$0.00"
                   value={formData.marketPrice}
                   decimalsLimit={2}
                   onValueChange={(value) =>
                     handleInputChange(value, "marketPrice")
                   }
-                  readOnly
                   required
+                  readOnly
                   className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
-              </div>
-            </div>
-            {/* Market Price  */}
-            <div className="sm:col-span-3">
-              <label
-                htmlFor="marketPrice"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Market Price
-              </label>
-              <div className="mt-2">
-                <CurrencyInput
-                  decimalSeparator="."
-                  prefix="$"
-                  name="marketPrice"
-                  placeholder="$0.00"
-                  value={formData.marketPrice}
-                  decimalsLimit={2}
-                  onValueChange={(value) =>
-                    handleInputChange(value, "marketPrice")
-                  }
-                  readOnly
-                  required
-                  className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                  <span
+                    className="text-gray-500 sm:text-sm"
+                    id="price-currency"
+                  >
+                    USD
+                  </span>
+                </div>
               </div>
             </div>
             {/* Trade Amount  */}
@@ -470,12 +440,11 @@ export default function AddUserStock() {
               >
                 Trade Amount
               </label>
-              <div className="mt-2">
+              <div className="relative mt-2 rounded-md shadow-sm">
                 <CurrencyInput
                   decimalSeparator="."
                   prefix="$"
                   name="tradeAmount"
-                  placeholder="$0.00"
                   value={formData.tradeAmount}
                   decimalsLimit={2}
                   onValueChange={(value) =>
@@ -485,6 +454,14 @@ export default function AddUserStock() {
                   readOnly
                   className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                  <span
+                    className="text-gray-500 sm:text-sm"
+                    id="price-currency"
+                  >
+                    USD
+                  </span>
+                </div>
               </div>
             </div>
             {/* Value */}
@@ -495,12 +472,11 @@ export default function AddUserStock() {
               >
                 Value
               </label>
-              <div className="mt-2">
+              <div className="relative mt-2 rounded-md shadow-sm">
                 <CurrencyInput
                   decimalSeparator="."
                   prefix="$"
                   name="value"
-                  placeholder="$0.00"
                   value={formData.value}
                   decimalsLimit={2}
                   onValueChange={(value) => handleInputChange(value, "value")}
@@ -508,6 +484,14 @@ export default function AddUserStock() {
                   readOnly
                   className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                  <span
+                    className="text-gray-500 sm:text-sm"
+                    id="price-currency"
+                  >
+                    USD
+                  </span>
+                </div>
               </div>
             </div>
             {/* Profit Loss */}
@@ -516,11 +500,11 @@ export default function AddUserStock() {
                 htmlFor="profitLoss"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Profit/Loss
+                Profit/Loss (%)
               </label>
               <div className="mt-2">
                 <input
-                  type="text"
+                  type="number"
                   id="profitLoss"
                   name="profitLoss"
                   value={formData.profitLoss}
@@ -554,13 +538,38 @@ export default function AddUserStock() {
                 </select>
               </div>
             </div>
+            {/* Trade Date */}
+            <div className="sm:col-span-3">
+              <label
+                htmlFor="tradeDate"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Trade Date
+              </label>
+              <div className="mt-2">
+                <input
+                  type="date"
+                  id="tradeDate"
+                  name="tradeDate"
+                  value={formData.tradeDate}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      tradeDate: e.target.value,
+                    })
+                  }
+                  className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
+              </div>
+            </div>
           </div>
         </div>
+
         <div className="mt-4 flex space-x-6 justify-end">
           <button
             type="button"
             className="mt-3 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-            onClick={() => window.location.reload()}
+            onClick={() => window.history.back()}
           >
             Close
           </button>

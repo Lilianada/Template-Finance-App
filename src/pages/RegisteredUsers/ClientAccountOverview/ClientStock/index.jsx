@@ -38,8 +38,9 @@ export default function ClientStock() {
     };
   
     const handleEdit = async (stock) => {
-      setOpen(true);
-      setSelectedId(stock);
+      navigate(`/dashboard/registered_users/view/edit_stock/${stock.id}`, {
+        state: { stockToEdit: stock },
+      });
     };
   
     const handleDelete = (id) => {
