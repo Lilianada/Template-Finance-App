@@ -3,7 +3,7 @@ import { useModal } from "../../../../context/ModalContext";
 import { formatNumber, getCurrentDate } from "../../../../config/utils";
 import { addTermToUserCollection } from "../../../../config/terms";
 import { customModal } from "../../../../config/modalUtils";
-import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { CheckIcon, XMarkIcon, ExclamationIcon } from "@heroicons/react/24/outline";
 import DotLoader from "../../../../components/DotLoader";
 import { Dialog, Transition } from "@headlessui/react";
 import CurrencyInput from "react-currency-input-field";
@@ -56,6 +56,17 @@ export default function AddUserTerms({ setOpen, open, fixedTerm, userId }) {
       // refreshDetails();
     } catch (error) {
       console.error("Error adding deposit transaction: ", error);
+      customModal({
+        showModal,
+        title: "Error!",
+        text: `There was an error encountered when trying to add term deposit. Please tryy again.`,
+        showConfirmButton: false,
+        icon: ExclamationIcon,
+        iconBgColor: "bg-red-100",
+        iconTextColor: "text-red-600",
+        buttonBgColor: "bg-red-600",
+        timer: 2000,
+      });
     } finally {
       setIsLoading(false);
     }
