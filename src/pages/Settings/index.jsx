@@ -54,7 +54,7 @@ export default function Settings() {
 
   return (
     <div className="sm:grid sm:grid-cols-12 sm:gap-x-5">
-      <aside className="px-2 py-6 sm:px-6 lg:col-span-3 lg:px-0 lg:py-0">
+      <aside className="px-2 py-6 lg:col-span-3 lg:px-0 lg:py-0">
         <nav className="space-y-1">
           {navigation.map((item) => (
             <div
@@ -83,7 +83,7 @@ export default function Settings() {
         </nav>
       </aside>
 
-      <div className="space-y-6 sm:px-6 lg:col-span-9 sm:col-span-10 lg:px-0 text-left">
+      <div className="space-y-6 sm:px-6 lg:col-span-9 sm:col-span-10 lg:px-0 text-left sm:mt-4">
         {/* {activeTab === "changeLogo" && <ChangeLogo />}
           */}
           {activeTab === "changePassword" && <ChangePassword />} 

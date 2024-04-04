@@ -2,7 +2,7 @@ import React from "react";
 
 export default function GeneralSettings() {
   return (
-    <div className="space-y-6 sm:px-6 lg:col-span-9 sm:col-span-10 lg:px-0 text-left">
+    <div >
       <form action="#" method="POST">
         <div className="shadow sm:overflow-hidden sm:rounded-md">
           <div className="space-y-6 bg-white px-4 py-6 sm:p-6">
