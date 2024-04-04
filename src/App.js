@@ -43,6 +43,7 @@ import ClientTermPage from "./pages/RegisteredUsers/ClientAccountOverview/Client
 import ClientStock from "./pages/RegisteredUsers/ClientAccountOverview/ClientStock";
 import AddUserStock from "./pages/RegisteredUsers/ClientAccountOverview/ClientStock/Add";
 import EditUserStock from "./pages/RegisteredUsers/ClientAccountOverview/ClientStock/Edit";
+import Settings from "./pages/Settings";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -310,6 +311,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <RequestsTable />
+                    </ProtectedRoute>
+                  }
+                />
+              <Route
+                  path="settings"
+                  element={
+                    <ProtectedRoute>
+                      <Settings />
                     </ProtectedRoute>
                   }
                 />
