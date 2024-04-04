@@ -83,6 +83,7 @@ export default function ChangeLogo() {
         text: "Your image has been updated successfully",
         showConfirmButton: false,
         iconBgColor: "bg-green-500",
+        buttonBgColor: "bg-green-500",
         iconColor: "text-white",
         icon: CheckIcon,
         timer: 1500,
@@ -110,7 +111,7 @@ export default function ChangeLogo() {
 
   return (
     <div className="">
-      <form action="#" method="POST">
+      <form action="#" method="POST" onSubmit={handleImageUpload}>
         <div className="shadow sm:overflow-hidden sm:rounded-md">
           <div className="space-y-6 bg-white px-4 py-6 sm:p-6">
             <div>
@@ -247,7 +248,6 @@ export default function ChangeLogo() {
           <div className="mt-4 bg-gray-50 px-4 py-3 text-right sm:px-6">
             <button
               type="submit"
-              onClick={handleImageUpload}
               className="inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               {isLoading ? (
