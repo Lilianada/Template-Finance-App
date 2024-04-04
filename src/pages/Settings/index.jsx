@@ -10,6 +10,8 @@ import {
 } from "@heroicons/react/24/outline";
 import GeneralSettings from "./GeneralSettings";
 import AddNewAdmin from "./AddNewAdmin";
+import ChangeMetaData from "./ChangeMeta";
+import ChangePassword from "./ChangePasswordTab";
 
 const navigation = [
   {
@@ -83,8 +85,9 @@ export default function Settings() {
 
       <div className="space-y-6 sm:px-6 lg:col-span-9 sm:col-span-10 lg:px-0 text-left">
         {/* {activeTab === "changeLogo" && <ChangeLogo />}
+          */}
+          {activeTab === "changePassword" && <ChangePassword />} 
           {activeTab === "changeMeta" && <ChangeMetaData />}
-          {activeTab === "changePassword" && <ChangePasswordTab />} */}
         {activeTab === "generalSetting" && <GeneralSettings />}
         {activeTab === "addAdmin" && <AddNewAdmin />}
       </div>
