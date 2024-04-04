@@ -42,7 +42,7 @@ export default function AddUserStock() {
       const options = {
         method: 'GET',
         url: 'https://real-time-finance-data.p.rapidapi.com/stock-quote',
-        params: { inputValue: `${inputValue}${exchange}`, language: 'en' },
+        params: { symbol: `${inputValue}${exchange}`, language: 'en' },
         headers: {
             'X-RapidAPI-Key': stockApiKey, // Replace with your actual API Key
             'X-RapidAPI-Host': 'real-time-finance-data.p.rapidapi.com'

@@ -15,15 +15,7 @@ export default function EditUserStock() {
   const { showModal } = useModal();
   const [isLoading, setIsLoading] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const [companyName, setCompanyName] = useState(stockToEdit.companyName);
-  const [marketPrice, setMarketPrice] = useState(stockToEdit.marketPrice);
-  const [tradeAmount, setTradeAmount] = useState(stockToEdit.tradeAmount);
-  const [value, setValue] = useState(stockToEdit.value);
-  const [profitLoss, setProfitLoss] = useState(stockToEdit.profitLoss);
-  const [formData, setFormData] = useState({
-    ...stockToEdit,
-  });
-
+  const [formData, setFormData] = useState(stockToEdit);
   const stockApiKey = process.env.REACT_APP_STOCK_API_KEY;
 
   const fetchStockData = async () => {
@@ -37,9 +29,9 @@ export default function EditUserStock() {
     const options = {
       method: "GET",
       url: "https://real-time-finance-data.p.rapidapi.com/stock-quote",
-      params: { inputValue: `${inputValue}${exchange}`, language: "en" },
+      params: { symbol: `${inputValue}${exchange}`, language: "en" },
       headers: {
-        "X-RapidAPI-Key": stockApiKey, // Replace with your actual API Key
+        "X-RapidAPI-Key": stockApiKey,
         "X-RapidAPI-Host": "real-time-finance-data.p.rapidapi.com",
       },
     };
@@ -55,7 +47,7 @@ export default function EditUserStock() {
         customModal({
           showModal,
           title: "Error!",
-          text: `No data available for the specified symbol. Please try a differemt symbol.`,
+          text: `No data available for the specified symbol. Please try a different symbol.`,
           showConfirmButton: false,
           icon: ExclamationCircleIcon,
           iconBgColor: "bg-red-100",
@@ -69,7 +61,7 @@ export default function EditUserStock() {
       customModal({
         showModal,
         title: "Error!",
-        text: `There was an error encountered. Please try a differemt symbol..`,
+        text: `There was an error encountered. Please try a different symbol.`,
         showConfirmButton: false,
         icon: ExclamationCircleIcon,
         iconBgColor: "bg-red-100",
@@ -82,10 +74,12 @@ export default function EditUserStock() {
     }
   };
 
-  // Inside the updateStateWithStockData function
   const updateStateWithStockData = (price, companyName) => {
-    setMarketPrice(price);
-    setCompanyName(companyName);
+    setFormData((prevData) => ({
+      ...prevData,
+      marketPrice: price,
+      companyName: companyName,
+    }));
   };
 
   useEffect(() => {
@@ -108,35 +102,23 @@ export default function EditUserStock() {
     marketValue = parsedShares * parsedMarketPrice;
 
     if (type === "Sell") {
-      // When selling, calculate profit or loss
       profitLoss = ((marketValue - tradeAmount) / tradeAmount) * 100;
-      console.log("sell", profitLoss, marketValue, tradeAmount);
     } else {
-      // When buying, calculate total purchase price
       profitLoss = tradeAmount
         ? ((marketValue - tradeAmount) / tradeAmount) * 100
         : 0;
     }
 
-    setFormData((prevFormData) => ({
-      ...prevFormData,
+    setFormData((prevData) => ({
+      ...prevData,
       tradeAmount: tradeAmount.toFixed(2),
       value: marketValue.toFixed(2),
       profitLoss: profitLoss.toFixed(2),
     }));
   };
 
-  // Centralized handling for input changes
   const handleChange = (e) => {
-    let name, value;
-
-    if (e && e.target) {
-      name = e.target.name;
-      value = e.target.value;
-    } else {
-      name = "tradePrice";
-      value = e;
-    }
+    const { name, value } = e.target;
 
     if (name === "symbol") {
       setInputValue(value);
@@ -146,14 +128,16 @@ export default function EditUserStock() {
       if (name === "shares" || name === "tradePrice") {
         recalculateDependentFields();
       }
+      setFormData(newFormData);
     }
+
     if (name === "shares" && formData.type === "Sell") {
       const inputShares = parseFloat(value);
       if (inputShares > stockToEdit.shares) {
         customModal({
           showModal,
           title: "Error!",
-          text: `Cannot sell more shares than you own. Please try adifferent number.`,
+          text: `Cannot sell more shares than you own. Please try a different number.`,
           showConfirmButton: false,
           icon: ExclamationCircleIcon,
           iconBgColor: "bg-red-100",
@@ -164,8 +148,6 @@ export default function EditUserStock() {
         return;
       }
     }
-
-    setFormData({ ...formData, [name]: value });
   };
 
   const handleEditStock = async (e) => {
@@ -272,7 +254,7 @@ export default function EditUserStock() {
                   type="text"
                   id="companyName"
                   name="companyName"
-                  value={companyName}
+                  value={formData.companyName}
                   onChange={handleChange}
                   required
                   readOnly
@@ -342,10 +324,13 @@ export default function EditUserStock() {
                   name="tradePrice"
                   value={formData.tradePrice}
                   decimalsLimit={2}
-                  onValueChange={(value) => handleChange(value, "tradePrice")}
+                  onValueChange={(value) =>
+                    handleChange({ target: { name: "tradePrice", value } })
+                  }
                   required
                   className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
+
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                   <span
                     className="text-gray-500 sm:text-sm"
@@ -369,9 +354,9 @@ export default function EditUserStock() {
                   decimalSeparator="."
                   prefix="$"
                   name="marketPrice"
-                  value={marketPrice}
+                  value={formData.marketPrice}
                   decimalsLimit={2}
-                  onValueChange={(value) => handleChange(value, "marketPrice")}
+                  onValueChange={(value) =>  handleChange({ target: { name: "marketPrice", value } })}
                   required
                   readOnly
                   className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -399,9 +384,9 @@ export default function EditUserStock() {
                   decimalSeparator="."
                   prefix="$"
                   name="tradeAmount"
-                  value={tradeAmount}
+                  value={formData.tradeAmount}
                   decimalsLimit={2}
-                  onValueChange={(value) => handleChange(value, "tradeAmount")}
+                  onValueChange={(value) =>  handleChange({ target: { name: "tradeAmount", value } })}
                   required
                   readOnly
                   className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -429,9 +414,9 @@ export default function EditUserStock() {
                   decimalSeparator="."
                   prefix="$"
                   name="value"
-                  value={value}
+                  value={formData.value}
                   decimalsLimit={2}
-                  onValueChange={(value) => handleChange(value, "value")}
+                  onValueChange={(value) =>  handleChange({ target: { name: "value", value } })}
                   required
                   readOnly
                   className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -459,8 +444,13 @@ export default function EditUserStock() {
                   type="number"
                   id="profitLoss"
                   name="profitLoss"
-                  value={profitLoss}
-                  onChange={handleChange}
+                  value={formData.profitLoss}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      profitLoss: parseInt(e.target.value) || 0,
+                    })
+                  }
                   readOnly
                   className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
