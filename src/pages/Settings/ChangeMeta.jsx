@@ -6,8 +6,8 @@ import {
   updateTitleText,
 } from "../../config/settings";
 import { useModal } from "../../context/ModalContext";
-import { CheckIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { customModal } from "../../config/modalUtils";
+import { CheckIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import DotLoader from "../../components/DotLoader";
 
 export default function ChangeMetaData() {

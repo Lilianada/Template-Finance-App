@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import {
-  CreditCardIcon,
   KeyIcon,
   LockClosedIcon,
   WrenchScrewdriverIcon,
   UserIcon,
   CameraIcon,
-  UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import GeneralSettings from "./GeneralSettings";
 import AddNewAdmin from "./AddNewAdmin";
@@ -85,9 +83,9 @@ export default function Settings() {
       </aside>
 
       <div className="space-y-6 sm:px-6 lg:col-span-9 sm:col-span-10 lg:px-0 text-left sm:mt-4">
-          {activeTab === "changeLogo" && <ChangeLogo />}
-          {activeTab === "changePassword" && <ChangePassword />} 
-          {activeTab === "changeMeta" && <ChangeMetaData />}
+        {activeTab === "changeLogo" && <ChangeLogo />}
+        {activeTab === "changePassword" && <ChangePassword />}
+        {activeTab === "changeMeta" && <ChangeMetaData />}
         {activeTab === "generalSetting" && <GeneralSettings />}
         {activeTab === "addAdmin" && <AddNewAdmin />}
       </div>
