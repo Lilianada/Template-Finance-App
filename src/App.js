@@ -291,7 +291,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="registered_users/view/add_stock/:userId"
+                  path="registered_users/view/view_stocks_details/add_stock/:userId"
                   element={
                     <ProtectedRoute>
                       <AddUserStock />
@@ -299,7 +299,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="registered_users/view/edit_stock/:userId"
+                  path="registered_users/view/view_stocks_details/edit_stock/:userId"
                   element={
                     <ProtectedRoute>
                       <EditUserStock />

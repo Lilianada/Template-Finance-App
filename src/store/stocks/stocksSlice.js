@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {
   getStockFromUserDB,
-  addStockToPortfolio,
   editStockPortfolio,
   updateStockPortfolio,
   deleteStockFromDb,
+  addUserStock,
 } from '../../config/stock';
 
 // Async thunks
@@ -19,7 +19,7 @@ export const fetchUserStocks = createAsyncThunk(
 export const addNewStock = createAsyncThunk(
   'stockPortfolio/addNewStock',
   async ({ userId, stockData }) => {
-    const response = await addStockToPortfolio(userId, stockData);
+    const response = await addUserStock(userId, stockData);
     return response;
   }
 );

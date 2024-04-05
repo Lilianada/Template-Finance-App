@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useModal } from "../../../../context/ModalContext";
 import { getCurrentDate } from "../../../../config/utils";
-import { addStockToPortfolio } from "../../../../config/stock";
+import { addUserStock } from "../../../../config/stock";
 import CurrencyInput from "react-currency-input-field";
 import { CheckIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { customModal } from "../../../../config/modalUtils";
@@ -13,6 +13,7 @@ export default function AddUserStock() {
   const { userId } = useParams();
   const { showModal } = useModal();
   const [isLoading, setIsLoading] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   const [stock, setStock] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [formData, setFormData] = useState({
@@ -32,21 +33,21 @@ export default function AddUserStock() {
   const stockApiKey = process.env.REACT_APP_STOCK_API_KEY;
 
   const fetchStockData = async () => {
-    setIsLoading(true);
+    setIsSearching(true);
 
     let exchange = ":NASDAQ";
     const exchangeIndex = inputValue.indexOf(":");
     if (exchangeIndex > -1) {
       exchange = inputValue.substring(exchangeIndex); // Extract exchange from input
     }
-      const options = {
-        method: 'GET',
-        url: 'https://real-time-finance-data.p.rapidapi.com/stock-quote',
-        params: { symbol: `${inputValue}${exchange}`, language: 'en' },
-        headers: {
-            'X-RapidAPI-Key': stockApiKey, // Replace with your actual API Key
-            'X-RapidAPI-Host': 'real-time-finance-data.p.rapidapi.com'
-        }
+    const options = {
+      method: "GET",
+      url: "https://real-time-finance-data.p.rapidapi.com/stock-quote",
+      params: { symbol: `${inputValue}${exchange}`, language: "en" },
+      headers: {
+        "X-RapidAPI-Key": stockApiKey, // Replace with your actual API Key
+        "X-RapidAPI-Host": "real-time-finance-data.p.rapidapi.com",
+      },
     };
 
     try {
@@ -83,11 +84,10 @@ export default function AddUserStock() {
         timer: 2000,
       });
     } finally {
-      setIsLoading(false);
+      setIsSearching(false);
     }
   };
 
-  
   // Simplified function to update the state based on latest stock data
   const updateStateWithStockData = (price, companyName) => {
     setFormData((prevFormData) => ({
@@ -99,7 +99,12 @@ export default function AddUserStock() {
 
   useEffect(() => {
     recalculateDependentFields();
-  }, [formData.type, formData.marketPrice, formData.shares, formData.tradePrice]);
+  }, [
+    formData.type,
+    formData.marketPrice,
+    formData.shares,
+    formData.tradePrice,
+  ]);
 
   const recalculateDependentFields = () => {
     const { shares, tradePrice, marketPrice, type } = formData;
@@ -158,7 +163,8 @@ export default function AddUserStock() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleAddStock = async () => {
+  const handleAddStock = async (e) => {
+    e.preventDefault();
     // Update formData with the symbol from inputValue
     const updatedFormData = { ...formData, symbol: inputValue.toUpperCase() };
 
@@ -194,23 +200,23 @@ export default function AddUserStock() {
     setIsLoading(true);
 
     try {
-      const result = await addStockToPortfolio(userId, updatedFormData);
+      const result = await addUserStock(userId, updatedFormData);
 
       if (result) {
         setStock([...stock, { ...updatedFormData, id: result.id }]);
-        resetForm();
+        customModal({
+          showModal,
+          title: "Success!",
+          text: `Stock added successfully.`,
+          showConfirmButton: false,
+          icon: CheckIcon,
+          iconBgColor: "bg-green-100",
+          iconTextColor: "text-green-600",
+          buttonBgColor: "bg-green-600",
+          timer: 2000,
+        });
       }
-      customModal({
-        showModal,
-        title: "Success!",
-        text: `Stock added successfully.`,
-        showConfirmButton: false,
-        icon: CheckIcon,
-        iconBgColor: "bg-green-100",
-        iconTextColor: "text-green-600",
-        buttonBgColor: "bg-green-600",
-        timer: 2000,
-      });
+      resetForm();
     } catch (error) {
       customModal({
         showModal,
@@ -280,7 +286,7 @@ export default function AddUserStock() {
               onClick={fetchStockData}
               className="ml-2 inline-flex justify-center items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
             >
-              {isLoading ? (
+              {isSearching ? (
                 <div className="flex w-full justify-center align-middle gap-2">
                   <span>Searching</span>
                   <DotLoader />
@@ -289,10 +295,6 @@ export default function AddUserStock() {
                 "Search"
               )}
             </button>
-
-            {/* {error === "No data available for the specified symbol." && (
-          <p className="error_msg">{error}</p>
-          )} */}
           </div>
         </div>
       </div>
@@ -386,7 +388,9 @@ export default function AddUserStock() {
                   name="tradePrice"
                   value={formData.tradePrice}
                   decimalsLimit={2}
-                  onValueChange={(value) => handleInputChange(value, 'tradePrice')}
+                  onValueChange={(value) =>
+                    handleInputChange(value, "tradePrice")
+                  }
                   required
                   className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />

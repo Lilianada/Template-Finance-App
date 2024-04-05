@@ -60,7 +60,7 @@ import { getCurrentDate } from "./utils";
   }
   
   //Adding of stocks
-  export async function addStockToPortfolio(userId, stockData) {
+  export async function addUserStock(userId, stockData) {
     try {
       if (typeof userId !== 'string') {
         throw new Error('UserId must be a string');
@@ -145,7 +145,7 @@ import { getCurrentDate } from "./utils";
         });
       } else {
         // If the stock doesn't exist yet, add it
-        await addStockToPortfolio(userId, stockData);
+        await addUserStock(userId, stockData);
       }
     } catch (error) {
       console.error("Error updating stock portfolio:", error);
