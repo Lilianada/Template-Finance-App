@@ -80,7 +80,7 @@ export default function ChangeMetaData() {
         text: "An error occurred while updating your data. Please try again later.",
         showConfirmButton: false,
         iconTextColor: "text-red-600",
-        iconBgColor: "bg-green-500",
+        iconBgColor: "bg-red-500",
         iconColor: "text-white",
         icon: ExclamationCircleIcon,
         timer: 1500,

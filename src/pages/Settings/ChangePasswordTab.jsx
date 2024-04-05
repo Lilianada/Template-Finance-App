@@ -1,23 +1,26 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   EmailAuthProvider,
   getAuth,
   reauthenticateWithCredential,
   updatePassword,
 } from "firebase/auth";
-import { CheckIcon, ExclamationCircleIcon, EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import {
+  CheckIcon,
+  ExclamationCircleIcon,
+  EyeIcon,
+  EyeSlashIcon,
+} from "@heroicons/react/24/outline";
 import DotLoader from "../../components/DotLoader";
-import { useModal } from "../../context/ModalContext";
 import { fetchPasswordPolicySetting } from "../../config/settings";
 import { customModal } from "../../config/modalUtils";
+import { useModal } from "../../context/ModalContext";
 
 export default function ChangePassword() {
   const { showModal } = useModal();
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isStrongPasswordPolicy, setIsStrongPasswordPolicy] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -31,26 +34,40 @@ export default function ChangePassword() {
     setShowNewPassword(!showNewPassword);
   };
 
-  const validatePassword = (pass, isStrongPolicy) => {
-    if (isStrongPolicy) {
-      const regex = /^(?=.*\d)(?=.*[\W_]).{8,}$/;
-      return regex.test(pass);
-    } else {
-      return pass.length >= 6;
-    }
-  };
-
   const validatePasswords = () => {
     if (newPassword !== confirmPassword) {
-      setError("New password and confirm password do not match.");
+      customModal({
+        showModal,
+        title: "Error",
+        text: "New password and confirm password do not match.",
+        showConfirmButton: false,
+        iconTextColor: "text-red-600",
+        iconBgColor: "bg-red-500",
+        iconColor: "text-white",
+        icon: ExclamationCircleIcon,
+        timer: 1500,
+      });
       return false;
     }
-    if (!validatePassword(newPassword, isStrongPasswordPolicy)) {
-      setError(
-        isStrongPasswordPolicy
+
+    const regex = isStrongPasswordPolicy
+      ? /^(?=.*\d)(?=.*[\W_]).{8,}$/ // Strong password policy
+      : /^.{6,}$/;
+
+    if (!regex.test(newPassword)) {
+      customModal({
+        showModal,
+        title: "Error",
+        text: isStrongPasswordPolicy
           ? "Password must be at least 8 characters long, must contain at least one number and a special character."
-          : "Password must be at least 6 digits long."
-      );
+          : "Password must be at least 6 digits long.",
+        showConfirmButton: false,
+        iconTextColor: "text-red-600",
+        iconBgColor: "bg-red-500",
+        iconColor: "text-white",
+        icon: ExclamationCircleIcon,
+        timer: 1500,
+      });
       return false;
     }
     return true;
@@ -60,10 +77,17 @@ export default function ChangePassword() {
     e.preventDefault();
 
     if (newPassword !== confirmPassword) {
-      setError("Passwords do not match.");
-      setTimeout(() => {
-        setError("");
-      }, 3000);
+      customModal({
+        showModal,
+        title: "Error",
+        text: "Passwords do not match. Please make sure your current password is correct.",
+        showConfirmButton: false,
+        iconTextColor: "text-red-600",
+        iconBgColor: "bg-red-500",
+        iconColor: "text-white",
+        icon: ExclamationCircleIcon,
+        timer: 1500,
+      });
       return;
     }
 
@@ -89,21 +113,32 @@ export default function ChangePassword() {
       .then(() => {
         customModal({
           showModal,
-          title: "Data Updated",
-          text: "Your data has been updated successfully",
+          title: "Updated",
+          text: "Password updated successfully.",
           showConfirmButton: false,
           iconBgColor: "bg-green-100",
           iconTextColor: "text-green-600",
           buttonBgColor: "bg-green-600",
           icon: CheckIcon,
           timer: 1500,
-        });  
+        });
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
       })
       .catch((error) => {
-        setError(
-          "Failed to update password. Please make sure your current password is correct."
-        );
         console.error(error);
+        customModal({
+          showModal,
+          title: "Error",
+          text: "Failed to update password. Please make sure your current password is correct.",
+          showConfirmButton: false,
+          iconTextColor: "text-red-600",
+          iconBgColor: "bg-red-500",
+          iconColor: "text-white",
+          icon: ExclamationCircleIcon,
+          timer: 1500,
+        });
       })
       .finally(() => {
         setIsLoading(false);
@@ -143,22 +178,30 @@ export default function ChangePassword() {
                 >
                   Current password
                 </label>
-                <div className="mt-2">
+                <div className="relative mt-2 rounded-md shadow-sm">
                   <input
-                   type={showPassword ? "text" : "password"}
-                   name="current_password"
-                   value={currentPassword}
-                   onChange={(e) => setCurrentPassword(e.target.value)}
+                    className="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    type={showPassword ? "text" : "password"}
+                    name="current_password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
                     autoComplete="current-password"
-                    className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-black shadow-sm ring-1 ring-inset ring-black/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                   />
-                  {
-              showPassword ? (
-                <EyeIcon className="password_icon" onClick={togglePasswordVisibility} />
-              ) : (
-                <EyeSlashIcon className="password_icon" onClick={togglePasswordVisibility}/>
-              )
-            }
+                  <div className="cursor-pointer absolute inset-y-0 right-0 flex items-center pr-3">
+                    {showPassword ? (
+                      <EyeIcon
+                        className="h-5 w-5 text-indigo-400"
+                        aria-hidden="true"
+                        onClick={togglePasswordVisibility}
+                      />
+                    ) : (
+                      <EyeSlashIcon
+                        className="h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                        onClick={togglePasswordVisibility}
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -169,14 +212,29 @@ export default function ChangePassword() {
                 >
                   New password
                 </label>
-                <div className="mt-2">
+                <div className="relative mt-2 rounded-md shadow-sm">
                   <input
-                    id="new-password"
+                    className="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    type={showNewPassword ? "text" : "password"}
                     name="new_password"
-                    type="password"
-                    autoComplete="new-password"
-                    className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-black shadow-sm ring-1 ring-inset ring-black/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
                   />
+                  <div className="cursor-pointer absolute inset-y-0 right-0 flex items-center pr-3">
+                    {showNewPassword ? (
+                      <EyeIcon
+                        className="h-5 w-5 text-indigo-400"
+                        aria-hidden="true"
+                        onClick={toggleNewPasswordVisibility}
+                      />
+                    ) : (
+                      <EyeSlashIcon
+                        className="h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                        onClick={toggleNewPasswordVisibility}
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -189,9 +247,10 @@ export default function ChangePassword() {
                 </label>
                 <div className="mt-2">
                   <input
-                    id="confirm-password"
+                    type={showPassword ? "text" : "password"}
                     name="confirm_password"
-                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                     autoComplete="new-password"
                     className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-black shadow-sm ring-1 ring-inset ring-black/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                   />
