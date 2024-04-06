@@ -262,7 +262,7 @@ export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
                   >
                     {isLoading ? (
                       <div className="flex w-full justify-center align-middle gap-2">
-                        <span>Sumitting</span>
+                        <span>Submitting</span>
                         <DotLoader />
                       </div>
                     ) : (

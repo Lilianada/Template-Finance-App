@@ -72,7 +72,7 @@ export default function Settings() {
                   item.href === activeTab
                     ? "text-indigo-500 group-hover:text-indigo-500"
                     : "text-gray-400 group-hover:text-gray-500",
-                  "-ml-1 mr-3 h-6 w-6 flex-shrink-0"
+                  "-ml-1 mr-3 h-6 w-6 flex-shrink-0 cursor-pointer hover:text-indigo-500"
                 )}
                 aria-hidden="true"
               />

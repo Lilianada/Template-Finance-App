@@ -451,7 +451,14 @@ export default function AddNewUser() {
           type="submit"
           className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
         >
-          {isLoading ? <DotLoader /> : "Create"}
+          {isLoading ? (
+            <div className="flex w-full justify-center align-middle gap-2">
+              <span>Creating</span>
+              <DotLoader />
+            </div>
+          ) : (
+            "Create"
+          )}
         </button>
       </div>
     </form>
