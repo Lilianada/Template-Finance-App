@@ -1,27 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { PlusIcon } from "@heroicons/react/20/solid";
+import { addAdminUser, fetchAdmins } from "../../config/admin";
 
 export default function AddNewAdmin() {
-  const team = [
-    {
-      name: "Calvin Hawkins",
-      email: "calvin.hawkins@example.com",
-      imageUrl:
-        "https://images.unsplash.com/photo-1513910367299-bce8d8a0ebf6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-    {
-      name: "Bessie Richards",
-      email: "bessie.richards@example.com",
-      imageUrl:
-        "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-    {
-      name: "Floyd Black",
-      email: "floyd.black@example.com",
-      imageUrl:
-        "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-  ];
+  const [email, setEmail] = useState('');
+  const [admins, setAdmins] = useState([]);
+
+  useEffect(() => {
+    const getAdmins = async () => {
+      try {
+        const fetchedAdmins = await fetchAdmins();
+        setAdmins(fetchedAdmins);
+      } catch (error) {
+        console.error('Error fetching admins:', error);
+      }
+    };
+
+    getAdmins();
+  }, []);
+
+
+  const handleAddAdmin = async () => {
+    if (!email) return; 
+
+    try {
+      await addAdminUser(email);
+      setEmail('');
+    } catch (error) {
+      console.error('Error adding admin user:', error);
+    }
+  }; 
   return (
     <div className="space-y-6 sm:px-6 lg:col-span-9 sm:col-span-10 lg:px-0 text-left">
       <div className="shadow sm:overflow-hidden sm:rounded-md">
@@ -50,6 +58,7 @@ export default function AddNewAdmin() {
               <button
                 type="button"
                 className="inline-flex items-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                onClick={handleAddAdmin}
               >
                 <PlusIcon
                   className="-ml-0.5 h-5 w-5 text-gray-400"
@@ -62,13 +71,17 @@ export default function AddNewAdmin() {
         </div>
         <div className="border-b border-gray-200  px-4 py-6 sm:p-6">
           <ul className="divide-y divide-gray-200">
-            {team.map((person) => (
+            {admins.map((person) => (
               <li key={person.email} className="flex py-4">
-                <img
-                  className="h-10 w-10 rounded-full"
-                  src={person.imageUrl}
-                  alt=""
-                />
+                <span className="inline-block h-10 w-10 overflow-hidden rounded-full bg-gray-100">
+                  <svg
+                    className="h-full w-full text-gray-300"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                </span>
                 <div className="ml-3 flex flex-col">
                   <span className="text-sm font-medium text-gray-900">
                     {person.name}

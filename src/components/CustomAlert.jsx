@@ -14,19 +14,6 @@ export default function CustomAlert({
   iconTextColor,
   timer,
 }) {
-  console.log(
-    open,
-    onClose,
-    title,
-    description,
-    textColor,
-    list,
-    listItems,
-    Icon,
-    iconBgColor,
-    iconTextColor,
-    timer
-  );
   const cancelButtonRef = useRef(null);
 
   useEffect(() => {

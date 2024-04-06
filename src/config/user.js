@@ -15,47 +15,12 @@ import {
     getAuth,
     sendEmailVerification,
     sendPasswordResetEmail,
-    signOut,
   } from "firebase/auth";
   
-  const ADMINUSERS_COLLECTION = "adminUsers";
   const ADMINDASH_COLLECTION = "admin_users";
   const USERS_COLLECTION = "users";
   
-  //Admin Users
-  export function addAdminUser(uid, fullName, email) {
-    // Use the uid directly as the document ID
-    return setDoc(doc(db, ADMINUSERS_COLLECTION, uid), {
-      fullName,
-      email,
-    });
-  }
-  
-  export const checkAdminRoleAndLogoutIfNot = async (db) => {
-    const auth = getAuth();
-    const user = auth.currentUser;
-  
-    if (!user) {
-      return false;
-    }
-  
-    try {
-      const adminUserRef = doc(db, ADMINUSERS_COLLECTION, user.uid);
-      const adminUserDoc = await getDoc(adminUserRef);
-  
-      if (adminUserDoc.exists() && adminUserDoc.data().role === "admin") {
-        return true;
-      } else {
-        await signOut(auth);
-        return false;
-      }
-    } catch (error) {
-      console.error("Error checking admin role:", error);
-      await signOut(auth);
-      return false;
-    }
-  };
-  
+ 
   //USER REQUESTS
   const USER_REQUESTS_COLLECTION = "userRequests";
   
