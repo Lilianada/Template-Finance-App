@@ -37,7 +37,6 @@ export default function CustomModal({
  
   if (!open) return null; 
 
-
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog

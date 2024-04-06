@@ -8,12 +8,15 @@ import {
 import { getDownloadURL, ref } from "firebase/storage";
 import { onAuthStateChanged } from "firebase/auth";
 import Background from "../../assets/images/Background.jpg";
-import Logo from "../../assets/images/logo.png";
+import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
 import { auth, db, storage } from "../../config/firebase";
 import { checkAdminRoleAndLogoutIfNot } from "../../config/utils";
 import DotLoader from "../../components/DotLoader";
+import CustomAlert from "../../components/CustomAlert";
+import { useAlert } from "../../context/AlertContext";
 
 export default function Login() {
+  const { showAlert } = useAlert();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -31,7 +34,6 @@ export default function Login() {
       setLogoUrl(logoUrl);
     } catch (error) {
       console.error("Error fetching Logo:", error);
-      // Handle errors as needed
     }
   };
 
@@ -69,8 +71,15 @@ export default function Login() {
         navigate("/dashboard");
         setIsLoading(false);
       } else {
-        setError("Access denied. You are not authorized as an admin.");
-        setTimeout(() => setError(""), 4000);
+        customA({
+          showAlert,
+          title: "Access Denied",
+          description: "You are not authorized as an admin.",
+          iconBgColor: "bg-red-500",
+          iconTextColor: "text-white",
+          Icon: ExclamationCircleIcon,
+          timer: 3000,
+        });
         setIsLoading(false);
       }
     } catch (error) {
