@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
 import DotLoader from "../../../../components/DotLoader";
 import { convertDateToISO, formatNumber } from "../../../../config/utils";
-import { customModal } from "../../../../config/modalUtils";
+import { customModal } from "../../../../utils/modalUtils";
 import { useModal } from "../../../../context/ModalContext";
 import {
   CheckIcon,

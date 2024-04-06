@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom';
 import { updateTerm } from '../../config/terms';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
-import { customModal } from '../../config/modalUtils';
+import { customModal } from '../../utils/modalUtils';
 import { useModal } from '../../context/ModalContext';
 import { PhotoIcon, CheckIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import DotLoader from '../../components/DotLoader';

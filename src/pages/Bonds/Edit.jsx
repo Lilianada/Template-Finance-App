@@ -9,7 +9,7 @@ import { updateBond } from "../../config/bonds";
 import DotLoader from "../../components/DotLoader";
 import { formatNumber } from "../../config/utils";
 import { useLocation } from "react-router-dom";
-import { customModal } from "../../config/modalUtils";
+import { customModal } from "../../utils/modalUtils";
 import { useModal } from "../../context/ModalContext";
 
 export default function Edit() {

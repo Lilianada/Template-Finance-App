@@ -6,7 +6,7 @@ import { getCurrentDate } from "../../../../config/utils";
 import { addUserStock } from "../../../../config/stock";
 import CurrencyInput from "react-currency-input-field";
 import { CheckIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
-import { customModal } from "../../../../config/modalUtils";
+import { customModal } from "../../../../utils/modalUtils";
 import DotLoader from "../../../../components/DotLoader";
 
 export default function AddUserStock() {

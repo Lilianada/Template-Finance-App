@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react";
 import DotLoader from "../../../../components/DotLoader";
 import { formatNumber, getCurrentDate } from "../../../../config/utils";
-import { customModal } from "../../../../config/modalUtils";
+import { customModal } from "../../../../utils/modalUtils";
 import { useModal } from "../../../../context/ModalContext";
 import {
   CheckIcon,

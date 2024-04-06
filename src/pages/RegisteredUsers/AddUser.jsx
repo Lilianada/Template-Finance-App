@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Select from "react-select";
 import DotLoader from "../../components/DotLoader";
-import { customModal } from "../../config/modalUtils";
+import { customModal } from "../../utils/modalUtils";
 import {
   CheckIcon,
   ExclamationTriangleIcon,

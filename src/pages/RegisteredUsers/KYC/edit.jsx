@@ -24,7 +24,7 @@ import {
 import { getUserKyc, updateUserKyc } from "../../../config/user";
 import DotLoader from "../../../components/DotLoader";
 import { useModal } from "../../../context/ModalContext";
-import { customModal } from "../../../config/modalUtils";
+import { customModal } from "../../../utils/modalUtils";
 
 function EditKyc() {
   const { userId } = useParams();

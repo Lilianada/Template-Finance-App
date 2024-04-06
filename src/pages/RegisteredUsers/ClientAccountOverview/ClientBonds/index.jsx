@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { formatNumber } from "../../../../config/utils";
 import { useModal } from "../../../../context/ModalContext";
-import { customModal } from "../../../../config/modalUtils";
+import { customModal } from "../../../../utils/modalUtils";
 import {
   CheckIcon,
   ExclamationTriangleIcon,

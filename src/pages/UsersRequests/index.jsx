@@ -7,7 +7,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import DotLoader from "../../components/DotLoader";
 import { auth, db } from "../../config/firebase";
-import { customModal } from "../../config/modalUtils";
+import { customModal } from "../../utils/modalUtils";
 import { useModal } from "../../context/ModalContext";
 import {
   CheckIcon,

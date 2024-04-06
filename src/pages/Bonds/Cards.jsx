@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { PencilIcon, CheckIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { formatNumber } from "../../config/utils";
 import LoadingScreen from "../../components/LoadingScreen";
-import { customModal } from "../../config/modalUtils";
+import { customModal } from "../../utils/modalUtils";
 import { deleteBond } from "../../config/bonds";
 import { useModal } from "../../context/ModalContext";
 

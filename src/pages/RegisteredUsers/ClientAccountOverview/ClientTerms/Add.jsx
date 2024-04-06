@@ -2,7 +2,7 @@ import React, { Fragment, useState } from "react";
 import { useModal } from "../../../../context/ModalContext";
 import { formatNumber, getCurrentDate } from "../../../../config/utils";
 import { addTermToUserCollection } from "../../../../config/terms";
-import { customModal } from "../../../../config/modalUtils";
+import { customModal } from "../../../../utils/modalUtils";
 import { CheckIcon, XMarkIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import DotLoader from "../../../../components/DotLoader";
 import { Dialog, Transition } from "@headlessui/react";

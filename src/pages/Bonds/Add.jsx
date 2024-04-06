@@ -3,7 +3,7 @@ import { PhotoIcon, CheckIcon, ExclamationTriangleIcon } from "@heroicons/react/
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { addNewBond } from "../../config/bonds";
 import DotLoader from "../../components/DotLoader";
-import { customModal } from "../../config/modalUtils";
+import { customModal } from "../../utils/modalUtils";
 import { useModal } from "../../context/ModalContext";
 
 export default function Add() {

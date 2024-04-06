@@ -8,7 +8,7 @@ import {
 import CurrencyInput from "react-currency-input-field";
 import { addNewIpos } from "../../config/ipos";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { customModal } from "../../config/modalUtils";
+import { customModal } from "../../utils/modalUtils";
 import DotLoader from "../../components/DotLoader";
 
 export default function AddIpos() {

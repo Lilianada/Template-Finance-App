@@ -5,7 +5,7 @@ import {
   deleteStockFromDb,
   getStockFromUserDB,
 } from "../../../../config/stock";
-import { customModal } from "../../../../config/modalUtils";
+import { customModal } from "../../../../utils/modalUtils";
 import {
   CheckIcon,
   ExclamationTriangleIcon,

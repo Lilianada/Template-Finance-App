@@ -2,7 +2,7 @@ import { Fragment, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { PencilIcon, CheckIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import LoadingScreen from "../../components/LoadingScreen";
-import { customModal } from "../../config/modalUtils";
+import { customModal } from "../../utils/modalUtils";
 import { deleteIpos } from "../../config/ipos";
 import { useModal } from "../../context/ModalContext";
 

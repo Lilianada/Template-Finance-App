@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUser } from "../../../config/user";
-import { customModal } from "../../../config/modalUtils";
+import { customModal } from "../../../utils/modalUtils";
 import { useModal } from "../../../context/ModalContext";
 import {
   CheckIcon,

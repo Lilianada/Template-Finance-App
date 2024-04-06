@@ -12,8 +12,8 @@ import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
 import { auth, db, storage } from "../../config/firebase";
 import { checkAdminRoleAndLogoutIfNot } from "../../config/utils";
 import DotLoader from "../../components/DotLoader";
-import CustomAlert from "../../components/CustomAlert";
 import { useAlert } from "../../context/AlertContext";
+import { customAlert } from "../../utils/alertUtils";
 
 export default function Login() {
   const { showAlert } = useAlert();
@@ -71,7 +71,7 @@ export default function Login() {
         navigate("/dashboard");
         setIsLoading(false);
       } else {
-        customA({
+        customAlert({
           showAlert,
           title: "Access Denied",
           description: "You are not authorized as an admin.",

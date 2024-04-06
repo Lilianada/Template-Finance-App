@@ -4,7 +4,7 @@ import { useDispatch} from "react-redux";
 import Select from "react-select";
 import { getUser, updateUser } from "../../../config/user";
 import DotLoader from "../../../components/DotLoader";
-import { customModal } from "../../../config/modalUtils";
+import { customModal } from "../../../utils/modalUtils";
 import {
   CheckIcon,
   ExclamationTriangleIcon,

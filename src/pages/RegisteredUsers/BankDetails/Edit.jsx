@@ -5,7 +5,7 @@ import {
   getBankingDetails,
   manageBankingDetails,
 } from "../../../config/bankDetails";
-import { customModal } from "../../../config/modalUtils";
+import { customModal } from "../../../utils/modalUtils";
 import {
   CheckIcon,
   ExclamationTriangleIcon,
