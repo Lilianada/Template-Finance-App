@@ -1,75 +1,41 @@
 import React, { useEffect, useState } from "react";
 import { PlusIcon } from "@heroicons/react/20/solid";
-import { addAdminUser, fetchAdmins } from "../../config/admin";
+import AddAdminModal from "../../components/AddAdminModal";
+import { fetchAdmins } from "../../config/admin";
 
 export default function AddNewAdmin() {
-  const [email, setEmail] = useState('');
+  const [open, setOpen] = useState(false);
   const [admins, setAdmins] = useState([]);
 
-  useEffect(() => {
-    const getAdmins = async () => {
-      try {
-        const fetchedAdmins = await fetchAdmins();
-        setAdmins(fetchedAdmins);
-      } catch (error) {
-        console.error('Error fetching admins:', error);
-      }
-    };
+  const handleAdd = async () => {
+    setOpen(true);
+  };
 
+  const getAdmins = async () => {
+    try {
+      const fetchedAdmins = await fetchAdmins();
+      setAdmins(fetchedAdmins);
+    } catch (error) {
+      console.error("Error fetching admins:", error);
+    }
+  };
+  useEffect(() => {
     getAdmins();
   }, []);
 
-
-  const handleAddAdmin = async () => {
-    if (!email) return; 
-
-    try {
-      await addAdminUser(email);
-      setEmail('');
-    } catch (error) {
-      console.error('Error adding admin user:', error);
-    }
-  }; 
+ 
   return (
     <div className="space-y-6 sm:px-6 lg:col-span-9 sm:col-span-10 lg:px-0 text-left">
       <div className="shadow sm:overflow-hidden sm:rounded-md">
-        <div className="space-y-2  px-4 py-6 sm:p-6">
+        <div className="flex justify-between items-center space-y-2  px-4 py-4 ">
           <label
             htmlFor="add-team-members"
-            className="block text-sm font-medium leading-6 text-gray-900"
+            className="block text-base font-semibold leading-6 text-gray-900"
           >
-            Add Team Members
+            All Admin Users
           </label>
-          <p id="add-team-members-helper" className="sr-only">
-            Search by email address
-          </p>
-          <div className="flex">
-            <div className="flex-grow">
-              <input
-                type="text"
-                name="add-team-members"
-                id="add-team-members"
-                className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-6"
-                placeholder="Email address"
-                aria-describedby="add-team-members-helper"
-              />
-            </div>
-            <span className="ml-3">
-              <button
-                type="button"
-                className="inline-flex items-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                onClick={handleAddAdmin}
-              >
-                <PlusIcon
-                  className="-ml-0.5 h-5 w-5 text-gray-400"
-                  aria-hidden="true"
-                />
-                Add
-              </button>
-            </span>
-          </div>
         </div>
-        <div className="border-b border-gray-200  px-4 py-6 sm:p-6">
+        <div className="border-b border-gray-200  px-4">
           <ul className="divide-y divide-gray-200">
             {admins.map((person) => (
               <li key={person.email} className="flex py-4">
@@ -88,11 +54,36 @@ export default function AddNewAdmin() {
                   </span>
                   <span className="text-sm text-gray-500">{person.email}</span>
                 </div>
+                
               </li>
             ))}
           </ul>
         </div>
+        <div className=" bg-gray-50 px-4 py-3 text-right sm:px-6">
+          <button
+            type="button"
+            className="inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            onClick={handleAdd}
+          >
+            <PlusIcon
+              className="-ml-0.5 h-5 w-5 text-white"
+              aria-hidden="true"
+            />
+            Add New Admin
+          </button>
+        </div>
       </div>
+      {
+        open && (
+          <AddAdminModal
+            open={open}
+            setOpen={setOpen}
+            refresh={getAdmins}
+          />
+        )
+      }
     </div>
   );
 }
+
+

@@ -76,7 +76,7 @@ export default function Login() {
           title: "Access Denied",
           description: "You are not authorized as an admin.",
           textColor: "text-red-800",
-          iconBgColor: "bg-red-500",
+          iconBgColor: "bg-red-100",
           iconTextColor: "text-red-600",
           icon: XCircleIcon,
           onClose: hideAlert,
@@ -90,7 +90,7 @@ export default function Login() {
       customAlert({
         showAlert,
         title: "Access Denied",
-        description: error === "Firebase: Error (auth/invalid-credential)." ? "Incorrect password, kindly try again with another password" : "You are not authorized as an admin.",
+        description: error ,
         textColor: "text-red-800",
         icon: XCircleIcon,
         iconBgColor: "bg-red-100",

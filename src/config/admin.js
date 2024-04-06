@@ -6,41 +6,70 @@ import {
     getDoc,
     getDocs,
     onSnapshot,
+    query,
     setDoc,
     updateDoc,
+    where,
   } from "firebase/firestore";
   import { db } from "./firebase";
   import {
     createUserWithEmailAndPassword,
     getAuth,
-    sendEmailVerification,
     sendPasswordResetEmail,
     signOut,
   } from "firebase/auth";
   
   const ADMINUSERS_COLLECTION = "adminUsers";
- //Admin Users
- export function addAdminUser(uid, fullName, email) {
-    return db.collection('adminUsers').doc(uid).set({
-      fullName,
-      email,
-      role: 'admin',
-    });
-  }
 
-  export async function fetchAdmins() {
+  export async function addAdminUser(fullName, email, password) {
     try {
-      const adminsSnapshot = await db.collection('adminUsers').get();
-      const admins = [];
+      const auth = getAuth();
   
-      adminsSnapshot.forEach((doc) => {
-        const data = doc.data();
-        admins.push({
-          uid: doc.id,
-          name: data.fullName,
-          role: data.role,
-        });
-      });
+      // Create admin user in Firebase Authentication
+      const adminCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const adminUid = adminCredential.user.uid;
+  
+      // Send password reset email
+      await sendPasswordResetEmail(auth, email);
+  
+      // Add admin to Firestore
+      const newAdmin = {
+        uid: adminUid,
+        fullName,
+        email,
+        role: "admin",
+      };
+      const adminDocRef = doc(db, ADMINUSERS_COLLECTION, adminUid);
+      await setDoc(adminDocRef, newAdmin);
+  
+      return newAdmin;
+    } catch (error) {
+      console.error("Error adding admin user:", error);
+      throw error;
+    }
+  }
+  
+  
+  export async function fetchAdmins() {
+      try {
+        const adminUserCollection = collection(db, 'adminUsers'); // Assuming 'adminUsers' is your Firestore collection name
+        const adminsQuery = query(adminUserCollection, where('role', '==', 'admin'));
+        const adminsSnapshot = await getDocs(adminsQuery);
+        
+        const admins = [];
+        adminsSnapshot.forEach((doc) => {
+          const data = doc.data();
+          admins.push({
+            uid: doc.id,
+            name: data.fullName,
+            role: data.role,
+            email: data.email,
+          });
+        });    
   
       return admins;
     } catch (error) {
