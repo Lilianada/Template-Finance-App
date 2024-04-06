@@ -7,7 +7,7 @@ import {
   ExclamationCircleIcon,
   PhotoIcon,
 } from "@heroicons/react/24/outline";
-import { customModal } from "../../config/modalUtils";
+import { customModal } from "../../utils/modalUtils";
 import DotLoader from "../../components/DotLoader";
 
 export default function ChangeLogo() {

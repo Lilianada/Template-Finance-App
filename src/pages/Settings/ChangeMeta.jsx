@@ -6,7 +6,7 @@ import {
   updateTitleText,
 } from "../../config/settings";
 import { useModal } from "../../context/ModalContext";
-import { customModal } from "../../config/modalUtils";
+import { customModal } from "../../utils/modalUtils";
 import { CheckIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import DotLoader from "../../components/DotLoader";
 

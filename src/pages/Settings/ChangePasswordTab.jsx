@@ -13,7 +13,7 @@ import {
 } from "@heroicons/react/24/outline";
 import DotLoader from "../../components/DotLoader";
 import { fetchPasswordPolicySetting } from "../../config/settings";
-import { customModal } from "../../config/modalUtils";
+import { customModal } from "../../utils/modalUtils";
 import { useModal } from "../../context/ModalContext";
 
 export default function ChangePassword() {
