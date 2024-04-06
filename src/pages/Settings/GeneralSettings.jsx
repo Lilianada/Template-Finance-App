@@ -1,8 +1,182 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import {
+  fetchBondsFeature,
+  fetchChatFeature,
+  fetchIposFeature,
+  fetchIposTablesFeature,
+  fetchPasswordPolicySetting,
+  fetchTermsFeature,
+  fetchToolsFeature,
+  updateBondsFeature,
+  updateChatFeature,
+  updateIposFeature,
+  updateIposTablesFeature,
+  updatePasswordPolicySetting,
+  updateTermsFeature,
+  updateToolsFeature,
+} from "../../config/settings";
 
 export default function GeneralSettings() {
+  const [strongPasswordPolicy, setStrongPasswordPolicy] = useState(true);
+  const [isChatEnabled, setIsChatEnabled] = useState(false);
+  const [isToolsEnabled, setIsToolsEnabled] = useState(false);
+  const [isBondsEnabled, setIsBondsEnabled] = useState(false);
+  const [isIposEnabled, setIsIposEnabled] = useState(false);
+  const [isTermsEnabled, setIsTermsEnabled] = useState(false);
+  const [displayIposTables, setDisplayIposTables] = useState(false);
+
+  const fetchPasswordSetting = async () => {
+    try {
+      const passwordPolicy = await fetchPasswordPolicySetting();
+      setStrongPasswordPolicy(passwordPolicy);
+    } catch (error) {
+      console.error("Error fetching password policy:", error);
+    }
+  };
+
+  const fetchChatSetting = async () => {
+    try {
+      const chatEnabled = await fetchChatFeature();
+      setIsChatEnabled(chatEnabled);
+    } catch (error) {
+      console.error("Error fetching chat setting:", error);
+    }
+  };
+
+  const fetchToolsSetting = async () => {
+    try {
+      const toolsEnabled = await fetchToolsFeature();
+      setIsToolsEnabled(toolsEnabled);
+    } catch (error) {
+      console.error("Error fetching tools setting:", error);
+    }
+  };
+
+  const fetchTermsSetting = async () => {
+    try {
+      const termsEnabled = await fetchTermsFeature();
+      setIsTermsEnabled(termsEnabled);
+    } catch (error) {
+      console.error("Error fetching terms setting:", error);
+    }
+  };
+
+  const fetchBondsSetting = async () => {
+    try {
+      const bondsEnabled = await fetchBondsFeature();
+      setIsBondsEnabled(bondsEnabled);
+    } catch (error) {
+      console.error("Error fetching Bonds setting:", error);
+    }
+  };
+
+  const fetchIposSetting = async () => {
+    try {
+      const iposEnabled = await fetchIposFeature();
+      setIsIposEnabled(iposEnabled);
+    } catch (error) {
+      console.error("Error fetching Ipos setting:", error);
+    }
+  };
+
+  const fetchIposTablesSetting = async () => {
+    try {
+      const tablesEnabled = await fetchIposTablesFeature();
+      setDisplayIposTables(tablesEnabled);
+    } catch (error) {
+      console.error("Error fetching Tables setting:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPasswordSetting();
+    fetchChatSetting();
+    fetchToolsSetting();
+    fetchTermsSetting();
+    fetchBondsSetting();
+    fetchIposSetting();
+    fetchIposTablesSetting();
+  }, []);
+
+  const togglePasswordPolicy = () => {
+    const updatedValue = !strongPasswordPolicy;
+    setStrongPasswordPolicy(updatedValue);
+
+    updatePasswordPolicySetting(updatedValue)
+      .then(() => {})
+      .catch((error) => {
+        console.error("Error updating password policy: ", error);
+      });
+  };
+
+  const toggleChatFeature = () => {
+    const updatedValue = !isChatEnabled;
+    setIsChatEnabled(updatedValue);
+
+    updateChatFeature(updatedValue)
+      .then(() => {})
+      .catch((error) => {
+        console.error("Error updating chat feature: ", error);
+      });
+  };
+
+  const toggleToolsFeature = () => {
+    const updatedValue = !isToolsEnabled;
+    setIsToolsEnabled(updatedValue);
+
+    updateToolsFeature(updatedValue)
+      .then(() => {})
+      .catch((error) => {
+        console.error("Error updating tools feature: ", error);
+      });
+  };
+
+  const toggleTermsFeature = () => {
+    const updatedValue = !isTermsEnabled;
+    setIsTermsEnabled(updatedValue);
+
+    updateTermsFeature(updatedValue)
+      .then(() => {})
+      .catch((error) => {
+        console.error("Error updating tools feature: ", error);
+      });
+  };
+
+  const toggleBondsFeature = () => {
+    const updatedValue = !isBondsEnabled;
+    setIsBondsEnabled(updatedValue);
+
+    updateBondsFeature(updatedValue)
+      .then(() => {})
+      .catch((error) => {
+        console.error("Error updating tools feature: ", error);
+      });
+  };
+
+  const toggleIposFeature = () => {
+    const updatedValue = !isIposEnabled;
+    setIsIposEnabled(updatedValue);
+
+    updateIposFeature(updatedValue)
+      .then(() => {})
+      .catch((error) => {
+        console.error("Error updating tools feature: ", error);
+      });
+  };
+
+  const toggleTablesFeature = () => {
+    const updatedValue = !displayIposTables;
+    setDisplayIposTables(updatedValue);
+
+    updateIposTablesFeature(updatedValue)
+      .then(() => {})
+      .catch((error) => {
+        console.error("Error updating tools feature: ", error);
+      });
+  };
+
   return (
-    <div >
+    <div>
       <form action="#" method="POST">
         <div className="shadow sm:overflow-hidden sm:rounded-md">
           <div className="space-y-6 bg-white px-4 py-6 sm:p-6">
@@ -15,7 +189,7 @@ export default function GeneralSettings() {
                 settings.
               </p>
             </div>
-
+            {/* password policy */}
             <fieldset>
               <legend className="text-sm font-semibold leading-6 text-gray-900">
                 Password
@@ -24,15 +198,17 @@ export default function GeneralSettings() {
                 <div className="flex items-start">
                   <div className="flex h-6 items-center">
                     <input
-                      id="comments"
-                      name="comments"
+                      id="password-policy"
+                      name="password-policy"
                       type="checkbox"
+                      checked={strongPasswordPolicy}
+                      onChange={togglePasswordPolicy}
                       className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                     />
                   </div>
                   <div className="ml-3 text-sm leading-6">
                     <label
-                      htmlFor="comments"
+                      htmlFor="password-policy"
                       className="font-medium text-gray-900"
                     >
                       Password Policy
@@ -50,18 +226,21 @@ export default function GeneralSettings() {
                 Menu Visibility
               </legend>
               <div className="mt-4 space-y-4">
+                {/* tools menu */}
                 <div className="flex items-start">
                   <div className="flex h-6 items-center">
                     <input
-                      id="comments"
-                      name="comments"
+                      id="tools-menu"
+                      name="tools-menu"
                       type="checkbox"
+                      checked={isToolsEnabled}
+                      onChange={toggleToolsFeature}
                       className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                     />
                   </div>
                   <div className="ml-3 text-sm leading-6">
                     <label
-                      htmlFor="comments"
+                      htmlFor="tools-menu"
                       className="font-medium text-gray-900"
                     >
                       Tools Menu
@@ -71,73 +250,76 @@ export default function GeneralSettings() {
                     </p>
                   </div>
                 </div>
-                <div>
-                  <div className="flex items-start">
-                    <div className="flex h-6 items-center">
-                      <input
-                        id="candidates"
-                        name="candidates"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                    </div>
-                    <div className="ml-3 text-sm leading-6">
-                      <label
-                        htmlFor="candidates"
-                        className="font-medium text-gray-900"
-                      >
-                        IPOs Menu
-                      </label>
-                      <p className="text-gray-500">
-                        Check the box to enable the display of IPOs menu.
-                      </p>
-                    </div>
+                {/* ipos menu */}
+                <div className="flex items-start">
+                  <div className="flex h-6 items-center">
+                    <input
+                      id="ipos-menu"
+                      name="ipos-menu"
+                      checked={isIposEnabled}
+                      onChange={toggleIposFeature}
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                    />
+                  </div>
+                  <div className="ml-3 text-sm leading-6">
+                    <label
+                      htmlFor="ipos-menu"
+                      className="font-medium text-gray-900"
+                    >
+                      IPOs Menu
+                    </label>
+                    <p className="text-gray-500">
+                      Check the box to enable the display of IPOs menu.
+                    </p>
                   </div>
                 </div>
-                <div>
-                  <div className="flex items-start">
-                    <div className="flex h-6 items-center">
-                      <input
-                        id="offers"
-                        name="offers"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                    </div>
-                    <div className="ml-3 text-sm leading-6">
-                      <label
-                        htmlFor="offers"
-                        className="font-medium text-gray-900"
-                      >
-                        Bonds Menu
-                      </label>
-                      <p className="text-gray-500">
-                        Check the box to enable the display of Bonds menu.
-                      </p>
-                    </div>
+                {/* bonds menu */}
+                <div className="flex items-start">
+                  <div className="flex h-6 items-center">
+                    <input
+                      id="bonds-menu"
+                      name="bonds-menu"
+                      type="checkbox"
+                      checked={isBondsEnabled}
+                      onChange={toggleBondsFeature}
+                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                    />
+                  </div>
+                  <div className="ml-3 text-sm leading-6">
+                    <label
+                      htmlFor="bonds-menu"
+                      className="font-medium text-gray-900"
+                    >
+                      Bonds Menu
+                    </label>
+                    <p className="text-gray-500">
+                      Check the box to enable the display of Bonds menu.
+                    </p>
                   </div>
                 </div>
-                <div>
-                  <div className="flex items-start">
-                    <div className="flex h-6 items-center">
-                      <input
-                        id="offers"
-                        name="offers"
-                        type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                      />
-                    </div>
-                    <div className="ml-3 text-sm leading-6">
-                      <label
-                        htmlFor="offers"
-                        className="font-medium text-gray-900"
-                      >
-                        Terms Menu
-                      </label>
-                      <p className="text-gray-500">
-                        Check the box to enable the display of Terms menu.
-                      </p>
-                    </div>
+                {/* terms menu */}
+                <div className="flex items-start">
+                  <div className="flex h-6 items-center">
+                    <input
+                      id="terms-menu"
+                      name="terms-menu"
+                      type="checkbox"
+                      checked={isTermsEnabled}
+                      onChange={toggleTermsFeature}
+                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                    />
+                  </div>
+                  <div className="ml-3 text-sm leading-6">
+                    <label
+                      htmlFor="terms-menu"
+                      className="font-medium text-gray-900"
+                    >
+                      Terms Menu
+                    </label>
+                    <p className="text-gray-500">
+                      Check the box to enable the display of Terms menu.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -148,18 +330,21 @@ export default function GeneralSettings() {
                 Table Visibility
               </legend>
               <div className="mt-4 space-y-4">
+                {/* ipos table */}
                 <div className="flex items-start">
                   <div className="flex h-6 items-center">
                     <input
-                      id="comments"
-                      name="comments"
+                      id="ipos-table"
+                      name="ipos-table"
+                      checked={displayIposTables}
+                      onChange={toggleTablesFeature}
                       type="checkbox"
                       className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                     />
                   </div>
                   <div className="ml-3 text-sm leading-6">
                     <label
-                      htmlFor="comments"
+                      htmlFor="ipos-table"
                       className="font-medium text-gray-900"
                     >
                       IPOs table visibility
