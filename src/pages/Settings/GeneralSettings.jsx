@@ -256,9 +256,9 @@ export default function GeneralSettings() {
                     <input
                       id="ipos-menu"
                       name="ipos-menu"
+                      type="checkbox"
                       checked={isIposEnabled}
                       onChange={toggleIposFeature}
-                      type="checkbox"
                       className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                     />
                   </div>
