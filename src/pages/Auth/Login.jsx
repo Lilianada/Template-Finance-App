@@ -8,15 +8,15 @@ import {
 import { getDownloadURL, ref } from "firebase/storage";
 import { onAuthStateChanged } from "firebase/auth";
 import Background from "../../assets/images/Background.jpg";
-import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
+import { XCircleIcon } from "@heroicons/react/20/solid";
 import { auth, db, storage } from "../../config/firebase";
 import { checkAdminRoleAndLogoutIfNot } from "../../config/utils";
 import DotLoader from "../../components/DotLoader";
-import { useAlert } from "../../context/AlertContext";
 import { customAlert } from "../../utils/alertUtils";
+import { useAlert } from "../../context/AlertContext";
 
 export default function Login() {
-  const { showAlert } = useAlert();
+  const { showAlert, hideAlert } = useAlert();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -75,15 +75,30 @@ export default function Login() {
           showAlert,
           title: "Access Denied",
           description: "You are not authorized as an admin.",
+          textColor: "text-red-800",
           iconBgColor: "bg-red-500",
-          iconTextColor: "text-white",
-          Icon: ExclamationCircleIcon,
+          iconTextColor: "text-red-600",
+          icon: XCircleIcon,
+          onClose: hideAlert,
+          list: false,
           timer: 3000,
         });
         setIsLoading(false);
       }
     } catch (error) {
       console.error("Error during login:", error);
+      customAlert({
+        showAlert,
+        title: "Access Denied",
+        description: error === "Firebase: Error (auth/invalid-credential)." ? "Incorrect password, kindly try again with another password" : "You are not authorized as an admin.",
+        textColor: "text-red-800",
+        icon: XCircleIcon,
+        iconBgColor: "bg-red-100",
+        iconTextColor: "text-red-600",
+        list: false,
+        onClose: hideAlert,
+        timer: 3000,
+      });
       setError(error.message);
       setIsLoading(false);
       setTimeout(() => setError(""), 4000);

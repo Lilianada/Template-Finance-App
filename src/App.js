@@ -4,6 +4,8 @@ import { checkAdminRoleAndLogoutIfNot } from "./config/utils";
 import { useAuth } from "./authState";
 import { db } from "./config/firebase";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ModalProvider } from "./context/ModalContext";
+import { AlertProvider } from "./context/AlertContext";
 import "./App.css";
 import store from "../src/store/store";
 import Skeleton from "./components/Skeleton";
@@ -16,7 +18,6 @@ import AddBond from "./pages/Bonds/Add";
 import EditBond from "./pages/Bonds/Edit";
 import Dashboard from "./pages/Dashboard";
 import RegisteredUsers from "./pages/RegisteredUsers";
-import { ModalProvider } from "./context/ModalContext";
 import AddNewUser from "./pages/RegisteredUsers/AddUser";
 import ViewUser from "./pages/RegisteredUsers/ViewUser";
 import Edit from "./pages/RegisteredUsers/ClientInfo/Edit";
@@ -54,6 +55,7 @@ function App() {
 
   return (
     <ModalProvider>
+      <AlertProvider>
       <Provider store={store}>
         <div className="App">
           <Router>
@@ -330,6 +332,7 @@ function App() {
           {loadingAuthState && <LoadingScreen />}
         </div>
       </Provider>
+      </AlertProvider>
     </ModalProvider>
   );
 }
