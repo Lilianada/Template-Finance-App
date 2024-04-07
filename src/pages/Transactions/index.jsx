@@ -2,8 +2,11 @@
 import { useEffect, useState } from "react";
 import PropTable from "../../components/PropTable";
 import { getAllTransactions } from "../../config/transactions";
-import { doc } from "firebase/firestore";
+import { doc, runTransaction, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
+import { customModal } from "../../utils/modalUtils";
+import { useModal } from "../../context/ModalContext";
+import { ExclamationCircleIcon, CheckIcon } from "@heroicons/react/24/outline";
 
 const headings = [
   "No",
@@ -64,6 +67,7 @@ const data = [
 ];
 
 function TransactionsComponent() {
+  const { showModal } = useModal();
   const [transactions, setTransactions] = useState([]);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [isApproving, setIsApproving] = useState(false);
@@ -180,21 +184,29 @@ function TransactionsComponent() {
       );
       transactionsCopy[transactionIndex].status = "Approved";
       setTransactions(transactionsCopy);
-
-      Swal.fire({
-        icon: "success",
-        title: "Approved!",
-        text: `Transaction has been approved.`,
+      customModal({
+        showModal,
+        title: "Success",
+        message: "Transaction has been approved successfully.",
         showConfirmButton: false,
-        timer: 2000,
+        iconBgColor: "bg-green-100",
+        iconTextColor: "text-green-600",
+        buttonBgColor: "bg-green-600",
+        icon: CheckIcon,
+        timer: 1500,
       });
     } catch (error) {
       console.error("Error updating transaction:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Error!",
-        text: `Failed to update the transaction.`,
-        showConfirmButton: true,
+      customModal({
+        showModal,
+        title: "Error",
+        text: "An error occurred while updating your data. Please try again later.",
+        showConfirmButton: false,
+        iconTextColor: "text-red-600",
+        iconBgColor: "bg-red-500",
+        iconColor: "text-white",
+        icon: ExclamationCircleIcon,
+        timer: 1500,
       });
     } finally {
       setIsLoading(false);
@@ -228,20 +240,29 @@ function TransactionsComponent() {
       setTransactions(transactionsCopy);
       setIsDeclining(false);
 
-      Swal.fire({
-        icon: "success",
-        title: "Declined!",
-        text: `Transaction has been declined.`,
+      customModal({
+        showModal,
+        title: "Success",
+        message: "Transaction has been declined successfully.",
         showConfirmButton: false,
-        timer: 2000,
-      });
+        iconBgColor: "bg-green-100",
+        iconTextColor: "text-green-600",
+        buttonBgColor: "bg-green-600",
+        icon: CheckIcon,
+        timer: 1500,
+      })
     } catch (error) {
       console.error("Error updating transaction:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Error!",
-        text: `Failed to update the transaction.`,
-        showConfirmButton: true,
+     customModal({
+        showModal,
+        title: "Error",
+        text: "An error occurred while updating your data. Please try again later.",
+        showConfirmButton: false,
+        iconTextColor: "text-red-600",
+        iconBgColor: "bg-red-500",
+        iconColor: "text-white",
+        icon: ExclamationCircleIcon,
+        timer: 1500,
       });
     } finally {
       setIsLoading(false);

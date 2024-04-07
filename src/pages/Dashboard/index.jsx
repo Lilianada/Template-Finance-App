@@ -5,7 +5,6 @@ import {
   BanknotesIcon,
   ChartBarSquareIcon,
   BellIcon,
-  CalculatorIcon,
   CircleStackIcon,
 } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
@@ -15,11 +14,6 @@ const menus = [
     title: "Registered Users",
     icon: <UserIcon className=" w-12" />,
     href: "/dashboard/registered_users",
-  },
-  {
-    title: "Transactions",
-    icon: <CalculatorIcon className=" w-12" />,
-    href: "/dashboard/transactions",
   },
   {
     title: "Cash Deposits",

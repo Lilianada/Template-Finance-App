@@ -19,12 +19,6 @@ const navigation = [
     icon: UsersIcon,
     current: false,
   },
-  // {
-  //   name: "Transactions",
-  //   to: "/dashboard/transactions",
-  //   icon: FolderIcon,
-  //   current: false,
-  // },
   {
     name: "Cash Deposits",
     to: "/dashboard/cash_deposits",
@@ -49,24 +43,6 @@ const navigation = [
     icon: CalendarIcon, 
     current: false 
   },
-  // {
-  //   name: "Documents",
-  //   to: "/dashboard/documents",
-  //   icon: DocumentDuplicateIcon,
-  //   current: false,
-  // },
-  // {
-  //   name: "Banking Details",
-  //   to: "/dashboard/banking_details",
-  //   icon: ChartPieIcon,
-  //   current: false,
-  // },
-  // {
-  //   name: "Chat Users",
-  //   to: "/dashboard/chat",
-  //   icon: ChatBubbleLeftRightIcon,
-  //   current: false,
-  // },
 ];
 
 const requests = [
