@@ -276,7 +276,7 @@ function TransactionsComponent() {
       noData="No transactions found."
       data={transactions}
       headings={headings}
-      onExportClick={() => console.log("Export Clicked")}
+      onAddTransaction={() => console.log("Add Clicked")}
       editLink="#"
     />
   );
