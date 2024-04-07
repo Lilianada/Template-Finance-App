@@ -19,12 +19,12 @@ const navigation = [
     icon: UsersIcon,
     current: false,
   },
-  {
-    name: "Transactions",
-    to: "/dashboard/transactions",
-    icon: FolderIcon,
-    current: false,
-  },
+  // {
+  //   name: "Transactions",
+  //   to: "/dashboard/transactions",
+  //   icon: FolderIcon,
+  //   current: false,
+  // },
   {
     name: "Cash Deposits",
     to: "/dashboard/cash_deposits",
@@ -74,7 +74,7 @@ const requests = [
   { id: 1, name: "Bonds Request", to: "#", initial: "B", current: false },
   { id: 2, name: "Ipos Request", to: "#", initial: "I", current: false },
   { id: 3, name: "Fixed Term Requests", to: "#", initial: "F", current: false, },
-  { id: 4, name: "Transaction Requests", to: "#", initial: "T", current: false, },
+  { id: 4, name: "Transaction Requests", to: "/dashboard/transactions_requests", initial: "T", current: false, },
 ];
 
 export default function Skeleton() {

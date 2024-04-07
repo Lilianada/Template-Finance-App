@@ -1,14 +1,18 @@
 // import transactions from "../data/transactions";
+import { useEffect, useState } from "react";
 import PropTable from "../../components/PropTable";
+import { getAllTransactions } from "../../config/transactions";
+import { doc } from "firebase/firestore";
+import { db } from "../../config/firebase";
 
 const headings = [
   "No",
-  "Company",
-  "Share",
-  "Commission",
-  "Price",
-  "Quantity",
-  "Net amount",
+  "Full Name",
+  "Account",
+  "Amount",
+  "Type",
+  "Status",
+  "Date",
 ];
 
 const data = [
@@ -60,11 +64,196 @@ const data = [
 ];
 
 function TransactionsComponent() {
+  const [transactions, setTransactions] = useState([]);
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
+  const [isApproving, setIsApproving] = useState(false);
+  const [isDeclining, setIsDeclining] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isEditPageOpen, setIsEditPageOpen] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const [transactionForEdit, setTransactionForEdit] = useState(false);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        setIsLoading(true);
+        const allTransactions = await getAllTransactions();
+        if (!allTransactions) {
+          setIsLoading(false);
+          return;
+        }
+
+      
+        setTransactions(allTransactions);
+      } catch (error) {
+        console.error("Error fetching transactions:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTransactions();
+  }, []);
+
+  const showApprovalModal = (id) => {
+    const selected = transactions.find((transaction) => transaction.id === id);
+    setSelectedTransaction(selected);
+    setIsApproving(true);
+  };
+
+  const showDeclineModal = (id) => {
+    const selected = transactions.find((transaction) => transaction.id === id);
+    setSelectedTransaction(selected);
+    setIsDeclining(true);
+  };
+
+  const handleApproval = async () => {
+    setIsLoading(true);
+    try {
+      // Initialize Firestore references
+      const userId = selectedTransaction.userId;
+      const transactionId = selectedTransaction.id;
+      const accountType = selectedTransaction.accountType; // Assuming this field exists
+      const amount = parseFloat(selectedTransaction.amount);
+      const transactionType = selectedTransaction.type; // Assuming this is either "Deposit" or "Withdrawal"
+
+      // Transaction Firestore Reference
+      const transactionRef = doc(
+        db,
+        "users",
+        userId,
+        "transactions",
+        transactionId
+      );
+
+      // Account Type Firestore Reference
+      const accountTypeRef = doc(
+        db,
+        "users",
+        userId,
+        "accountTypes",
+        accountType
+      );
+
+      // Start a Firestore transaction
+      await runTransaction(db, async (transaction) => {
+        // 1. Fetch the existing balance and type
+        const accountTypeDoc = await transaction.get(accountTypeRef);
+        let currentAmount = 0;
+        let label = ""; // Initialize label variable
+
+        if (accountTypeDoc.exists()) {
+          currentAmount = parseFloat(accountTypeDoc.data().amount || 0);
+          label = accountTypeDoc.data().label; // Fetch existing label
+        }
+
+        // 2. Update the balance based on the transaction type
+        let newAmount = currentAmount;
+
+        if (transactionType === "Deposit") {
+          newAmount = currentAmount + amount;
+        } else if (transactionType === "Withdrawal") {
+          newAmount = currentAmount - amount;
+        }
+
+        // Check if the new amount is negative (in case of withdrawal)
+        if (newAmount < 0) {
+          throw new Error("Insufficient funds for withdrawal");
+        }
+
+        // 3. Update the label and amount in Firestore
+        transaction.set(accountTypeRef, {
+          label,
+          amount: newAmount.toFixed(2),
+        });
+
+        // 4. Mark the transaction as "Approved"
+        transaction.update(transactionRef, { status: "Approved" });
+
+        // 5. Here you can also update the "Total Account Value" if needed
+      });
+
+      // Update the local state
+      const transactionsCopy = [...transactions];
+      const transactionIndex = transactionsCopy.findIndex(
+        (transaction) => transaction.id === transactionId
+      );
+      transactionsCopy[transactionIndex].status = "Approved";
+      setTransactions(transactionsCopy);
+
+      Swal.fire({
+        icon: "success",
+        title: "Approved!",
+        text: `Transaction has been approved.`,
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    } catch (error) {
+      console.error("Error updating transaction:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: `Failed to update the transaction.`,
+        showConfirmButton: true,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRejection = async () => {
+    setIsLoading(true);
+    try {
+      // Update the local state and local storage
+      const transactionsCopy = [...transactions];
+      const transactionIndex = transactionsCopy.findIndex(
+        (transaction) => transaction.id === selectedTransaction.id
+      );
+
+      transactionsCopy[transactionIndex].status = "Rejected";
+
+      const transactionRef = doc(
+        db,
+        "users",
+        selectedTransaction.userId,
+        "transactions",
+        selectedTransaction.id
+      );
+
+      await updateDoc(transactionRef, {
+        status: "Rejected",
+      });
+
+      // Update state
+      setTransactions(transactionsCopy);
+      setIsDeclining(false);
+
+      Swal.fire({
+        icon: "success",
+        title: "Declined!",
+        text: `Transaction has been declined.`,
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    } catch (error) {
+      console.error("Error updating transaction:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: `Failed to update the transaction.`,
+        showConfirmButton: true,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <PropTable
       title="Transactions"
-      description="A table of placeholder stock market data that does not make any sense."
-      data={data}
+      description="A table of all the deposits and withdrwals ."
+      noData="No transactions found."
+      data={transactions}
       headings={headings}
       onExportClick={() => console.log("Export Clicked")}
       editLink="#"

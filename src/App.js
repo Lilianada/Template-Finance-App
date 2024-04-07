@@ -45,6 +45,7 @@ import ClientStock from "./pages/RegisteredUsers/ClientAccountOverview/ClientSto
 import AddUserStock from "./pages/RegisteredUsers/ClientAccountOverview/ClientStock/Add";
 import EditUserStock from "./pages/RegisteredUsers/ClientAccountOverview/ClientStock/Edit";
 import Settings from "./pages/Settings";
+import TransactionsComponent from "./pages/Transactions";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -313,6 +314,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <RequestsTable />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="transactions_requests"
+                  element={
+                    <ProtectedRoute>
+                      <TransactionsComponent />
                     </ProtectedRoute>
                   }
                 />

@@ -4,7 +4,10 @@ import { Fragment, useState } from "react";
 import { useModal } from "../context/ModalContext";
 import { addAdminUser } from "../config/admin";
 import { XMarkIcon } from "@heroicons/react/20/solid";
-import { CheckIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import {
+  CheckIcon,
+  ExclamationTriangleIcon,
+} from "@heroicons/react/24/outline";
 import { customModal } from "../utils/modalUtils";
 
 export default function AddAdminModal({ setOpen, open, refresh }) {
@@ -19,7 +22,6 @@ export default function AddAdminModal({ setOpen, open, refresh }) {
     if (!email) return;
     setIsLoading(true);
     try {
-        console.log(fullName, email, password)
       await addAdminUser(fullName, email, password);
       setEmail("");
       setFullName("");
@@ -33,8 +35,8 @@ export default function AddAdminModal({ setOpen, open, refresh }) {
         iconBgColor: "bg-green-100",
         iconTextColor: "text-green-600",
         timer: 3000,
-    });
-    refresh();
+      });
+      refresh();
     } catch (error) {
       console.error("Error adding admin user:", error);
       customModal({
@@ -117,7 +119,7 @@ export default function AddAdminModal({ setOpen, open, refresh }) {
 
                     <div className="pb-4">
                       <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6">
-                            <div className="sm:col-span-full">
+                        <div className="sm:col-span-full">
                           <label
                             htmlFor="fullName"
                             className="block text-sm font-medium text-gray-700"
@@ -153,7 +155,6 @@ export default function AddAdminModal({ setOpen, open, refresh }) {
                             className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                           />
                         </div>
-
 
                         <div className="sm:col-span-3">
                           <label

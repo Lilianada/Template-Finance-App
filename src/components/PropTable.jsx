@@ -1,6 +1,6 @@
 import React from "react";
 
-function PropTable({ title, description, data, headings, onExportClick, editLink }) {
+function PropTable({ title, description, data, headings, onExportClick, editLink , noData}) {
   return (
     <div className="px-4 sm:px-6 lg:px-8 bg-gray-50 py-8 my-4 lg:my-8 rounded-md shadow">
       <div className="sm:flex sm:items-center text-left">
@@ -54,6 +54,11 @@ function PropTable({ title, description, data, headings, onExportClick, editLink
                   </tr>
                 ))}
               </tbody>
+              {data.length === 0 && (
+                   <div className="w-full grid place-items-center p-4">
+                   <h5 className="text-gray-400 text-lg ">{noData}</h5>
+                 </div>
+               ) }
             </table>
           </div>
         </div>
