@@ -250,7 +250,7 @@ function TransactionsComponent() {
         buttonBgColor: "bg-green-600",
         icon: CheckIcon,
         timer: 1500,
-      })
+      });
     } catch (error) {
       console.error("Error updating transaction:", error);
      customModal({
