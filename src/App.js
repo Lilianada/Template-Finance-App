@@ -46,6 +46,7 @@ import AddUserStock from "./pages/RegisteredUsers/ClientAccountOverview/ClientSt
 import EditUserStock from "./pages/RegisteredUsers/ClientAccountOverview/ClientStock/Edit";
 import Settings from "./pages/Settings";
 import TransactionsComponent from "./pages/Transactions";
+import BondsRequests from "./pages/BondsRequest";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -322,6 +323,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <TransactionsComponent />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="bonds_requests"
+                  element={
+                    <ProtectedRoute>
+                      <BondsRequests />
                     </ProtectedRoute>
                   }
                 />
