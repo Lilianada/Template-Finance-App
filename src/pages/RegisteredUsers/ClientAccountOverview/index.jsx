@@ -114,7 +114,7 @@ export default function AccountOverview({ initialUser }) {
     cashDepositData = [],
     sharesData = [],
     ipoData = [],
-    bondData = []
+    // bondData = []
   ) => {
     let cashBalance = 0;
 
@@ -137,13 +137,6 @@ export default function AccountOverview({ initialUser }) {
       if (ipo.type.trim().toUpperCase() === "SELL") {
         cashBalance +=
           convertToNumber(ipo.numberOfShares) * convertToNumber(ipo.sharePrice);
-      }
-    });
-
-    // Calculate cash balance from bond sales
-    bondData.forEach((bond) => {
-      if (bond.typeOfRequest.trim().toUpperCase() === "SELL") {
-        cashBalance += convertToNumber(bond.currentValue);
       }
     });
 

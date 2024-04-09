@@ -38,7 +38,7 @@ export default function ClientIposPage() {
     setSelectedId(Ipos);
   };
 
-  const handleDelete = () => {
+  const handleDelete = (id) => {
     customModal({
       showModal,
       title: "Are you sure?",
@@ -51,7 +51,7 @@ export default function ClientIposPage() {
       cancelButtonBgColor: "bg-white",
       cancelButtonTextColor: "text-gray-900",
       onConfirm: () => {
-        confirmDelete();
+        confirmDelete(id);
         hideModal();
       },
       onCancel: hideModal(),
@@ -63,11 +63,10 @@ export default function ClientIposPage() {
     });
   };
 
-  const confirmDelete = async () => {
+  const confirmDelete = async (id) => {
     setIsDeleting(true);
-    console.log(selectedId);
     try {
-      await deleteUserIpo(userId, selectedId);
+      await deleteUserIpo(userId, id);
       customModal({
         showModal,
         title: "Success!",
@@ -100,10 +99,6 @@ export default function ClientIposPage() {
     }
   };
 
-  if (isDeleting) {
-    <LoadingScreen />;
-  }
-
   return (
     <div className="px-4 ">
       <div className="sm:flex sm:items-center">
@@ -127,6 +122,7 @@ export default function ClientIposPage() {
           </button>
         </div>
       </div>
+      {isDeleting && <LoadingScreen />}
       <div className="-mx-4 mt-8 sm:-mx-0">
         {ipos === null ? (
           <div className="w-full grid place-items-center rounded-xl border border-gray-200 p-4 mt-12">
@@ -223,7 +219,7 @@ export default function ClientIposPage() {
                   </td>
                   <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                     <button
-                      onClick={() => {setSelectedId(item.id); handleDelete();}}
+                      onClick={() => handleDelete(item.id)}
                       className="text-red-600 hover:text-red-900"
                     >
                       Delete

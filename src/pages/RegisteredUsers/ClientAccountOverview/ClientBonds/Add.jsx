@@ -15,6 +15,7 @@ import { getUser } from "../../../../config/user";
 
 export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
   const [bondAmount, setBondAmount] = useState(0);
+  const [type, setType] = useState("buy");
   const [isLoading, setIsLoading] = useState(false);
   const { showModal } = useModal();
 
@@ -37,13 +38,13 @@ export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
       companyWebsite: bond.companyWebsite,
       isin: bond.isin,
       maturityDate: bond.maturityDate,
-      purchaseDate: bond.purchaseDate,
+      date: bond.purchaseDate,
       currentValue: amountAsNumber,
       issuerName: bond.issuerName,
       sector: bond.sector,
       couponFrequency: bond.couponFrequency,
       minimumAmount: bond.minimumAmount,
-      typeOfRequest: "buy",
+      typeOfRequest: type,
       quantity: numberOfBondsBought,
       userId: userId,
       userName: user[0].fullName,
@@ -225,12 +226,14 @@ export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
                         </div>
                       </div>
 
+                      
+
                       <div className="sm:col-span-3">
                         <label
                           htmlFor="purchaseDate"
                           className="block text-sm font-medium leading-6 text-gray-900"
                         >
-                          Purchase Date
+                          Purchase/Sale Date
                         </label>
                         <div className="mt-2">
                           <input

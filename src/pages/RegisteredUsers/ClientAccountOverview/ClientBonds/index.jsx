@@ -28,6 +28,7 @@ export default function ClientBondsPage() {
     try {
       const result = await getUserBonds(userId);
       setBonds(result);
+      console.log(result);
     } catch (error) {
       console.log(error);
     }
@@ -80,7 +81,7 @@ export default function ClientBondsPage() {
         onClose: hideModal,
       });
 
-      window.history.back();
+      fetchBonds();
     } catch (error) {
       console.error("Failed to delete user:", error);
       customModal({
@@ -159,9 +160,15 @@ export default function ClientBondsPage() {
                 </th>
                 <th
                   scope="col"
+                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell"
+                >
+                  Type
+                </th>
+                <th
+                  scope="col"
                   className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell"
                 >
-                  Purchase Date
+                  Date Issued
                 </th>
                 <th
                   scope="col"
@@ -193,11 +200,14 @@ export default function ClientBondsPage() {
                   <td className="px-3 py-4 text-sm text-gray-500 ">
                     $ {formatNumber(item.currentValue)}
                   </td>
-                  <td className=" px-3 py-4 text-sm text-gray-500capitalize">
+                  <td className=" px-3 py-4 text-sm text-gray-500">
                     {item.quantity}
                   </td>
+                  <td className=" px-3 py-4 text-sm text-gray-500 uppercase">
+                    {item.typeOfRequest}
+                  </td>
                   <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell capitalize">
-                    {item.purchaseDate}
+                    {item.purchaseDate || item.saleDate}
                   </td>
                   <td className="hidden px-3 py-4 text-sm text-gray-500  lg:table-cell  capitalize">
                     {item.maturityDate}

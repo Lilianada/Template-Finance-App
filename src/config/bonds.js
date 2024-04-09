@@ -10,6 +10,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "./firebase";
+import { getCurrentDate } from "./utils";
 
 const ADMINDASH_COLLECTION = "admin_users";
 const USERS_COLLECTION = "users";
@@ -119,31 +120,42 @@ export async function sumBondRequests(db, setBondRequestsCount) {
 
 // Function to handle selling bonds
 export async function handleSellApproval(uid, bondData, bondId) {
-  const userBondsPath = `users/${uid}/bondsHoldings`;
-  const bondDocRef = doc(db, `${userBondsPath}/${bondId}`); 
-
-  const bondDoc = await getDoc(bondDocRef);
-
-  if (bondDoc.exists()) {
-    // If bond exists in user's holdings, update it or delete it
-    const currentData = bondDoc.data();
-
-    if (currentData.quantity > bondData.quantity) {
-      const newQuantity = currentData.quantity - bondData.quantity;
-      const newCurrentValue = currentData.currentValue - bondData.currentValue;
-
-      await updateDoc(bondDocRef, {
-        quantity: newQuantity,
-        currentValue: newCurrentValue,
-        id: bondId
-      });
-    } else {
-      // If all units of this bond are being sold, remove it from user's holdings
-      await deleteDoc(bondDocRef);
-    }
-  } else {
-    console.error("Bond does not exist in user's holdings");
+  // Check if bondData and its id are defined
+  if (!bondData) {
+    console.error("Invalid bondData:", bondData);
+    return;
   }
+
+  const userBondsPath = `users/${uid}/bondsHoldings`;
+  const bondDocRef = doc(db, `${userBondsPath}/${bondId}`);
+
+  // Calculate the quantity the user is buying
+  const minInvestmentAmount = bondData.minimumAmount || 1;
+  const newQuantity = Math.floor(
+    bondData.amountRequested / minInvestmentAmount
+  );
+
+  // Check if bondData.amount is defined
+  if (bondData.amountRequested === undefined) {
+    console.error("Undefined amount in bondData:", bondData);
+    return;
+  }
+
+  await setDoc(bondDocRef, {
+    ...bondData,
+    quantity: newQuantity,
+    currentValue: bondData.amountRequested,
+  });
+
+  const cashDepositsRef = collection(db, `users/${uid}/cashDeposits`);
+
+  await addDoc(cashDepositsRef, {
+    type: "Sales",
+    status: "Cleared",
+    reference: "Sale of Bonds",
+    date: bondData.saleDate,
+    amount: bondData.amountRequested,
+  });
 }
 
 // Function to handle buying bonds
@@ -157,53 +169,23 @@ export async function handleBuyApproval(uid, bondData, bondId) {
   const userBondsPath = `users/${uid}/bondsHoldings`;
   const bondDocRef = doc(db, `${userBondsPath}/${bondId}`);
 
-  const bondDoc = await getDoc(bondDocRef);
-
   // Calculate the quantity the user is buying
   const minInvestmentAmount = bondData.minimumAmount || 1;
   const newQuantity = Math.floor(
     bondData.amountRequested / minInvestmentAmount
   );
 
-  if (bondDoc.exists()) {
-    const currentData = bondDoc.data();
-
-    // Check if all fields are defined
-    if (
-      currentData.quantity === undefined ||
-      currentData.currentValue === undefined ||
-      bondData.amountRequested === undefined
-    ) {
-      console.error(
-        "Undefined fields in currentData or bondData:",
-        currentData,
-        bondData
-      );
-      return;
-    }
-
-    const updatedQuantity = currentData.quantity + newQuantity;
-    const updatedCurrentValue =
-      currentData.currentValue + bondData.amountRequested;
-
-    await updateDoc(bondDocRef, {
-      quantity: updatedQuantity,
-      currentValue: updatedCurrentValue,
-      id: bondId,
-    });
-  } else {
-    // Check if bondData.amount is defined
-    if (bondData.amountRequested === undefined) {
-      console.error("Undefined amount in bondData:", bondData);
-      return;
-    }
-
-    await setDoc(bondDocRef, {
-      ...bondData,
-      quantity: newQuantity,
-      currentValue: bondData.amountRequested,
-    });
+  // Check if bondData.amount is defined
+  if (bondData.amountRequested === undefined) {
+    console.error("Undefined amount in bondData:", bondData);
+    return;
   }
+
+  await setDoc(bondDocRef, {
+    ...bondData,
+    quantity: newQuantity,
+    currentValue: bondData.amountRequested,
+  });
 }
 
 // Function to update request status in the Firestore
@@ -296,6 +278,17 @@ export async function addBondUser(userId, bondData) {
   try {
     const bondsRef = collection(db, USERS_COLLECTION, userId, "bondsHoldings");
     const newBondRef = await addDoc(bondsRef, bondData);
+    if (bondData.typeOfRequest === "sell") {
+      const cashDepositsRef = collection(db, `users/${userId}/cashDeposits`);
+
+      await addDoc(cashDepositsRef, {
+        type: "Sales",
+        status: "Cleared",
+        reference: "Sale of Bonds",
+        date: bondData.saleDate,
+        amount: bondData.amountRequested,
+      });
+    }
     return { success: true, id: newBondRef.id };
   } catch (error) {
     return { success: false, error: error.message };
