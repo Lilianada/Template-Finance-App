@@ -28,7 +28,6 @@ export default function ClientBondsPage() {
     try {
       const result = await getUserBonds(userId);
       setBonds(result);
-      console.log(result);
     } catch (error) {
       console.log(error);
     }
@@ -207,7 +206,7 @@ export default function ClientBondsPage() {
                     {item.typeOfRequest}
                   </td>
                   <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell capitalize">
-                    {item.purchaseDate || item.saleDate}
+                    {item.purchaseDate || item.saleDate || item.date}
                   </td>
                   <td className="hidden px-3 py-4 text-sm text-gray-500  lg:table-cell  capitalize">
                     {item.maturityDate}

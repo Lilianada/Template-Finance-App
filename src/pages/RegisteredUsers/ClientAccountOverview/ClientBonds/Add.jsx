@@ -15,7 +15,8 @@ import { getUser } from "../../../../config/user";
 
 export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
   const [bondAmount, setBondAmount] = useState(0);
-  const [type, setType] = useState("buy");
+  const [typeOfRequest, setTypeOfRequest] = useState("");
+  const [date, setDate] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { showModal } = useModal();
 
@@ -29,6 +30,7 @@ export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
     const numberOfBondsBought = amountAsNumber / minimumInvestmentAmount;
 
     const user = await getUser(userId);
+
     // Create bond data
     const bondData = {
       amountRequested: amountAsNumber,
@@ -38,13 +40,13 @@ export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
       companyWebsite: bond.companyWebsite,
       isin: bond.isin,
       maturityDate: bond.maturityDate,
-      date: bond.purchaseDate,
+      date: date,
       currentValue: amountAsNumber,
       issuerName: bond.issuerName,
       sector: bond.sector,
       couponFrequency: bond.couponFrequency,
       minimumAmount: bond.minimumAmount,
-      typeOfRequest: type,
+      typeOfRequest: typeOfRequest,
       quantity: numberOfBondsBought,
       userId: userId,
       userName: user[0].fullName,
@@ -52,7 +54,7 @@ export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
     setIsLoading(true);
     try {
       const result = await addBondUser(userId, bondData);
-      //   const bondId = result.id;
+        
       if (result.success) {
         customModal({
           showModal,
@@ -68,6 +70,8 @@ export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
       }
       setOpen(false);
       setBondAmount(0);
+      setTypeOfRequest("");
+      setDate("");
     } catch (error) {
       console.error(error.message);
       customModal({
@@ -153,7 +157,7 @@ export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
                 onSubmit={handleBuyBonds}
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="space-y-12">
+                <div className="space-y-4">
                   <div className="">
                     <h2 className="text-xl font-semibold leading-7 text-gray-900">
                       Add Bond Information
@@ -164,8 +168,8 @@ export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
                     </p>
                   </div>
 
-                  <div className="pb-4">
-                    <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6">
+                  <div className="pb-2">
+                    <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6">
                       <div className="sm:col-span-4">
                         <label
                           htmlFor="issuerName"
@@ -226,11 +230,30 @@ export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
                         </div>
                       </div>
 
-                      
+                      <div className="sm:col-span-3">
+                        <label
+                          htmlFor="typeOfRequest"
+                          className="block text-sm font-medium leading-6 text-gray-900"
+                        >
+                          Bonds Type
+                        </label>
+                        <div className="mt-2">
+                          <select
+                            name="typeOfRequest"
+                            value={typeOfRequest}
+                            onChange={(e) => setTypeOfRequest(e.target.value)}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                          >
+                            <option value="">Select Type </option>
+                            <option value="buy">Buy</option>
+                            <option value="sell">Sell</option>
+                          </select>
+                        </div>
+                      </div>
 
                       <div className="sm:col-span-3">
                         <label
-                          htmlFor="purchaseDate"
+                          htmlFor="date"
                           className="block text-sm font-medium leading-6 text-gray-900"
                         >
                           Purchase/Sale Date
@@ -238,10 +261,10 @@ export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
                         <div className="mt-2">
                           <input
                             type="date"
-                            name="purchaseDate"
-                            id="purchaseDate"
-                            onChange={handleChange}
-                            value={bond.purchaseDate}
+                            name="date"
+                            id="date"
+                            onChange={(e) => setDate(e.target.value)}
+                            value={date}
                             autoComplete="date"
                             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />

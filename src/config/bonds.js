@@ -306,6 +306,17 @@ export async function updateBondUser(userId, bondId, bondData) {
     const docRef = doc(userIposHoldingsPath, bondId); // Reference to the specific document within the subcollection
     await updateDoc(docRef, bondData);
     const docId = docRef.id;
+    if (bondData.typeOfRequest === "sell") {
+      const cashDepositsRef = collection(db, `users/${userId}/cashDeposits`);
+
+      await addDoc(cashDepositsRef, {
+        type: "Sales",
+        status: "Cleared",
+        reference: "Sale of Bonds",
+        date: bondData.saleDate,
+        amount: bondData.amountRequested,
+      });
+    }
     return { success: true, id: docId };
   } catch (error) {
     console.error("Error updating ipos:", error);

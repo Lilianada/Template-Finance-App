@@ -15,7 +15,7 @@ import { addIposToUserCollection, deleteUserIpo, updateIposToUserCollection } fr
 export default function EditUserIpos({ setOpen, open, ipo, userId, refreshDetails }) {
     const [isLoading, setIsLoading] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
-    const [purschaseDate, setPurchaseDate] = useState(ipo.date)
+    const [purchaseDate, setPurchaseDate] = useState(ipo.date)
     const [numberOfShares, setNumberOfShares] = useState(0);
     const { showModal, hideModal }  = useModal();
   
@@ -254,7 +254,7 @@ export default function EditUserIpos({ setOpen, open, ipo, userId, refreshDetail
                         type="date"
                         name="date"
                         id="date"
-                        value={purschaseDate}
+                        value={purchaseDate}
                         onChange={(e) => setPurchaseDate(e.target.value)}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
