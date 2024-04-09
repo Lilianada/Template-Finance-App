@@ -16,7 +16,7 @@ export default function Cards({ bonds, isLoading, handleEdit, refreshBonds }) {
   const [open, setOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { showModal, hideModal} = useModal();
-  const [selectedBond, setSelectedBond] = useState(null)
+  
   const sortedBonds = [...bonds].sort((a, b) => a.index - b.index);
 
   const handleDelete = (bond) => {
@@ -79,13 +79,10 @@ export default function Cards({ bonds, isLoading, handleEdit, refreshBonds }) {
     }
   };
 
-  if (isDeleting) {
-    <LoadingScreen/>
-  }
-
   return (
     <ul className="grid grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-3 sm:grid-cols-2 xl:gap-x-8 w-full">
       {isLoading && <LoadingScreen />}
+      {isDeleting && <LoadingScreen />}
       {!bonds || bonds.length === 0 ? (
         <div className="w-full grid place-items-center rounded-xl border border-gray-200 p-4">
           <h5 className="text-gray-400 text-lg ">NO BONDS FOUND.</h5>
@@ -131,7 +128,7 @@ export default function Cards({ bonds, isLoading, handleEdit, refreshBonds }) {
                     <Menu.Item>
                       {({ active }) => (
                         <button
-                          onClick={() => { setSelectedBond(bond.id); handleDelete(bond.id); }}
+                          onClick={() => handleDelete(bond.id)}
                           className={classNames(
                             active ? "bg-gray-50" : "",
                             "block px-3 py-1 text-sm leading-6 text-gray-900 w-full cursor-pointer"

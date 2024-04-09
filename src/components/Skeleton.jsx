@@ -2,21 +2,22 @@ import React, { useState } from "react";
 import {
   Bars3Icon,
   BanknotesIcon,
+  DocumentChartBarIcon,
   CalendarIcon,
-  FolderIcon,
+  CreditCardIcon,
   HomeIcon,
-  UsersIcon,
+  UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import { Outlet } from "react-router-dom";
 
 const navigation = [
-  { name: "Dashboard", to: "/dashboard", icon: HomeIcon, current: true },
+  { name: "Home", to: "/dashboard", icon: HomeIcon, current: true },
   {
     name: "Registered Users",
     to: "/dashboard/registered_users",
-    icon: UsersIcon,
+    icon: UserGroupIcon,
     current: false,
   },
   {
@@ -28,13 +29,13 @@ const navigation = [
   { 
     name: "Bonds", 
     to: "/dashboard/bonds", 
-    icon: CalendarIcon, 
+    icon: DocumentChartBarIcon, 
     current: false 
   },
   {
     name: "Fixed Term Deposits",
     to: "/dashboard/fixed_term_deposits",
-    icon: CalendarIcon,
+    icon: CreditCardIcon,
     current: false,
   },
   { 

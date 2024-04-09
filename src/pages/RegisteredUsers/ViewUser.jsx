@@ -12,11 +12,12 @@ export default function ViewUser() {
 
   return (
     <>
+      {/* Portfolio Information */}
+      <AccountOverview initialUser={initialUser}/>
+
       {/* Client Information */}
       <ClientInfo initialUser={initialUser} />
 
-      {/* Client Documents */}
-      <ClientDoc initialUser={initialUser}/>
 
       {/* Client KYC */}
       <ClientKyc initialUser={initialUser}/>
@@ -24,8 +25,8 @@ export default function ViewUser() {
       {/* Banking Details */}
       <BankDetails initialUser={initialUser}/>
 
-      {/* Portfolio Information */}
-      <AccountOverview initialUser={initialUser}/>
+      {/* Client Documents */}
+      <ClientDoc initialUser={initialUser}/>
     </>
   );
 }

@@ -90,10 +90,6 @@ export default function AddNewAdmin() {
       setIsDeleting(false);
     }
   };
-
-  if (isDeleting) {
-    <LoadingScreen />
-  }
  
   return (
     <div className="space-y-6 sm:px-6 lg:col-span-9 sm:col-span-10 lg:px-0 text-left">
@@ -106,6 +102,7 @@ export default function AddNewAdmin() {
             All Admin Users
           </label>
         </div>
+        {isDeleting && <LoadingScreen />}
         <div className="border-b border-gray-200  px-4">
           <ul className="divide-y divide-gray-200">
             {admins.map((person) => (
