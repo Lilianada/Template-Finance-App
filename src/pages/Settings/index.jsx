@@ -7,7 +7,7 @@ import {
   CameraIcon,
 } from "@heroicons/react/24/outline";
 import GeneralSettings from "./GeneralSettings";
-import AddNewAdmin from "./AddNewAdmin";
+import AddNewAdmin from "./AdminUsers";
 import ChangeMetaData from "./ChangeMeta";
 import ChangePassword from "./ChangePasswordTab";
 import ChangeLogo from "./ChangeLogo";

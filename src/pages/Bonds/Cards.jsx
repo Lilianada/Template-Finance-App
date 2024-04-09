@@ -47,7 +47,6 @@ export default function Cards({ bonds, isLoading, handleEdit, refreshBonds }) {
   const confirmDelete = async () => {
     setIsDeleting(true);
     try {
-      console.log(selectedBond)
       await deleteBond(selectedBond);
       customModal({
         showModal,

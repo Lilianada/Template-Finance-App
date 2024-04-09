@@ -52,7 +52,22 @@ import {
       throw error;
     }
   }
+
+  export async function deleteAdminUser(uid) {
+
+    try {
+      const auth = getAuth();
   
+      // Delete admin user from Firebase Authentication
+      const user = await getDoc(doc(db, ADMINUSERS_COLLECTION, uid));
+      await deleteDoc(doc(db, ADMINUSERS_COLLECTION,
+        uid));
+      await deleteDoc(doc(db, ADMINUSERS_COLLECTION, uid));
+    } catch (error) {
+      console.error("Error deleting admin user:", error);
+      throw error;
+    }
+  }
   
   export async function fetchAdmins() {
       try {

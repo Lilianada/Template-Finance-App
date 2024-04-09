@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { PlusIcon } from "@heroicons/react/20/solid";
+import { TrashIcon, CheckIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import AddAdminModal from "../../components/AddAdminModal";
 import { fetchAdmins } from "../../config/admin";
+import LoadingScreen from "../../components/LoadingScreen";
+import { useModal } from "../../context/ModalContext";
+import { customModal } from "../../utils/modalUtils";
 
 export default function AddNewAdmin() {
+  const { showModal, hideModal} = useModal();
   const [open, setOpen] = useState(false);
   const [admins, setAdmins] = useState([]);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleAdd = async () => {
     setOpen(true);
@@ -19,10 +25,75 @@ export default function AddNewAdmin() {
       console.error("Error fetching admins:", error);
     }
   };
+
   useEffect(() => {
     getAdmins();
   }, []);
 
+
+  const handleDelete = () => {
+    customModal({
+      showModal,
+      title: "Are you sure?",
+      text: `You are about to delete this user. This action cannot be undone.`,
+      showConfirmButton: true,
+      confirmButtonText: "Yes, delete",
+      cancelButtonText: "Cancel",
+      confirmButtonBgColor: "bg-red-600",
+      confirmButtonTextColor: "text-white",
+      cancelButtonBgColor: "bg-white",
+      cancelButtonTextColor: "text-gray-900",
+      onConfirm: () => {
+        confirmDelete();
+        hideModal();
+      },
+      onCancel: hideModal(),
+      onClose: hideModal(),
+      icon: ExclamationTriangleIcon,
+      iconBgColor: "bg-red-100",
+      iconTextColor: "text-red-600",
+      timer: 0,
+    });
+  };
+
+  const confirmDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await deleteBond(selectedBond);
+      customModal({
+        showModal,
+        title: "Success",
+        text: "You have successfully deleted this bond.",
+        showConfirmButton: false,
+        icon: CheckIcon,
+        iconBgColor: "bg-green-100",
+        iconTextColor: "text-green-600",
+        buttonBgColor: "bg-green-600",
+        timer: 2000,
+      });
+      setOpen(false);
+      refreshBonds();
+    } catch (error) {
+      customModal({
+        showModal,
+        title: "Error!",
+        text: "There was an error deleting this bond. Please try again.",
+        showConfirmButton: false,
+        icon: ExclamationTriangleIcon,
+        iconBgColor: "bg-red-100",
+        iconTextColor: "text-red-600",
+        buttonBgColor: "bg-red-600",
+        timer: 2000,
+      });
+      console.error(error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  if (isDeleting) {
+    <LoadingScreen />
+  }
  
   return (
     <div className="space-y-6 sm:px-6 lg:col-span-9 sm:col-span-10 lg:px-0 text-left">
@@ -54,12 +125,14 @@ export default function AddNewAdmin() {
                   </span>
                   <span className="text-sm text-gray-500">{person.email}</span>
                 </div>
-                
+                <button className="cursor-pointer self-end ml-auto mr-0">
+                  <TrashIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
+                </button>
               </li>
             ))}
           </ul>
         </div>
-        <div className=" bg-gray-50 px-4 py-3 text-right sm:px-6">
+        <div className=" bg-gray-50 px-4 py-5 text-right sm:px-6">
           <button
             type="button"
             className="inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
