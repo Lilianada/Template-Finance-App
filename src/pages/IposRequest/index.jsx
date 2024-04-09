@@ -6,18 +6,15 @@ import {
   CheckIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
-import {
-  deleteRequestFromFirestore,
-  fetchRequestData,
-  getBondRequests,
-  handleBuyApproval,
-  handleSellApproval,
-  updateRequestStatusInFirestore,
-} from "../../config/bonds";
 import { formatNumber } from "../../config/utils";
-import { addNotification } from "../../config/notifications";
 import LoadingScreen from "../../components/LoadingScreen";
-import { getIposRequests } from "../../config/ipos";
+import {
+  deleteIposRequestStatus,
+  getIposRequests,
+  getSpecificIpoRequest,
+  handleIpoApproval,
+  handleIpoDecline,
+} from "../../config/ipos";
 
 export default function IposRequests() {
   const [requests, setRequests] = useState([]);
@@ -60,7 +57,7 @@ export default function IposRequests() {
         },
         onCancel: hideModal(),
         onClose: hideModal(),
-        icon: ExclamationTriangleIcon,
+        icon: CheckIcon,
         iconBgColor: "bg-green-100",
         iconTextColor: "text-green-600",
         timer: 0,
@@ -94,39 +91,20 @@ export default function IposRequests() {
   const confirmRequest = async (userId, requestId, newStatus) => {
     setIsUpdating(true);
     try {
-      const requestData = await fetchRequestData(userId, requestId);
+      const requestData = await getSpecificIpoRequest(requestId, userId);
 
-      await updateRequestStatusInFirestore(userId, requestId, newStatus);
-
-      let message;
       if (newStatus === "Approved") {
-        // If the request is approved, handle buying or selling approval
-        if (requestData.typeOfRequest === "buy") {
-          await handleBuyApproval(userId, requestData, requestId);
-          message = `Your bond request to buy $${requestData.amountRequested} worth of bonds has been approved.`;
-        } else if (requestData.typeOfRequest === "sell") {
-          await handleSellApproval(userId, requestData, requestId);
-          message = `Your bond request to sell $${requestData.amountRequested} worth of bonds has been approved.`;
-        }
-      } else {
-        // Handle declined request
-        if (requestData.typeOfRequest === "buy") {
-          message = `Your bond request to buy $${requestData.amountRequested} worth of bonds has been declined.`;
-        } else if (requestData.typeOfRequest === "sell") {
-          message = `Your bond request to sell $${requestData.amountRequested} worth of bonds has been declined.`;
-        }
+        await handleIpoApproval(userId, requestId, requestData);
+      } else if (newStatus === "Declined") {
+        await handleIpoDecline(userId, requestId);
       }
 
-      // Delete the request from Firestore regardless of whether it's declined or approved
-      await deleteRequestFromFirestore(userId, requestId);
+      await deleteIposRequestStatus(userId, requestId);
+      const allRequests = await getIposRequests();
 
-      // Refresh the table data
-      const allRequests = await getBondRequests();
       setRequests(allRequests);
+      fetchUsersRequest();
 
-      if (message) {
-        await addNotification(userId, message, newStatus);
-      }
       customModal({
         showModal,
         title: "Success",
@@ -256,7 +234,8 @@ export default function IposRequests() {
                       {request.numberOfShares}
                     </td>
                     <td className=" px-3 py-4 text-sm text-gray-500 ">
-                      ${formatNumber(
+                      $
+                      {formatNumber(
                         totalCost(request.numberOfShares, request.sharePrice)
                       )}
                     </td>
