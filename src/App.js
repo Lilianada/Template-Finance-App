@@ -48,6 +48,7 @@ import Settings from "./pages/Settings";
 import TransactionsComponent from "./pages/Transactions";
 import BondsRequests from "./pages/BondsRequest";
 import Notifications from "./pages/Notifications";
+import IposRequests from "./pages/IposRequest";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -332,6 +333,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <BondsRequests />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="ipos_requests"
+                  element={
+                    <ProtectedRoute>
+                      <IposRequests />
                     </ProtectedRoute>
                   }
                 />

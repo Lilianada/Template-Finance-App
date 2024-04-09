@@ -270,7 +270,7 @@ export default function BondsRequests() {
                         className="text-red-600 hover:text-red-900"
                       >
                         Decline
-                        <span className="sr-only">, {request.fullName}</span>
+                        <span className="sr-only">, {request.userName}</span>
                       </button>
                     </td>
                   </tr>
