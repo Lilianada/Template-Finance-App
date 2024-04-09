@@ -101,11 +101,10 @@ export default function BondsRequests() {
       if (newStatus === "Approved") {
         // If the request is approved, handle buying or selling approval
         if (requestData.typeOfRequest === "buy") {
-          await handleBuyApproval(userId, requestData);
-          console.log(requestData);
+          await handleBuyApproval(userId, requestData, requestId);
           message = `Your bond request to buy $${requestData.amountRequested} worth of bonds has been approved.`;
         } else if (requestData.typeOfRequest === "sell") {
-          await handleSellApproval(userId, requestData);
+          await handleSellApproval(userId, requestData, requestId);
           message = `Your bond request to sell $${requestData.amountRequested} worth of bonds has been approved.`;
         }
       } else {

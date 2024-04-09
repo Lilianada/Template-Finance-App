@@ -118,9 +118,9 @@ export async function sumBondRequests(db, setBondRequestsCount) {
 }
 
 // Function to handle selling bonds
-export async function handleSellApproval(uid, bondData) {
+export async function handleSellApproval(uid, bondData, bondId) {
   const userBondsPath = `users/${uid}/bondsHoldings`;
-  const bondDocRef = doc(db, `${userBondsPath}/${bondData.id}`); // Assuming bondData.id is unique for each bond
+  const bondDocRef = doc(db, `${userBondsPath}/${bondId}`); 
 
   const bondDoc = await getDoc(bondDocRef);
 
@@ -135,6 +135,7 @@ export async function handleSellApproval(uid, bondData) {
       await updateDoc(bondDocRef, {
         quantity: newQuantity,
         currentValue: newCurrentValue,
+        id: bondId
       });
     } else {
       // If all units of this bond are being sold, remove it from user's holdings
@@ -146,7 +147,7 @@ export async function handleSellApproval(uid, bondData) {
 }
 
 // Function to handle buying bonds
-export async function handleBuyApproval(uid, bondData) {
+export async function handleBuyApproval(uid, bondData, bondId) {
   // Check if bondData and its id are defined
   if (!bondData) {
     console.error("Invalid bondData:", bondData);
@@ -154,7 +155,7 @@ export async function handleBuyApproval(uid, bondData) {
   }
 
   const userBondsPath = `users/${uid}/bondsHoldings`;
-  const bondDocRef = doc(db, `${userBondsPath}/${bondData.id}`);
+  const bondDocRef = doc(db, `${userBondsPath}/${bondId}`);
 
   const bondDoc = await getDoc(bondDocRef);
 
@@ -188,6 +189,7 @@ export async function handleBuyApproval(uid, bondData) {
     await updateDoc(bondDocRef, {
       quantity: updatedQuantity,
       currentValue: updatedCurrentValue,
+      id: bondId,
     });
   } else {
     // Check if bondData.amount is defined
@@ -215,12 +217,6 @@ export async function updateRequestStatusInFirestore(
     `${ADMINDASH_COLLECTION}/${userId}/${BONDS_REQUEST_SUB_COLLECTION}/${requestId}`
   );
   await updateDoc(requestDocPath, { status: newStatus });
-}
-
-// Function to add bond to user's bondsHoldings sub-collection
-export async function addBondToUserHoldings(userId, requestData) {
-  const userBondsHoldingsPath = collection(db, `users/${userId}/bondsHoldings`);
-  await addDoc(userBondsHoldingsPath, requestData);
 }
 
 // Function to delete request from bondsRequest sub-collection
