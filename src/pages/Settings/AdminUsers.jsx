@@ -77,13 +77,13 @@ export default function AddNewAdmin() {
       customModal({
         showModal,
         title: "Error!",
-        text: "There was an error deleting this user. Please try again.",
+        text: `${error} Please try again.`,
         showConfirmButton: false,
         icon: ExclamationTriangleIcon,
         iconBgColor: "bg-red-100",
         iconTextColor: "text-red-600",
         buttonBgColor: "bg-red-600",
-        timer: 2000,
+        timer: 3500,
       });
       console.error(error);
     } finally {

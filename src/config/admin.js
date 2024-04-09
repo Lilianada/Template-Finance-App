@@ -1,14 +1,11 @@
 import {
-    addDoc,
     collection,
     deleteDoc,
     doc,
     getDoc,
     getDocs,
-    onSnapshot,
     query,
     setDoc,
-    updateDoc,
     where,
   } from "firebase/firestore";
   import { db } from "./firebase";
@@ -59,10 +56,10 @@ import {
         const auth = getAuth();
 
         // Delete admin user from Firebase Authentication
-        await deleteUser(auth.currentUser);
+        await deleteUser(auth, uid);
 
         // Delete admin user document from Firestore
-        await deleteDoc(doc(db, ADMINUSERS_COLLECTION, uid));
+        await deleteDoc(doc(db, "adminUsers", uid));
         
         return "Admin user successfully deleted.";
     } catch (error) {
