@@ -47,6 +47,7 @@ import EditUserStock from "./pages/RegisteredUsers/ClientAccountOverview/ClientS
 import Settings from "./pages/Settings";
 import TransactionsComponent from "./pages/Transactions";
 import BondsRequests from "./pages/BondsRequest";
+import Notifications from "./pages/Notifications";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -339,6 +340,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <Settings />
+                    </ProtectedRoute>
+                  }
+                />
+              <Route
+                  path="notifications"
+                  element={
+                    <ProtectedRoute>
+                      <Notifications />
                     </ProtectedRoute>
                   }
                 />

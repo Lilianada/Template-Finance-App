@@ -9,6 +9,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import DotLoader from "../../../components/DotLoader";
+import { deleteUser } from "firebase/auth";
 
 export default function ClientInfo({ initialUser }) {
   const navigate = useNavigate();
@@ -54,7 +55,7 @@ export default function ClientInfo({ initialUser }) {
     customModal({
       showModal,
       title: "Are you sure?",
-      text: `You are about to delete ${viewUser.fullName}'s data. This action cannot be undone.`,
+      text: `You are about to delete ${viewUser.fullName}'s account. This action cannot be undone.`,
       showConfirmButton: true,
       confirmButtonText: "Yes, delete",
       cancelButtonText: "Cancel",
@@ -78,19 +79,12 @@ export default function ClientInfo({ initialUser }) {
   const confirmDelete = async () => {
     setIsDeleting(true);
     try {
-      // Initialize the Cloud Function
-      const functionsInstance = getFunctions();
-      const deleteFunction = httpsCallable(
-        functionsInstance,
-        "deleteUserAccount"
-      );
-      const selectedUserId = viewUser.uid;
-      await deleteFunction({ userId: selectedUserId });
+     await deleteUser(viewUser.uid);
 
       customModal({
         showModal,
         title: "Success!",
-        text: `${viewUser.fullName}'s data has been deleted successfully.`,
+        text: `You have sucessfully deleted this user.`,
         showConfirmButton: false,
         icon: CheckIcon,
         iconBgColor: "bg-green-100",
