@@ -110,7 +110,7 @@ export default function ClientDoc({ initialUser }) {
       <div className="px-4 py-6 sm:col-span-2 sm:px-0">
         <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
           <ul className="divide-y divide-gray-100 rounded-md border border-gray-200">
-            {doc.length > 0 ? (
+            {doc ? (
               doc.map((doc) => (
                 <li
                   className="flex items-center justify-between py-4 pl-4 pr-5 text-sm leading-6"

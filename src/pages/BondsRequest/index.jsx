@@ -21,6 +21,7 @@ import { addNotification } from "../../config/notifications";
 export default function BondsRequests() {
   const [requests, setRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const { showModal, hideModal } = useModal();
 
   useEffect(() => {
@@ -32,7 +33,6 @@ export default function BondsRequests() {
     try {
       const usersRequests = await getBondRequests();
       setRequests(usersRequests);
-      console.log("usersRequests", usersRequests);
     } catch (error) {
       console.error("Error fetching users:", error);
     } finally {
@@ -47,7 +47,7 @@ export default function BondsRequests() {
         title: "Are you sure?",
         text: `You are about to approve this bonds investment.`,
         showConfirmButton: true,
-        confirmButtonText: "Yes, approve",
+        confirmButtonText: isUpdating ? <DotLoader/> : "Yes, approve",
         cancelButtonText: "Cancel",
         confirmButtonBgColor: "bg-green-600",
         confirmButtonTextColor: "text-white",
@@ -55,7 +55,6 @@ export default function BondsRequests() {
         cancelButtonTextColor: "text-gray-900",
         onConfirm: () => {
           confirmRequest(userId, requestId, newStatus);
-          hideModal();
         },
         onCancel: hideModal(),
         onClose: hideModal(),
@@ -70,7 +69,7 @@ export default function BondsRequests() {
         title: "Are you sure?",
         text: `You are about to decline this bonds investment. This action cannot be undone.`,
         showConfirmButton: true,
-        confirmButtonText: "Yes, decline",
+        confirmButtonText: isUpdating ? <DotLoader/> : "Yes, decline",
         cancelButtonText: "Cancel",
         confirmButtonBgColor: "bg-red-600",
         confirmButtonTextColor: "text-white",
@@ -78,7 +77,6 @@ export default function BondsRequests() {
         cancelButtonTextColor: "text-gray-900",
         onConfirm: () => {
           confirmRequest(userId, requestId, newStatus);
-          hideModal();
         },
         onCancel: hideModal(),
         onClose: hideModal(),
@@ -92,7 +90,7 @@ export default function BondsRequests() {
 
   const confirmRequest = async (userId, requestId, newStatus) => {
     try {
-      setIsLoading(true);
+      setIsUpdating(true);
 
       // Fetching the request data
       const requestData = await fetchRequestData(userId, requestId);
@@ -155,7 +153,7 @@ export default function BondsRequests() {
         timer: 2000,
       });
     } finally {
-      setIsLoading(false);
+      setIsUpdating(false);
     }
   };
 
@@ -272,7 +270,7 @@ export default function BondsRequests() {
                         }
                         className="text-red-600 hover:text-red-900"
                       >
-                        Reject
+                        Decline
                         <span className="sr-only">, {request.fullName}</span>
                       </button>
                     </td>
