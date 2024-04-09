@@ -16,6 +16,7 @@ import {
   sendEmailVerification,
   sendPasswordResetEmail,
 } from "firebase/auth";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 const ADMINDASH_COLLECTION = "admin_users";
 const USERS_COLLECTION = "users";
@@ -244,7 +245,12 @@ export function updateUser(uid, userData) {
 }
 
 //delete user
-export function deleteUser(uid) {
+export async function deleteUser(uid) {
+  const functionsInstance = getFunctions();
+  const deleteFunction = httpsCallable(functionsInstance, "deleteUserAccount");
+  
+  await deleteFunction({ userId: uid });
+
   const userDoc = doc(db, USERS_COLLECTION, uid);
   return deleteDoc(userDoc);
 }

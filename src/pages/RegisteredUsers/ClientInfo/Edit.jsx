@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useDispatch} from "react-redux";
 import Select from "react-select";
-import { getUser, updateUser } from "../../../config/user";
+import { getUser } from "../../../config/user";
 import DotLoader from "../../../components/DotLoader";
 import { customModal } from "../../../utils/modalUtils";
 import {
@@ -10,8 +10,8 @@ import {
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 import { useModal } from "../../../context/ModalContext";
-import { getFunctions, httpsCallable } from "firebase/functions";
 import { updateUserAsync } from "../../../store/user/userSlice";
+import { deleteUser } from "firebase/auth";
 
 const CountrySelect = ({ value, onChange }) => {
   const [countries, setCountries] = useState([]);
@@ -184,16 +184,7 @@ export default function Edit() {
   const confirmDelete = async () => {
     setIsDeleting(true);
     try {
-      // Initialize the Cloud Function
-      const functionsInstance = getFunctions();
-      const deleteFunction = httpsCallable(
-        functionsInstance,
-        "deleteUserAccount"
-      );
-      // Call the Cloud Function to delete the user from Firestore and Authentication
-      const selectedUserId = editUser.uid;
-      await deleteFunction({ userId: selectedUserId });
-
+      await deleteUser(editUser.uid);
       customModal({
         showModal,
         title: "Success!",
