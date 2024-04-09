@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import { TrashIcon, CheckIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import AddAdminModal from "../../components/AddAdminModal";
-import { fetchAdmins } from "../../config/admin";
+import { deleteAdminUser, fetchAdmins } from "../../config/admin";
 import LoadingScreen from "../../components/LoadingScreen";
 import { useModal } from "../../context/ModalContext";
 import { customModal } from "../../utils/modalUtils";
@@ -31,7 +31,7 @@ export default function AddNewAdmin() {
   }, []);
 
 
-  const handleDelete = () => {
+  const handleDelete = (uid) => {
     customModal({
       showModal,
       title: "Are you sure?",
@@ -44,7 +44,7 @@ export default function AddNewAdmin() {
       cancelButtonBgColor: "bg-white",
       cancelButtonTextColor: "text-gray-900",
       onConfirm: () => {
-        confirmDelete();
+        confirmDelete(uid);
         hideModal();
       },
       onCancel: hideModal(),
@@ -56,14 +56,14 @@ export default function AddNewAdmin() {
     });
   };
 
-  const confirmDelete = async () => {
+  const confirmDelete = async (uid) => {
     setIsDeleting(true);
     try {
-      await deleteBond(selectedBond);
+      await deleteAdminUser(uid);
       customModal({
         showModal,
         title: "Success",
-        text: "You have successfully deleted this bond.",
+        text: "You have successfully deleted this user.",
         showConfirmButton: false,
         icon: CheckIcon,
         iconBgColor: "bg-green-100",
@@ -72,12 +72,12 @@ export default function AddNewAdmin() {
         timer: 2000,
       });
       setOpen(false);
-      refreshBonds();
+      getAdmins();
     } catch (error) {
       customModal({
         showModal,
         title: "Error!",
-        text: "There was an error deleting this bond. Please try again.",
+        text: "There was an error deleting this user. Please try again.",
         showConfirmButton: false,
         icon: ExclamationTriangleIcon,
         iconBgColor: "bg-red-100",
@@ -125,7 +125,7 @@ export default function AddNewAdmin() {
                   </span>
                   <span className="text-sm text-gray-500">{person.email}</span>
                 </div>
-                <button className="cursor-pointer self-end ml-auto mr-0">
+                <button className="cursor-pointer self-end ml-auto mr-0" onClick={() => handleDelete(person.uid)}>
                   <TrashIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
                 </button>
               </li>

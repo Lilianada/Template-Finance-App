@@ -14,6 +14,7 @@ import {
   import { db } from "./firebase";
   import {
     createUserWithEmailAndPassword,
+    deleteUser,
     getAuth,
     sendPasswordResetEmail,
     signOut,
@@ -54,20 +55,22 @@ import {
   }
 
   export async function deleteAdminUser(uid) {
-
     try {
-      const auth = getAuth();
-  
-      // Delete admin user from Firebase Authentication
-      const user = await getDoc(doc(db, ADMINUSERS_COLLECTION, uid));
-      await deleteDoc(doc(db, ADMINUSERS_COLLECTION,
-        uid));
-      await deleteDoc(doc(db, ADMINUSERS_COLLECTION, uid));
+        const auth = getAuth();
+
+        // Delete admin user from Firebase Authentication
+        await deleteUser(auth.currentUser);
+
+        // Delete admin user document from Firestore
+        await deleteDoc(doc(db, ADMINUSERS_COLLECTION, uid));
+        
+        return "Admin user successfully deleted.";
     } catch (error) {
-      console.error("Error deleting admin user:", error);
-      throw error;
+        console.error("Error deleting admin user:", error);
+        throw error;
     }
-  }
+}
+
   
   export async function fetchAdmins() {
       try {

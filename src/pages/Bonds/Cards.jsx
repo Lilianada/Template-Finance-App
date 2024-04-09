@@ -19,7 +19,7 @@ export default function Cards({ bonds, isLoading, handleEdit, refreshBonds }) {
   const [selectedBond, setSelectedBond] = useState(null)
   const sortedBonds = [...bonds].sort((a, b) => a.index - b.index);
 
-  const handleDelete = () => {
+  const handleDelete = (bond) => {
     customModal({
       showModal,
       title: "Are you sure?",
@@ -32,7 +32,7 @@ export default function Cards({ bonds, isLoading, handleEdit, refreshBonds }) {
       cancelButtonBgColor: "bg-white",
       cancelButtonTextColor: "text-gray-900",
       onConfirm: () => {
-        confirmDelete();
+        confirmDelete(bond);
         hideModal();
       },
       onCancel: hideModal(),
@@ -44,10 +44,10 @@ export default function Cards({ bonds, isLoading, handleEdit, refreshBonds }) {
     });
   };
 
-  const confirmDelete = async () => {
+  const confirmDelete = async (bond) => {
     setIsDeleting(true);
     try {
-      await deleteBond(selectedBond);
+      await deleteBond(bond);
       customModal({
         showModal,
         title: "Success",
@@ -131,7 +131,7 @@ export default function Cards({ bonds, isLoading, handleEdit, refreshBonds }) {
                     <Menu.Item>
                       {({ active }) => (
                         <button
-                          onClick={() => { setSelectedBond(bond.id); handleDelete(); }}
+                          onClick={() => { setSelectedBond(bond.id); handleDelete(bond.id); }}
                           className={classNames(
                             active ? "bg-gray-50" : "",
                             "block px-3 py-1 text-sm leading-6 text-gray-900 w-full cursor-pointer"
