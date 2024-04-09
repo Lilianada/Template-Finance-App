@@ -325,7 +325,6 @@ export async function updateBondUser(userId, bondId, bondData) {
 }
 
 export const deleteUserBond = async (uid, requestId) => {
-  console.log(uid, requestId)
   try {
     const requestRef = doc(
       db,

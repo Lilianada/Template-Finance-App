@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import DotLoader from "../../components/DotLoader";
 import { customModal } from "../../utils/modalUtils";
 import { useModal } from "../../context/ModalContext";
@@ -17,6 +16,7 @@ import {
 } from "../../config/bonds";
 import { formatNumber } from "../../config/utils";
 import { addNotification } from "../../config/notifications";
+import LoadingScreen from "../../components/LoadingScreen";
 
 export default function BondsRequests() {
   const [requests, setRequests] = useState([]);
@@ -47,7 +47,7 @@ export default function BondsRequests() {
         title: "Are you sure?",
         text: `You are about to approve this bonds investment.`,
         showConfirmButton: true,
-        confirmButtonText: isUpdating ? <DotLoader/> : "Yes, approve",
+        confirmButtonText: "Yes, approve",
         cancelButtonText: "Cancel",
         confirmButtonBgColor: "bg-green-600",
         confirmButtonTextColor: "text-white",
@@ -55,6 +55,7 @@ export default function BondsRequests() {
         cancelButtonTextColor: "text-gray-900",
         onConfirm: () => {
           confirmRequest(userId, requestId, newStatus);
+          hideModal();
         },
         onCancel: hideModal(),
         onClose: hideModal(),
@@ -69,7 +70,7 @@ export default function BondsRequests() {
         title: "Are you sure?",
         text: `You are about to decline this bonds investment. This action cannot be undone.`,
         showConfirmButton: true,
-        confirmButtonText: isUpdating ? <DotLoader/> : "Yes, decline",
+        confirmButtonText: "Yes, decline",
         cancelButtonText: "Cancel",
         confirmButtonBgColor: "bg-red-600",
         confirmButtonTextColor: "text-white",
@@ -77,6 +78,7 @@ export default function BondsRequests() {
         cancelButtonTextColor: "text-gray-900",
         onConfirm: () => {
           confirmRequest(userId, requestId, newStatus);
+          hideModal();
         },
         onCancel: hideModal(),
         onClose: hideModal(),
@@ -89,13 +91,10 @@ export default function BondsRequests() {
   };
 
   const confirmRequest = async (userId, requestId, newStatus) => {
+    setIsUpdating(true);
     try {
-      setIsUpdating(true);
-
-      // Fetching the request data
       const requestData = await fetchRequestData(userId, requestId);
 
-      // Update the request status in Firestore
       await updateRequestStatusInFirestore(userId, requestId, newStatus);
 
       let message;
@@ -103,13 +102,13 @@ export default function BondsRequests() {
         // If the request is approved, handle buying or selling approval
         if (requestData.typeOfRequest === "buy") {
           await handleBuyApproval(userId, requestData);
+          console.log(requestData);
           message = `Your bond request to buy $${requestData.amountRequested} worth of bonds has been approved.`;
         } else if (requestData.typeOfRequest === "sell") {
           await handleSellApproval(userId, requestData);
           message = `Your bond request to sell $${requestData.amountRequested} worth of bonds has been approved.`;
         }
       } else {
-        // Assuming that newStatus here can only be "Approved" or "Declined"
         // Handle declined request
         if (requestData.typeOfRequest === "buy") {
           message = `Your bond request to buy $${requestData.amountRequested} worth of bonds has been declined.`;
@@ -172,6 +171,7 @@ export default function BondsRequests() {
       </div>
 
       <div className="mt-8 flow-root">
+        {isUpdating && <LoadingScreen />}
         {isLoading ? (
           <div className="my-8">
             <DotLoader />

@@ -39,7 +39,6 @@ export default function ClientBondsPage() {
   };
 
   const handleDelete = (id) => {
-    setSelectedId(id);
     customModal({
       showModal,
       title: "Are you sure?",
@@ -52,7 +51,7 @@ export default function ClientBondsPage() {
       cancelButtonBgColor: "bg-white",
       cancelButtonTextColor: "text-gray-900",
       onConfirm: () => {
-        confirmDelete();
+        confirmDelete(id);
         hideModal();
       },
       onCancel: hideModal(),
@@ -64,11 +63,10 @@ export default function ClientBondsPage() {
     });
   };
 
-  const confirmDelete = async () => {
+  const confirmDelete = async (id) => {
     setIsDeleting(true);
-    console.log(selectedId);
     try {
-      await deleteUserBond(userId, selectedId);
+      await deleteUserBond(userId, id);
       customModal({
         showModal,
         title: "Success!",
@@ -129,6 +127,7 @@ export default function ClientBondsPage() {
           </button>
         </div>
       </div>
+      {isDeleting && <LoadingScreen />}
       <div className="-mx-4 mt-8 sm:-mx-0">
         {bonds === null ? (
           <div className="w-full grid place-items-center rounded-xl border border-gray-200 p-4 mt-12">
