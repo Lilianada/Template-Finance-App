@@ -285,7 +285,7 @@ export async function addBondUser(userId, bondData) {
         type: "Sales",
         status: "Cleared",
         reference: "Sale of Bonds",
-        date: bondData.saleDate,
+        date: bondData.saleDate || bondData.date,
         amount: bondData.amountRequested,
       });
     }
@@ -313,7 +313,7 @@ export async function updateBondUser(userId, bondId, bondData) {
         type: "Sales",
         status: "Cleared",
         reference: "Sale of Bonds",
-        date: bondData.saleDate,
+        date: bondData.saleDate || bondData.date,
         amount: bondData.amountRequested,
       });
     }

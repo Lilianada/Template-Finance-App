@@ -130,6 +130,18 @@ export const updateIposToUserCollection = async (userId, ipoId, ipoData) => {
     await updateDoc(docRef, ipoData);
     const docId = docRef.id;
 
+    if (ipoData.type === "sell") {
+      const cashDepositsRef = collection(db, `users/${userId}/cashDeposits`);
+
+      await addDoc(cashDepositsRef, {
+        type: "Sales",
+        status: "Cleared",
+        reference: "Sale of IPOs",
+        date: ipoData.date,
+        amount: ipoData.amountRequested,
+      });
+    }
+
     return { success: true, id: docId };
   } catch (error) {
     console.error("Error updating ipos:", error);
@@ -250,6 +262,17 @@ export const handleIpoApproval = async (uid, requestId, requestData) => {
     // Check if the user's "ipos" subcollection exists, and if not, create it
     await setDoc(iposDocRef, { ...requestData, status: "Approved" });
 
+    if (requestData.type === "sell") {
+      const cashDepositsRef = collection(db, `users/${uid}/cashDeposits`);
+
+      await addDoc(cashDepositsRef, {
+        type: "Sales",
+        status: "Cleared",
+        reference: "Sale of IPOs",
+        date: requestData.date,
+        amount: requestData.amountRequested,
+      });
+    }
     // Add Notification
     const userNotificationPath = collection(
       db,

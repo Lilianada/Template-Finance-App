@@ -132,14 +132,6 @@ export default function AccountOverview({ initialUser }) {
       }
     });
 
-    // Calculate cash balance from IPO sales
-    ipoData.forEach((ipo) => {
-      if (ipo.type.trim().toUpperCase() === "SELL") {
-        cashBalance +=
-          convertToNumber(ipo.numberOfShares) * convertToNumber(ipo.sharePrice);
-      }
-    });
-
     return cashBalance;
   };
 

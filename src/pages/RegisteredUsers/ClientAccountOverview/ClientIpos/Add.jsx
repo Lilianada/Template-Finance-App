@@ -15,7 +15,9 @@ import { getUser } from "../../../../config/user";
 export default function AddUserIpos({ setOpen, open, ipo, userId }) {
     const [isLoading, setIsLoading] = useState(false);
     const [numberOfShares, setNumberOfShares] = useState(0);
+    const [type, setType] = useState(ipo.type);
     const { showModal }  = useModal();
+    const [date, setDate] = useState(getCurrentDate());
   
     const handleInvestInIpo = async (e) => {
       e.preventDefault();
@@ -26,10 +28,10 @@ export default function AddUserIpos({ setOpen, open, ipo, userId }) {
         expectedDate: ipo.expectedDate,
         sharePrice: ipo.sharePrice,
         expListingPrice: ipo.expListingPrice,
-        date: getCurrentDate(),
+        date: date,
         minInvestment: ipo.minInvestment,
         numberOfShares: numberOfShares,
-        type: "invest",
+        type: type,
         userId: userId,
         userName: user[0].fullName,
       };
@@ -130,8 +132,8 @@ export default function AddUserIpos({ setOpen, open, ipo, userId }) {
                   </div>
   
                   {/* IPO Details */}
-                  <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
-                    <div>
+                  <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6">
+                    <div className="sm:col-span-4">
                       <label className="block text-sm font-medium text-gray-900">
                         Company Name
                       </label>
@@ -139,7 +141,7 @@ export default function AddUserIpos({ setOpen, open, ipo, userId }) {
                         {ipo.name}
                       </div>
                     </div>
-                    <div>
+                    <div className="sm:col-span-3">
                       <label className="block text-sm font-medium text-gray-900">
                         IPO Expected Date
                       </label>
@@ -147,7 +149,7 @@ export default function AddUserIpos({ setOpen, open, ipo, userId }) {
                         {ipo.expectedDate}
                       </div>
                     </div>
-                    <div>
+                    <div className="sm:col-span-3">
                       <label className="block text-sm font-medium text-gray-900">
                         IPO Share Price
                       </label>
@@ -155,15 +157,15 @@ export default function AddUserIpos({ setOpen, open, ipo, userId }) {
                         ${formatNumber(ipo.sharePrice)}
                       </div>
                     </div>
-                    <div>
+                    <div className="sm:col-span-3">
                       <label className="block text-sm font-medium text-gray-900">
-                        Minimum Investment Amount
+                        Minimum Investment
                       </label>
                       <div className="mt-1 text-sm text-gray-500">
                         ${formatNumber(ipo.minInvestment)}
                       </div>
                     </div>
-                    <div className="sm:col-span-2">
+                    <div className="sm:col-span-3">
                       <label className="block text-sm font-medium text-gray-900">
                         Total Cost
                       </label>
@@ -171,32 +173,62 @@ export default function AddUserIpos({ setOpen, open, ipo, userId }) {
                         ${formatNumber(ipo.sharePrice * numberOfShares)}
                       </div>
                     </div>
-                    <div className="sm:col-span-2">
+                    <div className="sm:col-span-4">
                       <label className="block text-sm font-medium text-gray-900">
                         Number of Shares
                       </label>
-                      <CurrencyInput
+                      <input
                         name="numberOfShares"
-                        placeholder="$0.00"
-                        defaultValue={numberOfShares}
+                        placeholder="0"
+                        value={numberOfShares}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         decimalsLimit={2}
-                        onValueChange={(value) =>
-                          handleNumberOfSharesChange(value)
+                        onChange={(e) =>
+                          handleNumberOfSharesChange(e)
                         }
                       />
                     </div>
-                    <div className="sm:col-span-2">
-                      <label className="block text-sm font-medium text-gray-900">
-                        Date
-                      </label>
-                      <input
-                        type="date"
-                        name="date"
-                        id="date"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      />
-                    </div>
+                    
+                    <div className="sm:col-span-3">
+                        <label
+                          htmlFor="type"
+                          className="block text-sm font-medium leading-6 text-gray-900"
+                        >
+                          IPOs Type
+                        </label>
+                        <div className="mt-2">
+                          <select
+                            name="type"
+                            value={type}
+                            onChange={(e) => setType(e.target.value)}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                          >
+                            <option value="">Select Type </option>
+                            <option value="invest">Invest</option>
+                            <option value="sell">Sell</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="sm:col-span-3">
+                        <label
+                          htmlFor="date"
+                          className="block text-sm font-medium leading-6 text-gray-900"
+                        >
+                          Purchase/Sale Date
+                        </label>
+                        <div className="mt-2">
+                          <input
+                            type="date"
+                            name="date"
+                            id="date"
+                            onChange={(e) => setDate(e.target.value)}
+                            value={date}
+                            autoComplete="date"
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          />
+                        </div>
+                      </div>
                   </div>
   
                   {/* Form Actions */}

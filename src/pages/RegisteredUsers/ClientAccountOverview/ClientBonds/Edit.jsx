@@ -12,10 +12,17 @@ import CurrencyInput from "react-currency-input-field";
 import { deleteUserBond, updateBondUser } from "../../../../config/bonds";
 import { Dialog, Transition } from "@headlessui/react";
 
-export default function EditBondsDetails ({ setOpen, open, bond, setBond, userId, refreshDetails }) {
-  const [bondAmount, setBondAmount] = useState(0)
-  const [typeOfRequest, setTypeOfRequest] = useState("");
-  const [date, setDate] = useState("");
+export default function EditBondsDetails({
+  setOpen,
+  open,
+  bond,
+  setBond,
+  userId,
+  refreshDetails,
+}) {
+  const [bondAmount, setBondAmount] = useState(0);
+  const [typeOfRequest, setTypeOfRequest] = useState(bond.typeOfRequest);
+  const [date, setDate] = useState(bond.date);
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { showModal, hideModal } = useModal();
@@ -50,22 +57,22 @@ export default function EditBondsDetails ({ setOpen, open, bond, setBond, userId
     setIsLoading(true);
     try {
       const result = await updateBondUser(userId, bond.id, bondData);
-      
+
       if (result.success) {
-      customModal({
-        showModal,
-        title: "Success",
-        text: "You have successfully updated this investment on behalf of this user.",
-        showConfirmButton: false,
-        icon: CheckIcon,
-        iconBgColor: "bg-green-100",
-        iconTextColor: "text-green-600",
-        buttonBgColor: "bg-green-600",
-        timer: 2000,
-      });
-    }
-    refreshDetails();
-    setOpen(false);
+        customModal({
+          showModal,
+          title: "Success",
+          text: "You have successfully updated this investment on behalf of this user.",
+          showConfirmButton: false,
+          icon: CheckIcon,
+          iconBgColor: "bg-green-100",
+          iconTextColor: "text-green-600",
+          buttonBgColor: "bg-green-600",
+          timer: 2000,
+        });
+      }
+      refreshDetails();
+      setOpen(false);
       setBondAmount(0);
     } catch (error) {
       console.error(error.message);
@@ -79,7 +86,7 @@ export default function EditBondsDetails ({ setOpen, open, bond, setBond, userId
         iconTextColor: "text-red-600",
         buttonBgColor: "bg-red-600",
         timer: 2000,
-      }); 
+      });
     } finally {
       setIsLoading(false);
     }
@@ -141,23 +148,6 @@ export default function EditBondsDetails ({ setOpen, open, bond, setBond, userId
       console.error(error);
     } finally {
       setIsDeleting(false);
-    }
-  };
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    if (name === "date") {
-      const parts = value.split("-");
-      const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
-      setBond((prevFormData) => ({
-        ...prevFormData,
-        [name]: formattedDate,
-      }));
-    } else {
-      setBond((prevFormData) => ({
-        ...prevFormData,
-        [name]: value,
-      }));
     }
   };
   
@@ -273,7 +263,7 @@ export default function EditBondsDetails ({ setOpen, open, bond, setBond, userId
                             name="bondAmount"
                             placeholder="$0"
                             defaultValue={bond.amountRequested}
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-600 sm:text-sm sm:leading-6"
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             decimalsLimit={2}
                             onValueChange={(value) => {
                               const formattedValue =
@@ -294,7 +284,7 @@ export default function EditBondsDetails ({ setOpen, open, bond, setBond, userId
                         <div className="mt-2">
                           <select
                             name="typeOfRequest"
-                            value={bond.typeOfRequest}
+                            value={typeOfRequest}
                             onChange={(e) => setTypeOfRequest(e.target.value)}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           >
@@ -318,9 +308,7 @@ export default function EditBondsDetails ({ setOpen, open, bond, setBond, userId
                             name="date"
                             id="date"
                             onChange={(e) => setDate(e.target.value)}
-                            value={
-                              bond.date
-                            }
+                            value={date}
                             autoComplete="date"
                             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           />
@@ -336,23 +324,27 @@ export default function EditBondsDetails ({ setOpen, open, bond, setBond, userId
                     className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
                   >
                     {isLoading ? (
-                       <div className="flex w-full justify-center align-middle gap-2">
-                       <span>Submitting</span>
-                       <DotLoader />
-                     </div>
-                    ) : "Submit"}
+                      <div className="flex w-full justify-center align-middle gap-2">
+                        <span>Submitting</span>
+                        <DotLoader />
+                      </div>
+                    ) : (
+                      "Submit"
+                    )}
                   </button>
                   <button
                     type="button"
                     className="inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
-                  onClick={handleDelete}
+                    onClick={handleDelete}
                   >
                     {isDeleting ? (
-                       <div className="flex w-full justify-center align-middle gap-2">
-                       <span>Deleting</span>
-                       <DotLoader />
-                     </div>
-                    ) : "Delete"}
+                      <div className="flex w-full justify-center align-middle gap-2">
+                        <span>Deleting</span>
+                        <DotLoader />
+                      </div>
+                    ) : (
+                      "Delete"
+                    )}
                   </button>
                 </div>
               </form>
