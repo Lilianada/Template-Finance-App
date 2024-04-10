@@ -1,4 +1,5 @@
 import {
+  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -122,3 +123,50 @@ export const checkAdminRoleAndLogoutIfNot = async (db) => {
     return false;
   }
 };
+
+
+// Function to add login/logout notification to Admin Dashboard
+export async function addLogNotification(userRef) {
+  try {
+    // Fetch the user's data to determine the login status
+    const userSnapshot = await getDoc(userRef);
+
+    if (userSnapshot.exists()) {
+      const userData = userSnapshot.data();
+      const isLoggedIn = userData.isLoggedIn; // Assuming 'isLoggedIn' is a boolean field in the user's data
+
+      // Create a notification message based on the login status
+      const adminNotification = isLoggedIn
+        ? `User '${userData.fullName}' logged in`
+        : `User '${userData.fullName}' logged out`;
+
+      // Send the notification to the admin_users collection
+      const notificationData = {
+        message: adminNotification,
+        // date: getCurrentDate(),
+        timeStamp: new Date(),
+        isLoggedIn: isLoggedIn,
+      };
+
+      // Construct the Firestore references for admin dashboard and sub-collection
+      const adminDashRef = collection(db, ADMINUSERS_COLLECTION);
+      const notificationDashRef = doc(adminDashRef, "notifications");
+      const subCollectionName = isLoggedIn
+        ? "loginNotifications"
+        : "logoutNotifications";
+      const notificationsRef = collection(
+        notificationDashRef,
+        subCollectionName
+      );
+
+      await addDoc(notificationsRef, notificationData);
+      return notificationData;
+    } else {
+      console.error("User not found in Firestore.");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error adding user login notification to Firestore:", error);
+    return null;
+  }
+}

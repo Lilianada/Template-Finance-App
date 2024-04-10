@@ -1,29 +1,26 @@
 import {
-  UserIcon,
-  Cog6ToothIcon,
-  CreditCardIcon,
-  BanknotesIcon,
-  ChartBarSquareIcon,
-  BellIcon,
-  CircleStackIcon,
-} from "@heroicons/react/24/outline";
-
-import my_accounts_icon from "../../assets/images/my_accounts.png";
+  React,
+  useState
+} from "react";
+import { useNavigate } from "react-router-dom";
+import account_details from "../../assets/images/account_details.png";
 import transactions_icon from "../../assets/images/transaction.png";
 import bonds_icon from "../../assets/images/bond.png";
 import fixedTerm_icon from "../../assets/images/deposit.png";
 import ipos_icon from "../../assets/images/ipo.png";
-import accountDetails_icon from "../../assets/images/account_details.png";
-import stock_icon from "../../assets/images/stock_market.png";
 import logout_icon from "../../assets/images/logout.png"; 
 import notification_icon from "../../assets/images/notification.png";
 import settings_icon from "../../assets/images/settings.png"; 
 import { Link } from "react-router-dom";
+import { useModal } from "../../context/ModalContext";
+import { auth, db } from "../../config/firebase";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { addLogNotification } from "../../config/admin";
 
 const menus = [
   {
     title: "Registered Users",
-    icon: my_accounts_icon,
+    icon: account_details,
     href: "/dashboard/registered_users",
   },
   {
@@ -56,9 +53,43 @@ const menus = [
     icon: settings_icon,
     href: "/dashboard/settings",
   },
+  {
+    title: "Logout",
+    icon: logout_icon,
+    href: {},
+  },
 ];
 
 export default function Dashboard() {
+  const {showModal, hideModal} = useModal();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    setIsLoading(true);
+
+    try {
+      const user = auth.currentUser;
+
+      if (user) {
+        // Fetch the user's details from Firestore
+        const userRef = doc(db, "users", user.uid);
+        const userDoc = await getDoc(userRef);
+        if (userDoc.exists()) {
+          await updateDoc(userRef, { isLoggedIn: false });
+          await addLogNotification(userRef, user);
+        }
+        await auth.signOut();
+      }
+
+      setIsLoading(false);
+      navigate("/");
+    } catch (error) {
+      setIsLoading(false);
+      console.error("Error signing out:", error);
+    }
+  };
   return (
     <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 px-4">
       {menus.map((item, index) => (
@@ -72,7 +103,7 @@ export default function Dashboard() {
           >
             <div className="flex-1 truncate">
               <div className="flex items-center justify-center space-x-3">
-              <img src={item.icon} className="homePage_icon" alt="card icon" />
+              <img src={item.icon} className="w-12" alt="card icon" />
               </div>
               <h2 className="mt-6 truncate text-xl text-gray-500">
                 {item.title}
