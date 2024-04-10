@@ -43,7 +43,7 @@ export default function IposRequests() {
       customModal({
         showModal,
         title: "Are you sure?",
-        text: `You are about to approve this bonds investment.`,
+        text: `You are about to approve this IPOs transaction.`,
         showConfirmButton: true,
         confirmButtonText: "Yes, approve",
         cancelButtonText: "Cancel",
@@ -66,7 +66,7 @@ export default function IposRequests() {
       customModal({
         showModal,
         title: "Are you sure?",
-        text: `You are about to decline this bonds investment. This action cannot be undone.`,
+        text: `You are about to decline this IPOs transaction. This action cannot be undone.`,
         showConfirmButton: true,
         confirmButtonText: "Yes, decline",
         cancelButtonText: "Cancel",
@@ -146,7 +146,7 @@ export default function IposRequests() {
             IPOs Requests
           </h1>
           <p className="mt-2 text-sm text-gray-700">
-            A list of all the bonds requests made including their full name,
+            A list of all the IPOs requests made including their full name,
             email, mobile phone and user id.
           </p>
         </div>

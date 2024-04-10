@@ -45,7 +45,7 @@ export default function BondsRequests() {
       customModal({
         showModal,
         title: "Are you sure?",
-        text: `You are about to approve this bonds investment.`,
+        text: `You are about to approve this Bonds investment.`,
         showConfirmButton: true,
         confirmButtonText: "Yes, approve",
         cancelButtonText: "Cancel",
@@ -68,7 +68,7 @@ export default function BondsRequests() {
       customModal({
         showModal,
         title: "Are you sure?",
-        text: `You are about to decline this bonds investment. This action cannot be undone.`,
+        text: `You are about to decline this Bonds investment. This action cannot be undone.`,
         showConfirmButton: true,
         confirmButtonText: "Yes, decline",
         cancelButtonText: "Cancel",
@@ -163,7 +163,7 @@ export default function BondsRequests() {
             Bonds Requests
           </h1>
           <p className="mt-2 text-sm text-gray-700">
-            A list of all the bonds requests made including their full name,
+            A list of all the Bonds requests made including their full name,
             email, mobile phone and user id.
           </p>
         </div>
