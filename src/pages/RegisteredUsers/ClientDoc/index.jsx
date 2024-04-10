@@ -149,11 +149,22 @@ export default function ClientDoc({ initialUser }) {
                 </li>
               ))
             ) : (
-              <div className="w-full grid place-items-center p-4">
+              <div className="w-full grid place-items-center p-4 ">
                 <h5 className="text-gray-400 text-lg ">No Document</h5>
               </div>
             )}
           </ul>
+          {!doc && (
+            <div className="mt-6 flex space-x-3 justify-end">
+              <button
+                type="button"
+                className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-indigo-400 hover:bg-indigo-400"
+                onClick={() => handleUpdate(doc)}
+              >
+                Add Doc
+              </button>
+            </div>
+          )}
         </dd>
       </div>
       {open && (

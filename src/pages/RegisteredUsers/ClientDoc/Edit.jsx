@@ -122,7 +122,7 @@ export default function EditDoc({ setOpen, open, doc, userId, refresh }) {
                   </div>
 
                   <div className="pb-4">
-                    <div className="mt-6 flex items-end gap-2">
+                  <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6">
                       <div className="sm:col-span-full">
                         <label
                           htmlFor="fileDescription"
@@ -138,10 +138,10 @@ export default function EditDoc({ setOpen, open, doc, userId, refresh }) {
                           value={fileDescription}
                           onChange={(e) => setFileDescription(e.target.value)}
                           required
-                          className=" focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                          className="mt-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                         />
                       </div>
-                      <div className=" flex items-center">
+                      <div className="sm:col-span-3 flex items-center">
                         <input
                           type="file"
                           name="image"

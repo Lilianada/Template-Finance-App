@@ -281,6 +281,7 @@ export async function updateTermInUserCollection(userId, termId, termData) {
     const docRef = doc(userTermsHoldingsPath, termId);
     await updateDoc(docRef, termData);
     const docId = docRef.id;
+    
     if (termData.type === "withdrawal") {
       const cashDepositsRef = collection(db, `users/${userId}/cashDeposits`);
 
@@ -314,16 +315,3 @@ export async function deleteTermFromUserCollection(userId, termId) {
     return { success: false, error: error.message };
   }
 }
-
-
-export const getSpecificTermRequest = async (requestId, uid) => {
-  const requestRef = doc(
-    db,
-    ADMINDASH_COLLECTION,
-    uid,
-    TERMS_REQUEST_SUB_COLLECTION,
-    requestId
-  );
-  const requestSnapshot = await getDoc(requestRef);
-  return requestSnapshot.data();
-};
