@@ -28,11 +28,11 @@ export default function Dashboard() {
       icon: account_details,
       href: "/dashboard/registered_users",
     },
-    {
-      title: "Cash Deposits",
-      icon: transactions_icon,
-      href: "/dashboard/cash_deposits",
-    },
+    // {
+    //   title: "Cash Deposits",
+    //   icon: transactions_icon,
+    //   href: "/dashboard/cash_deposits",
+    // },
     {
       title: "Bonds",
       icon: bonds_icon,

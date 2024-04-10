@@ -6,6 +6,7 @@ import {
   CalendarIcon,
   CreditCardIcon,
   HomeIcon,
+  WrenchScrewdriverIcon,
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import Header from "./Header";
@@ -20,12 +21,12 @@ const navigation = [
     icon: UserGroupIcon,
     current: false,
   },
-  {
-    name: "Cash Deposits",
-    to: "/dashboard/cash_deposits",
-    icon: BanknotesIcon,
-    current: false,
-  },
+  // {
+  //   name: "Cash Deposits",
+  //   to: "/dashboard/cash_deposits",
+  //   icon: BanknotesIcon,
+  //   current: false,
+  // },
   { 
     name: "Bonds", 
     to: "/dashboard/bonds", 
@@ -42,6 +43,12 @@ const navigation = [
     name: "Ipos", 
     to: "/dashboard/ipos", 
     icon: CalendarIcon, 
+    current: false 
+  },
+  { 
+    name: "Settings", 
+    to: "/dashboard/settings", 
+    icon: WrenchScrewdriverIcon, 
     current: false 
   },
 ];
