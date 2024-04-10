@@ -246,7 +246,7 @@ export default function Notifications() {
                     />
                     <div className="flex-1 space-y-3">
                       <div className="flex items-center justify-between">
-                        <h3 className="text-sm font-medium">
+                        <h3 className="text-sm font-medium text-left">
                           {item.message}{" "}
                           {getHumanReadableTimestamp(item.timeStamp)}.
                         </h3>
