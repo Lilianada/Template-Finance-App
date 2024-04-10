@@ -47,7 +47,6 @@ export default function ClientTermPage() {
   };
 
   const handleDelete = (id) => {
-    setSelectedId(id)
     customModal({
       showModal,
       title: "Are you sure?",
@@ -60,7 +59,7 @@ export default function ClientTermPage() {
       cancelButtonBgColor: "bg-white",
       cancelButtonTextColor: "text-gray-900",
       onConfirm: () => {
-        confirmDelete();
+        confirmDelete(id);
         hideModal();
       },
       onCancel: hideModal(),
@@ -72,10 +71,10 @@ export default function ClientTermPage() {
     });
   };
 
-  const confirmDelete = async () => {
+  const confirmDelete = async (id) => {
     setIsDeleting(true);
     try {
-      await deleteTermFromUserCollection(userId, selectedId);
+      await deleteTermFromUserCollection(userId, id);
       customModal({
         showModal,
         title: "Success",
@@ -107,10 +106,6 @@ export default function ClientTermPage() {
     }
   };
 
-  if (isDeleting) {
-    <LoadingScreen />;
-  }
-
   return (
     <div className="px-4 ">
       <div className="sm:flex sm:items-center">
@@ -136,6 +131,7 @@ export default function ClientTermPage() {
           </button>
         </div>
       </div>
+      {isDeleting && <LoadingScreen />}
       {isLoading && <DotLoader />}
       <div className="-mx-4 mt-8 sm:-mx-0">
         {fixedTerms === null ? (

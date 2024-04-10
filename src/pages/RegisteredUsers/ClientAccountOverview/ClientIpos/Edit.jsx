@@ -35,6 +35,7 @@ export default function EditUserIpos({
       setType(ipo.type);
     }
   }, [ipo]);
+  
   const handleUpdate = async (e) => {
     e.preventDefault();
     const investmentData = {
