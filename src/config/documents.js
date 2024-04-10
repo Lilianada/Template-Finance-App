@@ -17,7 +17,6 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDoc,
   getDocs,
   updateDoc,
 } from "firebase/firestore";
@@ -72,7 +71,7 @@ export const fetchUserDocument = async (userId) => {
 
 export const deleteDocument = async (userId, docId, fileName) => {
   const storage = getStorage();
-  const storageRef = ref(storage, `${userId}/${fileName}`); // Construct the reference correctly
+  const storageRef = ref(storage,`${userId}/${fileName}`); 
 
   try {
     await deleteObject(storageRef);
@@ -86,19 +85,20 @@ export const deleteDocument = async (userId, docId, fileName) => {
 
 export const updateDocument = async (userId, documentId, fileDescription, file) => {
   const storage = getStorage();
-  const uid = userId; // Assuming userId is directly the user ID
+  const uid = userId;
   const storageRef = ref(storage, `${uid}/${file.name}`);
-  console.log(fileDescription, file, uid);
+  console.log(file,storageRef.fullPath, documentId)
   
   try {
     
     if (documentId) {
       const docRef = doc(db, "users", uid, "docs", documentId);
-      // Check if the document exists
+  
       // Document exists, update it
       const updatedDocData = {
         fileDescription,
         downloadURL: storageRef.fullPath, 
+        fileName: file.name,
       };
       await updateDoc(docRef, updatedDocData);
     } else {
@@ -112,11 +112,34 @@ export const updateDocument = async (userId, documentId, fileDescription, file) 
       const docData = {
         fileDescription,
         downloadURL,
+        fileName: file.name,
       };
       await addDoc(userDocCollectionRef, docData);
     }
   } catch (error) {
     console.error("Error during file upload or Firestore operation:", error);
+    throw error;
+  }
+};
+
+export const downloadFile = async (userId, fileName, callback) => {
+  const storage = getStorage();
+  const uid = userId; // Assuming userId is directly the user ID
+  const storageRef = ref(storage, `${uid}/${fileName}`);
+
+  try {
+    // Get the download URL for the file
+    const downloadURL = await getDownloadURL(storageRef);
+
+    // If a callback function is provided, call it with the download URL
+    if (callback && typeof callback === 'function') {
+      callback(downloadURL);
+    }
+
+    // Return the download URL
+    return downloadURL;
+  } catch (error) {
+    console.error("Error downloading file:", error);
     throw error;
   }
 };

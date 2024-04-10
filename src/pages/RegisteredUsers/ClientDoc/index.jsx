@@ -2,23 +2,25 @@ import React, { useEffect, useState } from "react";
 import { PaperClipIcon } from "@heroicons/react/20/solid";
 import {
   deleteDocument,
+  downloadFile,
   fetchUserDocument,
-  updateDocumentInFirestore,
 } from "../../../config/documents";
 import {
+  ArrowDownTrayIcon,
   CheckIcon,
   ExclamationCircleIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
-import { getStorage, ref } from "firebase/storage";
 import { customModal } from "../../../utils/modalUtils";
 import { useModal } from "../../../context/ModalContext";
 import EditDoc from "./Edit";
+import LoadingScreen from "../../../components/LoadingScreen";
 
 export default function ClientDoc({ initialUser }) {
   const user = initialUser.id;
   const { showModal, hideModal } = useModal();
   const [isLoading, setIsLoading] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const [doc, setDoc] = useState([]);
   const [open, setOpen] = useState(false);
 
@@ -39,7 +41,7 @@ export default function ClientDoc({ initialUser }) {
     setOpen(true);
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (doc) => {
     customModal({
       showModal,
       title: "Are you sure?",
@@ -52,7 +54,7 @@ export default function ClientDoc({ initialUser }) {
       cancelButtonBgColor: "bg-white",
       cancelButtonTextColor: "text-gray-900",
       onConfirm: () => {
-        confirmDelete();
+        confirmDelete(doc);
         hideModal();
       },
       onCancel: hideModal(),
@@ -64,15 +66,15 @@ export default function ClientDoc({ initialUser }) {
     });
   };
 
-  const confirmDelete = async () => {
+  const confirmDelete = async (doc) => {
     setIsLoading(true);
 
     try {
-      await deleteDocument(user, doc);
+      await deleteDocument(user, doc.id, doc.fileName);
       customModal({
         showModal,
         title: "Success",
-        message: "Document has been deleted successfully.",
+        text: "Document has been deleted successfully.",
         showConfirmButton: false,
         iconBgColor: "bg-green-100",
         iconTextColor: "text-green-600",
@@ -80,6 +82,7 @@ export default function ClientDoc({ initialUser }) {
         icon: CheckIcon,
         timer: 1500,
       });
+      fetchDoc();
     } catch (error) {
       console.error("Error during document deletion:", error);
 
@@ -89,14 +92,39 @@ export default function ClientDoc({ initialUser }) {
         title: "Error",
         text: "An error occurred while deleting document. Please try again later.",
         showConfirmButton: false,
+        iconBgColor: "bg-red-100",
         iconTextColor: "text-red-600",
-        iconBgColor: "bg-red-500",
-        iconColor: "text-white",
+        buttonBgColor: "text-red-600",
         icon: ExclamationCircleIcon,
         timer: 1500,
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const download = async (doc) => {
+    setIsDownloading(true);
+    
+    try {
+      const downloadURL = await downloadFile(user, doc);
+      console.log("Download URL:", downloadURL);
+  
+      customModal({
+        showModal,
+        title: "Success",
+        text: "Document has been downloaded successfully.",
+        showConfirmButton: false,
+        iconBgColor: "bg-green-100",
+        iconTextColor: "text-green-600",
+        buttonBgColor: "bg-green-600",
+        icon: CheckIcon,
+        timer: 1500,
+      });
+    } catch (error) {
+      console.error("Error downloading file:", error);
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -108,6 +136,8 @@ export default function ClientDoc({ initialUser }) {
         </h3>
       </div>
       <div className="px-4 py-6 sm:col-span-2 sm:px-0">
+        {isLoading && <LoadingScreen />}
+        {isDownloading && <LoadingScreen /> }
         <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
           <ul className="divide-y divide-gray-100 rounded-md border border-gray-200">
             {doc ? (
@@ -125,13 +155,19 @@ export default function ClientDoc({ initialUser }) {
                       <span className="truncate font-medium">
                         {doc.fileDescription}
                       </span>
+                      <span className="text-gray-200" aria-hidden="true">
+                        |
+                      </span>
+                      <span className="truncate text-gray-500">
+                        {doc.fileName}
+                      </span>
                     </div>
                   </div>
                   <div className="ml-4 flex flex-shrink-0 space-x-4">
                     <button
                       type="button"
                       className="rounded-md bg-gray-50 font-medium text-indigo-600 hover:text-indigo-500"
-                      onClick={() => handleUpdate(doc)}
+                      onClick={handleUpdate}
                     >
                       Update
                     </button>
@@ -141,10 +177,24 @@ export default function ClientDoc({ initialUser }) {
                     <button
                       type="button"
                       className="rounded-md bg-gray-50 font-medium text-gray-900 hover:text-gray-800"
-                      onClick={handleDelete}
+                      onClick={() => handleDelete(doc)}
                     >
                       Remove
                     </button>
+                    <span className="text-gray-200" aria-hidden="true">
+                      |
+                    </span>
+                    <span className="text-gray-500">
+                      <button
+                        title="download file"
+                        onClick={(e) => download(doc.fileName)}
+                      >
+                        <ArrowDownTrayIcon
+                          className="h-6 w-6 text-green-600"
+                          aria-hidden="true"
+                        />
+                      </button>
+                    </span>
                   </div>
                 </li>
               ))
@@ -159,7 +209,7 @@ export default function ClientDoc({ initialUser }) {
               <button
                 type="button"
                 className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
-                  onClick={() => handleUpdate(doc)}
+                onClick={handleUpdate}
               >
                 Add Doc
               </button>

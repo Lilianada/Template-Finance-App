@@ -29,7 +29,7 @@ export default function EditDoc({ setOpen, open, doc, userId, refresh }) {
     setIsLoading(true);
 
     try {
-      await updateDocument(userId, doc, fileDescription, file);
+      await updateDocument(userId, doc[0].id, fileDescription, file);
 
       customModal({
         showModal,
