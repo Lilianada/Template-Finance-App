@@ -107,8 +107,7 @@ export default function ClientDoc({ initialUser }) {
     setIsDownloading(true);
     
     try {
-      const downloadURL = await downloadFile(user, doc);
-      console.log("Download URL:", downloadURL);
+     await downloadFile(doc);
   
       customModal({
         showModal,
@@ -181,20 +180,20 @@ export default function ClientDoc({ initialUser }) {
                     >
                       Remove
                     </button>
-                    <span className="text-gray-200" aria-hidden="true">
+                    {/* <span className="text-gray-200" aria-hidden="true">
                       |
                     </span>
                     <span className="text-gray-500">
                       <button
                         title="download file"
-                        onClick={(e) => download(doc.fileName)}
+                        onClick={(e) => download(doc)}
                       >
                         <ArrowDownTrayIcon
                           className="h-6 w-6 text-green-600"
                           aria-hidden="true"
                         />
                       </button>
-                    </span>
+                    </span> */}
                   </div>
                 </li>
               ))

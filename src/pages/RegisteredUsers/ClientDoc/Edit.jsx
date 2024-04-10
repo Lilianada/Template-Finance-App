@@ -16,10 +16,11 @@ export default function EditDoc({ setOpen, open, doc, userId, refresh }) {
   const [fileDescription, setFileDescription] = useState('');
   const [file, setFile] = useState( null);
   const [fileName, setFileName] = useState(''); 
-  
+
   useEffect(() => {
     if (doc) {
-      setFileDescription(doc.fileDescription || '');
+      setFileDescription(doc[0].fileDescription || '');
+      setFileName(doc[0].fileName || '');
     }
   }, [doc]);
 
@@ -29,6 +30,7 @@ export default function EditDoc({ setOpen, open, doc, userId, refresh }) {
     setIsLoading(true);
 
     try {
+      
       await updateDocument(userId, doc[0].id, fileDescription, file);
 
       customModal({
@@ -68,8 +70,15 @@ export default function EditDoc({ setOpen, open, doc, userId, refresh }) {
   const handleChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
-    setFileName(selectedFile?.name || '');
+    if (selectedFile) {
+      setFileName(selectedFile.name);
+    } else if (doc && doc.length > 0) {
+      setFileName(doc[0].downloadURL || '');
+    } else {
+      setFileName('');
+    }
   };
+  
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -126,8 +135,8 @@ export default function EditDoc({ setOpen, open, doc, userId, refresh }) {
                     <h2 className="text-xl font-semibold leading-7 text-gray-900">
                       Update User Document
                     </h2>
-                    <p className="mt-1 text-sm leading-6 text-gray-600">
-                      Add document details below
+                    <p className="mt-1 text-sm leading-6 text-gray-600 flex">
+                      Re-upload file even when you only want to change the document name. Ensure there is a (✔️) in front of the file name before submitting.
                     </p>
                   </div>
 
