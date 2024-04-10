@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import Select from "react-select";
 import { getUser } from "../../../config/user";
 import DotLoader from "../../../components/DotLoader";
@@ -72,11 +72,7 @@ export default function Edit() {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    const {
-      fullName,
-      email,
-      mobilePhone,
-    } = formData;
+    const { fullName, email, mobilePhone } = formData;
 
     // Check if required fields are filled
     if (!fullName || !email || !mobilePhone) {
@@ -116,7 +112,9 @@ export default function Edit() {
     setIsEditing(true);
 
     try {
-      await dispatch(updateUserAsync({ userId: editUser.uid, userDetails: updatedUser })).unwrap();
+      await dispatch(
+        updateUserAsync({ userId: editUser.uid, userDetails: updatedUser })
+      ).unwrap();
       customModal({
         showModal,
         title: "Updated!",
@@ -221,20 +219,21 @@ export default function Edit() {
   return (
     <form className="text-left bg-gray-50 px-6 py-8" onSubmit={handleUpdate}>
       <div className="space-y-12">
-        <div className=''>
+        <div className="">
           <h2 className="text-xl font-semibold leading-7 text-gray-900">
             Edit Account Information
           </h2>
           <p className="mt-1 text-sm leading-6 text-gray-600">
-            If you wish to remove any information, please do so below by updating the field to "Nil" or "N/A." 
-            Any fields left blank will not be updated as the current data will be retained.
+            If you wish to remove any information, please do so below by
+            updating the field to "Nil" or "N/A." Any fields left blank will not
+            be updated as the current data will be retained.
           </p>
         </div>
 
         <div className="pb-12">
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-4 flex items-center gap-2">
-              <div className=''>
+              <div className="">
                 <input
                   type="checkbox"
                   name="jointAccount"
@@ -268,7 +267,7 @@ export default function Edit() {
                   value={formData.title || ""}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                 >
-                  <option value=''>Select Title</option>
+                  <option value="">Select Title</option>
                   <option value="Miss">Miss</option>
                   <option value="Mrs">Mrs</option>
                   <option value="Mr">Mr</option>
@@ -311,25 +310,25 @@ export default function Edit() {
                   Secondary Account Holder Title
                 </label>
                 <div className="mt-2">
-                <select
-                  id="secondaryTitle"
-                  name="secondaryTitle"
-                  autoComplete="secondaryTitle"
-                  onChange={handleChange}
-                  value={formData.secondaryTitle || ""}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                >
-                  <option value="">Select Title</option>
-                  <option value="Miss">Miss</option>
-                  <option value="Mrs">Mrs</option>
-                  <option value="Mr">Mr</option>
-                  <option value="Ms">Ms</option>
-                  <option value="Dr">Dr</option>
-                  <option value="Rev">Rev</option>
-                  <option value="Other">Other</option>
-                  <option value="Other">N/A</option>
-                </select>
-              </div>
+                  <select
+                    id="secondaryTitle"
+                    name="secondaryTitle"
+                    autoComplete="secondaryTitle"
+                    onChange={handleChange}
+                    value={formData.secondaryTitle || ""}
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                  >
+                    <option value="">Select Title</option>
+                    <option value="Miss">Miss</option>
+                    <option value="Mrs">Mrs</option>
+                    <option value="Mr">Mr</option>
+                    <option value="Ms">Ms</option>
+                    <option value="Dr">Dr</option>
+                    <option value="Rev">Rev</option>
+                    <option value="Other">Other</option>
+                    <option value="Other">N/A</option>
+                  </select>
+                </div>
               </div>
             )}
 
@@ -511,14 +510,28 @@ export default function Edit() {
           type="submit"
           className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
         >
-          {isEditing ? <DotLoader /> : "Update User"}
+          {isEditing ? (
+            <div className="flex w-full justify-center align-middle gap-2">
+              <span>Updating</span>
+              <DotLoader />
+            </div>
+          ) : (
+            "Update User"
+          )}
         </button>
         <button
           type="button"
           className="inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
           onClick={handleDelete}
         >
-          {isDeleting ? <DotLoader /> : "Delete User"}
+          {isDeleting ? (
+            <div className="flex w-full justify-center align-middle gap-2">
+              <span>Deleting</span>
+              <DotLoader />
+            </div>
+          ) : (
+            "Delete User"
+          )}
         </button>
       </div>
     </form>
