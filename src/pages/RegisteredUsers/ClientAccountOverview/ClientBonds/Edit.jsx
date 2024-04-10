@@ -268,7 +268,7 @@ export default function EditBondsDetails({
                             onValueChange={(value) => {
                               const formattedValue =
                                 parseFloat(value).toFixed(2);
-                              setBondAmount(parseFloat(formattedValue)); // Store as a number
+                              setBondAmount(parseFloat(formattedValue)); 
                             }}
                           />
                         </div>

@@ -8,7 +8,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { formatNumber } from "../../config/utils";
 import LoadingScreen from "../../components/LoadingScreen";
-import { deleteFixedTermRequestStatus, getSpecificTermRequest, getTermRequests, handleDepositApproval, handleWithdrawalApproval } from "../../config/terms";
+import { deleteFixedTermRequestStatus, getTermRequests, handleDepositApproval, handleWithdrawalApproval } from "../../config/terms";
 import { addNotification } from "../../config/notifications";
 
 export default function FixedTermRequests() {

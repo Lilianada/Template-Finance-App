@@ -25,6 +25,7 @@ export default function EditUserTerms({
   useEffect(() => {
     if (fixedTerm) {
       setDate(fixedTerm.date);
+      setDepositAmount(fixedTerm.principalAmount);
       setType(fixedTerm.type);
     }
   }, [fixedTerm]);
@@ -40,14 +41,14 @@ export default function EditUserTerms({
       }
       const user = await getUser(userId);
       const newDeposit = {
-        date: getCurrentDate(),
+        date: date,
         principalAmount: parseFloat(depositAmount),
         minAmount: fixedTerm.minAmount,
         status: "Paid",
         bankName: fixedTerm.bankName,
         term: fixedTerm.term,
         interestRate: fixedTerm.interestRate,
-        type: "Deposit",
+        type: type,
         image: fixedTerm.image,
         userId: userId,
         userName: user[0].fullName,
@@ -125,7 +126,7 @@ export default function EditUserTerms({
                   onSubmit={onDeposit}
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <div className="space-y-12">
+                  <div className="space-y-6">
                     <div className="">
                       <h2 className="text-xl font-semibold leading-7 text-gray-900">
                           Edit Fixed Term Deposit Information
@@ -177,7 +178,7 @@ export default function EditUserTerms({
                             htmlFor="fixedTermAmount"
                             className="block text-sm font-medium leading-6 text-gray-900"
                           >
-                            Input Amount
+                            Principal Amount
                           </label>
                           <div className="mt-2">
                             <CurrencyInput
@@ -185,7 +186,7 @@ export default function EditUserTerms({
                               prefix="$"
                               name="fixedTermAmount"
                               placeholder="$0"
-                              defaultValue={depositAmount}
+                              defaultValue={fixedTerm.principalAmount}
                               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                               decimalsLimit={2}
                               onValueChange={(value) => {
@@ -222,7 +223,7 @@ export default function EditUserTerms({
                           htmlFor="date"
                           className="block text-sm font-medium leading-6 text-gray-900"
                         >
-                          Purchase/Sale Date
+                          Deposit/Withdrawal Date
                         </label>
                         <div className="mt-2">
                           <input
@@ -242,13 +243,6 @@ export default function EditUserTerms({
 
                   <div className="mt-4 flex space-x-6 justify-end">
                     <button
-                      type="button"
-                      className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                      onClick={() => setOpen(false)}
-                    >
-                      Close
-                    </button>
-                    <button
                       type="submit"
                       className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
                     >
@@ -260,6 +254,13 @@ export default function EditUserTerms({
                       ) : (
                         "Submit"
                       )}
+                    </button>
+                    <button
+                      type="button"
+                      className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                      onClick={() => setOpen(false)}
+                    >
+                      Close
                     </button>
                   </div>
                 </form>
