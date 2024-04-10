@@ -45,7 +45,6 @@ import ClientStock from "./pages/RegisteredUsers/ClientAccountOverview/ClientSto
 import AddUserStock from "./pages/RegisteredUsers/ClientAccountOverview/ClientStock/Add";
 import EditUserStock from "./pages/RegisteredUsers/ClientAccountOverview/ClientStock/Edit";
 import Settings from "./pages/Settings";
-import TransactionsComponent from "./pages/Transactions";
 import BondsRequests from "./pages/BondsRequest";
 import Notifications from "./pages/Notifications";
 import IposRequests from "./pages/IposRequest";
@@ -317,14 +316,6 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <RequestsTable />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="transactions_requests"
-                  element={
-                    <ProtectedRoute>
-                      <TransactionsComponent />
                     </ProtectedRoute>
                   }
                 />

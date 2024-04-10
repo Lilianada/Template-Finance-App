@@ -51,7 +51,6 @@ const requests = [
   { id: 1, name: "Bonds Request", to: "/dashboard/bonds_requests", initial: "B", current: false },
   { id: 2, name: "Ipos Request", to: "/dashboard/ipos_requests", initial: "I", current: false },
   { id: 3, name: "Fixed Term Requests", to: "/dashboard/fixedTerms_requests", initial: "F", current: false, },
-  { id: 4, name: "Transaction Requests", to: "/dashboard/transactions_requests", initial: "T", current: false, },
 ];
 
 export default function Skeleton() {
