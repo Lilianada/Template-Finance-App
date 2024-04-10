@@ -158,8 +158,8 @@ export default function ClientDoc({ initialUser }) {
             <div className="mt-6 flex space-x-3 justify-end">
               <button
                 type="button"
-                className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-indigo-400 hover:bg-indigo-400"
-                onClick={() => handleUpdate(doc)}
+                className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+                  onClick={() => handleUpdate(doc)}
               >
                 Add Doc
               </button>

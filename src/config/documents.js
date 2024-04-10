@@ -17,6 +17,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   updateDoc,
 } from "firebase/firestore";
@@ -83,61 +84,39 @@ export const deleteDocument = async (userId, docId, fileName) => {
   }
 };
 
-export const uploadDocument = async (userId, fileDescription, file) => {
+export const updateDocument = async (userId, documentId, fileDescription, file) => {
   const storage = getStorage();
-  const uid = userId.userId;
+  const uid = userId; // Assuming userId is directly the user ID
   const storageRef = ref(storage, `${uid}/${file.name}`);
   console.log(fileDescription, file, uid);
+  
   try {
-    // Upload the document to Firebase Storage
-    const uploadTask = uploadBytesResumable(storageRef, file);
+    
+    if (documentId) {
+      const docRef = doc(db, "users", uid, "docs", documentId);
+      // Check if the document exists
+      // Document exists, update it
+      const updatedDocData = {
+        fileDescription,
+        downloadURL: storageRef.fullPath, 
+      };
+      await updateDoc(docRef, updatedDocData);
+    } else {
+      // Document doesn't exist, upload a new one
+      const uploadTask = uploadBytesResumable(storageRef, file);
+      const snapshot = await uploadTask;
+      const downloadURL = await getDownloadURL(snapshot.ref);
 
-    // Set up event listeners for the upload task if needed
-    // For example, to track upload progress
-
-    // Wait for the upload to complete
-    const snapshot = await uploadTask;
-
-    // Get the download URL of the uploaded file
-    const downloadURL = await getDownloadURL(snapshot.ref);
-
-    // Add the metadata to Firestore
-    const userDocCollectionRef = collection(db, "users", uid, "docs");
-    const docData = {
-      fileDescription,
-      downloadURL,
-    };
-
-    await addDoc(userDocCollectionRef, docData);
+      // Add the metadata to Firestore
+      const userDocCollectionRef = collection(db, "users", uid, "docs");
+      const docData = {
+        fileDescription,
+        downloadURL,
+      };
+      await addDoc(userDocCollectionRef, docData);
+    }
   } catch (error) {
-    console.error("Error during file upload or Firestore save:", error);
-    throw error;
-  }
-};
-
-export const updateDocumentInFirestore = async (
-  userId,
-  documentId,
-  fileDescription,
-  file
-) => {
-  try {
-    // Create a reference to the Firestore document
-    const docRef = doc(db, "users", userId, "docs", documentId);
-
-    // Create a reference to the Firebase Storage for the user
-    const storage = getStorage();
-    const storagePath = ref(storage, `${userId}/${file.name}`);
-
-    // Update the document data with the new file description and file URL
-    const updatedDocData = {
-      fileDescription,
-      downloadURL: storagePath.fullPath, // You may need to adjust this based on your storage structure
-    };
-
-    // Update the document in Firestore
-    await updateDoc(docRef, updatedDocData);
-  } catch (error) {
+    console.error("Error during file upload or Firestore operation:", error);
     throw error;
   }
 };

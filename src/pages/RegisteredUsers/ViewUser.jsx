@@ -18,15 +18,14 @@ export default function ViewUser() {
       {/* Client Information */}
       <ClientInfo initialUser={initialUser} />
 
+      {/* Client Documents */}
+      <ClientDoc initialUser={initialUser}/>
 
       {/* Client KYC */}
       <ClientKyc initialUser={initialUser}/>
 
       {/* Banking Details */}
       <BankDetails initialUser={initialUser}/>
-
-      {/* Client Documents */}
-      <ClientDoc initialUser={initialUser}/>
     </>
   );
 }

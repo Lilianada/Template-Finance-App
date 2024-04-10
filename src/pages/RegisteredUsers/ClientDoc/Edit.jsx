@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useModal } from "../../../context/ModalContext";
 import {
   CheckIcon,
@@ -7,48 +7,57 @@ import {
 } from "@heroicons/react/24/outline";
 import DotLoader from "../../../components/DotLoader";
 import { Dialog, Transition } from "@headlessui/react";
-import { updateDocumentInFirestore } from "../../../config/documents";
+import { updateDocument } from "../../../config/documents";
 import { customModal } from "../../../utils/modalUtils";
 
 export default function EditDoc({ setOpen, open, doc, userId, refresh }) {
-  const { showModal } = useModal();
+  const { showModal } = useModal(); 
   const [isLoading, setIsLoading] = useState(false);
-  const [fileDescription, setFileDescription] = useState("");
-  const [file, setFile] = useState(null);
+  const [fileDescription, setFileDescription] = useState('');
+  const [file, setFile] = useState( null);
+  const [fileName, setFileName] = useState(''); 
+  
+  useEffect(() => {
+    if (doc) {
+      setFileDescription(doc.fileDescription || '');
+    }
+  }, [doc]);
 
-  const handleUpdate = async () => {
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
     setIsLoading(true);
 
     try {
-      // Call the updateDocumentInFirestore function
-      await updateDocumentInFirestore(
-        userId,
-        doc,
-        fileDescription,
-        file
-      );
+      await updateDocument(userId, doc, fileDescription, file);
 
       customModal({
         showModal,
-        title: "Success",
-        message: "Document has been updated successfully.",
+        title: 'Success',
+        text: 'Document has been updated successfully.',
         showConfirmButton: false,
-        iconBgColor: "bg-green-100",
-        iconTextColor: "text-green-600",
-        buttonBgColor: "bg-green-600",
+        iconBgColor: 'bg-green-100',
+        iconTextColor: 'text-green-600',
+        buttonBgColor: 'bg-green-600',
         icon: CheckIcon,
         timer: 1500,
       });
+      setFileDescription('');
+      setFile(null);
+      setOpen(false);
       refresh();
     } catch (error) {
-      console.error("Error during document update:", error);
+      console.error('Error during document update:', error);
 
-      showModal({
-        title: "Error",
-        text: "An error occurred while updating document. Please try again later.",
+      customModal({
+        showModal,
+        title: 'Error',
+        text: 'An error occurred while updating document. Please try again later.',
+        showConfirmButton: false,
         icon: ExclamationCircleIcon,
-        iconBgColor: "bg-red-500",
-        iconTextColor: "text-red-600",
+        iconBgColor: 'bg-red-100',
+        iconTextColor: 'text-red-600',
+        buttonBgColor: 'bg-red-600',
         timer: 1500,
       });
     } finally {
@@ -58,7 +67,8 @@ export default function EditDoc({ setOpen, open, doc, userId, refresh }) {
 
   const handleChange = (e) => {
     const selectedFile = e.target.files[0];
-    setFileDescription(selectedFile);
+    setFile(selectedFile);
+    setFileName(selectedFile?.name || '');
   };
 
   return (
@@ -111,7 +121,7 @@ export default function EditDoc({ setOpen, open, doc, userId, refresh }) {
                 onSubmit={handleUpdate}
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="space-y-12">
+                <div className="space-y-6">
                   <div className="">
                     <h2 className="text-xl font-semibold leading-7 text-gray-900">
                       Update User Document
@@ -122,7 +132,7 @@ export default function EditDoc({ setOpen, open, doc, userId, refresh }) {
                   </div>
 
                   <div className="pb-4">
-                  <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6">
+                    <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-6">
                       <div className="sm:col-span-full">
                         <label
                           htmlFor="fileDescription"
@@ -141,24 +151,25 @@ export default function EditDoc({ setOpen, open, doc, userId, refresh }) {
                           className="mt-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                         />
                       </div>
-                      <div className="sm:col-span-3 flex items-center">
+                      <div className="sm:col-span-full flex items-center">
                         <input
                           type="file"
                           name="image"
                           id="file"
                           className="hidden"
                           onChange={handleChange}
-                          accept="image/*"
+                          accept="image/pdf/*"
                         />
                         <button
                           type="button"
                           className="rounded-md bg-white px-2.5 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                          onClick={() =>
-                            document.getElementById("file").click()
-                          }
+                          onClick={() => document.getElementById("file").click()}
                         >
                           Choose File
                         </button>
+                        <span className="ml-2 text-sm text-gray-500 flex">
+                          {fileName} {file && <CheckIcon className="h-5 w-5 text-green-500" />}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -182,7 +193,7 @@ export default function EditDoc({ setOpen, open, doc, userId, refresh }) {
                         <DotLoader />
                       </div>
                     ) : (
-                      "Submit"
+                      'Submit'
                     )}
                   </button>
                 </div>
