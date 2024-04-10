@@ -3,7 +3,11 @@ import { useModal } from "../../../../context/ModalContext";
 import { formatNumber, getCurrentDate } from "../../../../config/utils";
 import { addTermToUserCollection } from "../../../../config/terms";
 import { customModal } from "../../../../utils/modalUtils";
-import { CheckIcon, XMarkIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
+import {
+  CheckIcon,
+  XMarkIcon,
+  ExclamationCircleIcon,
+} from "@heroicons/react/24/outline";
 import DotLoader from "../../../../components/DotLoader";
 import { Dialog, Transition } from "@headlessui/react";
 import CurrencyInput from "react-currency-input-field";
@@ -13,6 +17,8 @@ export default function AddUserTerms({ setOpen, open, fixedTerm, userId }) {
   const { showModal } = useModal();
   const [isLoading, setIsLoading] = useState(false);
   const [depositAmount, setDepositAmount] = useState(0);
+  const [date, setDate] = useState(getCurrentDate());
+  const [type, setType] = useState("");
 
   const onDeposit = async (e) => {
     e.preventDefault();
@@ -32,7 +38,7 @@ export default function AddUserTerms({ setOpen, open, fixedTerm, userId }) {
         bankName: fixedTerm.bankName,
         term: fixedTerm.term,
         interestRate: fixedTerm.interestRate,
-        type: "Deposit",
+        type: type,
         image: fixedTerm.image,
         userId: userId,
         userName: user[0].fullName,
@@ -41,7 +47,7 @@ export default function AddUserTerms({ setOpen, open, fixedTerm, userId }) {
       customModal({
         showModal,
         title: "Success!",
-        text: `You have successfully made a deposit of $${formatNumber(
+        text: `You have successfully made a transaction of $${formatNumber(
           depositAmount
         )} on behalf of this user.`,
         showConfirmButton: false,
@@ -170,7 +176,7 @@ export default function AddUserTerms({ setOpen, open, fixedTerm, userId }) {
                           </div>
                         </div>
 
-                        <div className="sm:col-span-full">
+                        <div className="sm:col-span-3">
                           <label
                             htmlFor="fixedTermAmount"
                             className="block text-sm font-medium leading-6 text-gray-900"
@@ -194,6 +200,45 @@ export default function AddUserTerms({ setOpen, open, fixedTerm, userId }) {
                             />
                           </div>
                         </div>
+                        <div className="sm:col-span-3">
+                          <label
+                            htmlFor="type"
+                            className="block text-sm font-medium leading-6 text-gray-900"
+                          >
+                            IPOs Type
+                          </label>
+                          <div className="mt-2">
+                            <select
+                              name="type"
+                              value={type}
+                              onChange={(e) => setType(e.target.value)}
+                              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            >
+                              <option value="">Select Type </option>
+                              <option value="deposit">Deposit</option>
+                              <option value="withdrawal">Withdrawal</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="sm:col-span-3">
+                        <label
+                          htmlFor="date"
+                          className="block text-sm font-medium leading-6 text-gray-900"
+                        >
+                          Purchase/Sale Date
+                        </label>
+                        <div className="mt-2">
+                          <input
+                            type="date"
+                            name="date"
+                            id="date"
+                            onChange={(e) => setDate(e.target.value)}
+                            value={date}
+                            autoComplete="date"
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          />
+                        </div>
+                      </div>
                       </div>
                     </div>
                   </div>

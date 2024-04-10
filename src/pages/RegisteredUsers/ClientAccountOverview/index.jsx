@@ -113,8 +113,6 @@ export default function AccountOverview({ initialUser }) {
   const calculateTotalCashBalance = (
     cashDepositData = [],
     sharesData = [],
-    ipoData = [],
-    // bondData = []
   ) => {
     let cashBalance = 0;
 

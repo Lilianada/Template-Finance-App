@@ -41,8 +41,6 @@ export default function ClientCashPage() {
   };
 
   const handleDelete = (id) => {
-    setSelectedId(id);
-    console.log(selectedId);
     customModal({
       showModal,
       title: "Are you sure?",
@@ -55,7 +53,7 @@ export default function ClientCashPage() {
       cancelButtonBgColor: "bg-white",
       cancelButtonTextColor: "text-gray-900",
       onConfirm: () => {
-        confirmDelete();
+        confirmDelete(id);
         hideModal();
       },
       onCancel: hideModal(),
@@ -67,10 +65,10 @@ export default function ClientCashPage() {
     });
   };
 
-  const confirmDelete = async () => {
+  const confirmDelete = async (id) => {
     setIsDeleting(true);
     try {
-      await deleteCashDeposit(userId, selectedId);
+      await deleteCashDeposit(userId, id);
       customModal({
         showModal,
         title: "Success!",
@@ -103,10 +101,6 @@ export default function ClientCashPage() {
     }
   };
 
-  if (isDeleting) {
-    <LoadingScreen/>
-  }
-
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
@@ -129,6 +123,7 @@ export default function ClientCashPage() {
           </button>
         </div>
       </div>
+      {isDeleting && <LoadingScreen />}
       <div className="-mx-4 mt-8 sm:-mx-0">
         {cashTransaction === null ? (
           <div className="w-full grid place-items-center rounded-xl border border-gray-200 p-4 mt-12">
