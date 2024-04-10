@@ -146,8 +146,7 @@ export default function IposRequests() {
             IPOs Requests
           </h1>
           <p className="mt-2 text-sm text-gray-700">
-            A list of all the IPOs requests made including their full name,
-            email, mobile phone and user id.
+            A list of all the IPOs requests made including their full name.  All requests are pending until approved or declined.
           </p>
         </div>
       </div>

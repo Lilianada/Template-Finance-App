@@ -48,6 +48,7 @@ import Settings from "./pages/Settings";
 import BondsRequests from "./pages/BondsRequest";
 import Notifications from "./pages/Notifications";
 import IposRequests from "./pages/IposRequest";
+import FixedTermRequests from "./pages/FixedTermRequest";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -332,6 +333,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <IposRequests />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="fixedTerms_requests"
+                  element={
+                    <ProtectedRoute>
+                      <FixedTermRequests />
                     </ProtectedRoute>
                   }
                 />

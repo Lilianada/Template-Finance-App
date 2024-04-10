@@ -8,9 +8,10 @@ import {
 } from "@heroicons/react/24/outline";
 import { formatNumber } from "../../config/utils";
 import LoadingScreen from "../../components/LoadingScreen";
-import { getTermRequests } from "../../config/terms";
+import { deleteFixedTermRequestStatus, getSpecificTermRequest, getTermRequests, handleDepositApproval, handleWithdrawalApproval } from "../../config/terms";
+import { addNotification } from "../../config/notifications";
 
-export default function IposRequests() {
+export default function FixedTermRequests() {
   const [requests, setRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -85,20 +86,35 @@ export default function IposRequests() {
   const confirmRequest = async (userId, requestId, newStatus) => {
     setIsUpdating(true);
     try {
-      const requestData = await getSpecificIpoRequest(requestId, userId);
-
-      if (newStatus === "Approved") {
-        await handleIpoApproval(userId, requestId, requestData);
-      } else if (newStatus === "Declined") {
-        await handleIpoDecline(userId, requestId);
-      }
-
-      await deleteIposRequestStatus(userId, requestId);
-      const allRequests = await getIposRequests();
-
-      setRequests(allRequests);
-      fetchUsersRequest();
-
+        setIsLoading(true);
+        // Fetching the request data
+        const requestData = await getTermRequests(userId, requestId);
+        const requestObject = requestData[0]; // Accessing the object inside the array
+        let message;
+        if (newStatus === "Approved") {
+          if (requestObject.type === "deposit") {
+            await handleDepositApproval(userId, requestObject);
+            message = `Your fixed term deposit request to deposit $${requestObject.principalAmount} to ${requestObject.bankName} with ${requestObject.term} term and ${requestObject.coupon}% coupon has been approved.`;
+          } else if (requestObject.type === "withdraw") {
+            await handleWithdrawalApproval(userId, requestObject);
+            message = `Your fixed term deposit request to withdraw $${requestObject.principalAmount} has been approved.`;
+          }
+        } else {
+          // Assuming the newStatus here can only be "Approved" or "Declined"
+          if (requestObject.type === "deposit") {
+            message = `Your fixed term deposit request to deposit $${requestObject.principalAmount} has been declined.`;
+          } else if (requestObject.type === "withdraw") {
+            message = `Your fixed term deposit request to withdraw $${requestObject.principalAmount} has been declined.`;
+          }
+        }
+  
+        // Delete the request from Firestore and update the notifications
+        await deleteFixedTermRequestStatus(userId, requestId);
+        if (message) await addNotification(userId, message, newStatus);
+  
+        // Refresh the table data
+        fetchUsersRequest();
+        
       customModal({
         showModal,
         title: "Success",
@@ -128,20 +144,15 @@ export default function IposRequests() {
     }
   };
 
-  const totalCost = (numberOfShares, sharePrice) => {
-    return numberOfShares * sharePrice;
-  };
-
   return (
     <div className="lg:px-4">
       <div className="sm:flex sm:items-center text-left">
         <div className="sm:flex-auto">
           <h1 className="text-lg font-semibold leading-6 text-gray-900">
-            IPOs Requests
+            Fixed Term Deposit Requests
           </h1>
           <p className="mt-2 text-sm text-gray-700">
-            A list of all the Fixed Term Deposit requests made including their full name,
-            email, mobile phone and user id.
+            A list of all the Fixed Term Deposit requests made. All requests are pending until approved or declined.
           </p>
         </div>
       </div>
@@ -169,40 +180,34 @@ export default function IposRequests() {
                   </th>
                   <th
                     scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 "
+                    className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell"
                   >
-                    Shares No
+                    Bank Name
                   </th>
                   <th
                     scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                   >
-                    Total Cost
+                    Amount
                   </th>
                   <th
                     scope="col"
-                    className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
-                  >
-                    Issuer
-                  </th>
-                  <th
-                    scope="col"
-                    className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
-                  >
-                    Share Price
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                   >
                     Type
                   </th>
                   <th
                     scope="col"
-                    className=" px-3 py-3.5 text-left text-sm font-semibold text-gray-900 "
+                    className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell"
+                  >
+                    Date
+                  </th>
+                  {/* <th
+                    scope="col"
+                    className=" px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                   >
                     Status
-                  </th>
+                  </th> */}
                   <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0">
                     <span className="sr-only">Edit</span>
                   </th>
@@ -213,38 +218,33 @@ export default function IposRequests() {
                   <tr key={index}>
                     <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0">
                       {request.userName}
-                      <dl className="font-normal lg:hidden">
-                        <dt className="sr-only sm:hidden">Issuer Name</dt>
+                      <dl className="font-normal sm:hidden">
+                        <dt className="sr-only sm:hidden">Bank Name</dt>
                         <dd className="mt-1 truncate text-gray-500 max-w-16">
-                          {request.name}
+                          {request.bankName}
                         </dd>
-                        <dt className="sr-only sm:hidden">Share Price</dt>
-                        <dd className="mt-1 text-gray-500">
-                          {request.sharePrice}
+                        <dt className="sr-only sm:hidden">Date</dt>
+                        <dd className="mt-1 truncate text-gray-500 max-w-16">
+                          {request.date}
                         </dd>
                       </dl>
                     </td>
-                    <td className="px-3 py-4 text-sm text-gray-500">
-                      {request.numberOfShares}
+                    <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell max-w-16 truncate">
+                      {request.bankName}
                     </td>
                     <td className=" px-3 py-4 text-sm text-gray-500 ">
                       $
-                      {formatNumber(
-                        totalCost(request.numberOfShares, request.sharePrice)
-                      )}
-                    </td>
-                    <td className="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell max-w-16 truncate">
-                      {request.name}
-                    </td>
-                    <td className="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell max-w-16 truncate">
-                      ${formatNumber(request.sharePrice)}
+                      {formatNumber(request.principalAmount)}
                     </td>
                     <td className=" px-3 py-4 text-sm text-gray-500 capitalize">
                       {request.type}
                     </td>
-                    <td className="px-3 py-4 text-sm text-gray-500 lg:table-cell truncate">
-                      {request.status}
+                    <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
+                      {request.date}
                     </td>
+                    {/* <td className="px-3 py-4 text-sm text-gray-500">
+                      {request.status}
+                    </td> */}
                     <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                       <button
                         onClick={() =>

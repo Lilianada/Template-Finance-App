@@ -314,3 +314,16 @@ export async function deleteTermFromUserCollection(userId, termId) {
     return { success: false, error: error.message };
   }
 }
+
+
+export const getSpecificTermRequest = async (requestId, uid) => {
+  const requestRef = doc(
+    db,
+    ADMINDASH_COLLECTION,
+    uid,
+    TERMS_REQUEST_SUB_COLLECTION,
+    requestId
+  );
+  const requestSnapshot = await getDoc(requestRef);
+  return requestSnapshot.data();
+};
