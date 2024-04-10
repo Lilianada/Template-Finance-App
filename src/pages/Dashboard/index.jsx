@@ -7,42 +7,53 @@ import {
   BellIcon,
   CircleStackIcon,
 } from "@heroicons/react/24/outline";
+
+import my_accounts_icon from "../../assets/images/my_accounts.png";
+import transactions_icon from "../../assets/images/transaction.png";
+import bonds_icon from "../../assets/images/bond.png";
+import fixedTerm_icon from "../../assets/images/deposit.png";
+import ipos_icon from "../../assets/images/ipo.png";
+import accountDetails_icon from "../../assets/images/account_details.png";
+import stock_icon from "../../assets/images/stock_market.png";
+import logout_icon from "../../assets/images/logout.png"; 
+import notification_icon from "../../assets/images/notification.png";
+import settings_icon from "../../assets/images/settings.png"; 
 import { Link } from "react-router-dom";
 
 const menus = [
   {
     title: "Registered Users",
-    icon: <UserIcon className=" w-12" />,
+    icon: my_accounts_icon,
     href: "/dashboard/registered_users",
   },
   {
     title: "Cash Deposits",
-    icon: <BanknotesIcon className=" w-12" />,
+    icon: transactions_icon,
     href: "/dashboard/cash_deposits",
   },
   {
     title: "Bonds",
-    icon: <CreditCardIcon className=" w-12" />,
+    icon: bonds_icon,
     href: "/dashboard/bonds",
   },
   {
     title: "Fixed Terms",
-    icon: <CircleStackIcon className=" w-12" />,
+    icon: fixedTerm_icon,
     href: "/dashboard/fixed_term_deposits",
   },
   {
     title: "IPOs",
-    icon: <ChartBarSquareIcon className=" w-12" />,
+    icon: ipos_icon,
     href: "/dashboard/ipos",
   },
   {
     title: "Notification",
-    icon: <BellIcon className=" w-12" />,
+    icon: notification_icon,
     href: "/dashboard/notifications",
   },
   {
     title: "Settings",
-    icon: <Cog6ToothIcon className=" w-12" />,
+    icon: settings_icon,
     href: "/dashboard/settings",
   },
 ];
@@ -61,7 +72,7 @@ export default function Dashboard() {
           >
             <div className="flex-1 truncate">
               <div className="flex items-center justify-center space-x-3">
-                {item.icon}
+              <img src={item.icon} className="homePage_icon" alt="card icon" />
               </div>
               <h2 className="mt-6 truncate text-xl text-gray-500">
                 {item.title}
