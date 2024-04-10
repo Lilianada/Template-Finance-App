@@ -182,10 +182,9 @@ export default function AddUserIpos({ setOpen, open, ipo, userId }) {
                         placeholder="0"
                         value={numberOfShares}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                        decimalsLimit={2}
-                        onChange={(e) =>
-                          handleNumberOfSharesChange(e)
-                        }
+                      
+                        onChange={(e) => setNumberOfShares(e.target.value)}
+                       
                       />
                     </div>
                     

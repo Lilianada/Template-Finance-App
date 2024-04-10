@@ -9,21 +9,30 @@ import {
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 import LoadingScreen from "../../../../components/LoadingScreen";
-import { deleteExistingCashDeposit, fetchUserCashDeposits } from "../../../../store/cash/cashSlice";
+import { deleteCashDeposit, getUserCashDeposits } from "../../../../config/cashBalance";
+// import { deleteExistingCashDeposit, fetchUserCashDeposits } from "../../../../store/cash/cashSlice";
 
 export default function ClientCashPage() {
   const { showModal, hideModal } = useModal();
+  const [cashTransaction, setCashTransaction] = useState([]);
   const [selectedId, setSelectedId] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const navigate = useNavigate();
   const { userId } = useParams();
-  const cashTransaction = useSelector(state => state.cashDeposits.userCashDeposits);
-  const dispatch = useDispatch();
+  // const cashTransaction = useSelector(state => state.cashDeposits.userCashDeposits);
+
+  const fetchTransaction = async () => {
+    try {
+      const result = await getUserCashDeposits(userId);
+      setCashTransaction(result);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
-    dispatch(fetchUserCashDeposits(userId));
-  }, [dispatch, userId])
-
+    fetchTransaction();
+  }, []);
 
   const handleEdit = async (id) => {
     navigate(`/dashboard/registered_users/view/edit_cash_details/${userId}`, {
@@ -61,7 +70,7 @@ export default function ClientCashPage() {
   const confirmDelete = async () => {
     setIsDeleting(true);
     try {
-      dispatch(deleteExistingCashDeposit({userId, depositId: selectedId}));
+      await deleteCashDeposit(userId, selectedId);
       customModal({
         showModal,
         title: "Success!",
@@ -74,8 +83,7 @@ export default function ClientCashPage() {
         timer: 2000,
         onClose: hideModal,
       });
-
-      window.history.back();
+      fetchTransaction();
     } catch (error) {
       console.error("Failed to delete user:", error);
       customModal({

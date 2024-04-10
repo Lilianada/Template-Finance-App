@@ -111,6 +111,18 @@ export const addIposToUserCollection = async (userId, ipoData) => {
     const docRef = await addDoc(userIposHoldingsPath, ipoData);
     const docId = docRef.id;
 
+    if (ipoData.type === "sell") {
+      const cashDepositsRef = collection(db, `users/${userId}/cashDeposits`);
+
+      await addDoc(cashDepositsRef, {
+        type: "Sales",
+        status: "Cleared",
+        reference: "Sale of IPOs",
+        date: ipoData.date,
+        amount: ipoData.numberOfShares * ipoData.sharePrice,
+      });
+    }
+
     return { success: true, id: docId };
   } catch (error) {
     console.error("Error adding term:", error);
@@ -138,7 +150,7 @@ export const updateIposToUserCollection = async (userId, ipoId, ipoData) => {
         status: "Cleared",
         reference: "Sale of IPOs",
         date: ipoData.date,
-        amount: ipoData.amountRequested,
+        amount: ipoData.numberOfShares * ipoData.sharePrice,
       });
     }
 
