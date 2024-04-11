@@ -33,7 +33,7 @@ export default function Bonds() {
   };
 
   return (
-    <div>
+    <div >
       <PageHeading
         title="Add new bond"
         onclick="/dashboard/bonds/add"

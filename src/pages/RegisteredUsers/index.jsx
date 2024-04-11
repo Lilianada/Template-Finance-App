@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { getRegisteredUsers } from '../../config/user';
 import { useNavigate } from 'react-router-dom';
 import DotLoader from '../../components/DotLoader';
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
+import LoadingScreen from '../../components/LoadingScreen';
   
   export default function UserTable() {
     const [users, setUsers] = useState([]);
@@ -41,6 +43,15 @@ import DotLoader from '../../components/DotLoader';
 
     return (
       <div className="lg:px-4">
+        <div className="sm:flex-auto text-left mt-4 mb-6">
+        <button
+          className="flex gap-2 items-center cursor-pointer"
+          onClick={() => window.history.back()}
+        >
+          <ArrowLeftIcon className="h-5 w-5 stroke-gray-400 stroke-2" />
+          <p className="text-sm text-gray-400 font-semibold">Back</p>
+        </button>
+      </div>
         <div className="sm:flex sm:items-center text-left">
           <div className="sm:flex-auto">
             <h1 className="text-lg font-semibold leading-6 text-gray-900">Users</h1>
@@ -60,7 +71,7 @@ import DotLoader from '../../components/DotLoader';
         </div>
         { isLoading ? (
         <div className="mt-8">
-          <DotLoader/>
+          <LoadingScreen/>
         </div>
         ) :
           (<div className="-mx-4 mt-8 sm:-mx-0">

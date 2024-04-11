@@ -81,7 +81,7 @@ const updatedRequests = requests.map((item) => ({
                   <li>
                     <ul className="-mx-2 space-y-1">
                       {updatedNavigation.map((item) => (
-                        <li key={item.name}>
+                        <li key={item.name} onClick={() => setSidebarOpen(false)}>
                           <Link
                             to={item.to}
                             className={classNames(
@@ -102,7 +102,7 @@ const updatedRequests = requests.map((item) => ({
                     <div className="text-xs font-semibold leading-6 text-gray-400">Requests</div>
                     <ul className="-mx-2 mt-2 space-y-1">
                       {updatedRequests.map((item) => (
-                        <li key={item.name}>
+                        <li key={item.name} onClick={() => setSidebarOpen(false)}>
                           <Link
                             to={item.to}
                             className={classNames(

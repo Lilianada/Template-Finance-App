@@ -1,7 +1,11 @@
 import React, { Fragment, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { Link } from "react-router-dom";
-import { PencilIcon, CheckIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import {
+  PencilIcon,
+  CheckIcon,
+  ExclamationTriangleIcon,
+} from "@heroicons/react/24/outline";
 import { formatNumber } from "../../config/utils";
 import LoadingScreen from "../../components/LoadingScreen";
 import { customModal } from "../../utils/modalUtils";
@@ -15,8 +19,8 @@ function classNames(...classes) {
 export default function Cards({ bonds, isLoading, handleEdit, refreshBonds }) {
   const [open, setOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const { showModal, hideModal} = useModal();
-  
+  const { showModal, hideModal } = useModal();
+
   const sortedBonds = [...bonds].sort((a, b) => a.index - b.index);
 
   const handleDelete = (bond) => {
@@ -115,7 +119,7 @@ export default function Cards({ bonds, isLoading, handleEdit, refreshBonds }) {
                     <Menu.Item>
                       {({ active }) => (
                         <div
-                          onClick={() => handleEdit(bond) }
+                          onClick={() => handleEdit(bond)}
                           className={classNames(
                             active ? "bg-gray-50" : "",
                             "block px-3 py-1 text-sm leading-6 text-gray-900 cursor-pointer"
