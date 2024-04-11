@@ -224,7 +224,7 @@ export default function Notifications() {
           </div>
             {isLoading && (
                 <div className="w-full">
-                <DotLoader />
+                <LoadingScreen />
               </div>
             )}
             {isDeleting && <LoadingScreen />}

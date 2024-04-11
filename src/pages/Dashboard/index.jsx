@@ -48,11 +48,11 @@ export default function Dashboard() {
       icon: settings_icon,
       href: "/dashboard/settings",
     },
-    {
-      title: "Logout",
-      icon: logout_icon,
-      onClick: () => setOpenModal(true),
-    },
+    // {
+    //   title: "Logout",
+    //   icon: logout_icon,
+    //   onClick: () => setOpenModal(true),
+    // },
   ];
 
   return (

@@ -82,7 +82,7 @@ export default function Header() {
                     onClick={() => setOpenModal(true)}
                     className={classNames(
                       active ? "bg-gray-50 w-full" : "",
-                      "block px-3 py-1 text-sm leading-6 text-red-700 w-full"
+                      "block px-3 py-1 text-sm leading-6 text-red-700 w-full text-left"
                     )}
                   >
                     Sign Out

@@ -63,7 +63,7 @@ export default function Settings() {
                 item.href === activeTab
                   ? "bg-gray-50 text-indigo-700 hover:bg-white hover:text-indigo-700"
                   : "text-gray-900 hover:bg-gray-50 hover:text-gray-900",
-                "group flex items-center rounded-md px-3 py-2 text-sm font-medium"
+                "group flex items-center rounded-md px-3 py-2 text-sm font-medium cursor-pointer"
               )}
               aria-current={item.href === activeTab ? "page" : undefined}
             >
@@ -72,7 +72,7 @@ export default function Settings() {
                   item.href === activeTab
                     ? "text-indigo-500 group-hover:text-indigo-500"
                     : "text-gray-400 group-hover:text-gray-500",
-                  "-ml-1 mr-3 h-6 w-6 flex-shrink-0 cursor-pointer hover:text-indigo-500"
+                  "-ml-1 mr-3 h-6 w-6 flex-shrink-0 hover:text-indigo-500"
                 )}
                 aria-hidden="true"
               />
