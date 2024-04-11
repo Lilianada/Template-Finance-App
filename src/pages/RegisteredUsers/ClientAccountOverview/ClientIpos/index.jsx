@@ -189,7 +189,7 @@ export default function ClientIposPage() {
             <tbody className="divide-y divide-gray-200 bg-gray-50 text-left">
               {ipos.map((item, index) => (
                 <tr key={index}>
-                  <td className="w-2/5 max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0 capitalize">
+                  <td className="w-2/5 max-w-12 truncate py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0 capitalize">
                     {item.name}
                     <dl className="font-normal lg:hidden">
                       <dt className="sr-only lg:hidden">Type</dt>
@@ -197,7 +197,7 @@ export default function ClientIposPage() {
                         {item.type}
                       </dd>
                       <dd className="mt-1 truncate text-gray-500 lg:hidden">
-                        $ {formatNumber(item.sharePrice)}
+                        ${formatNumber(item.sharePrice)}
                       </dd>
                       <dt className="sr-only lg:hidden">Purchase Date</dt>
                       <dd className="mt-1 truncate text-gray-700 lg:hidden">
@@ -212,10 +212,10 @@ export default function ClientIposPage() {
                     {item.numberOfShares}
                   </td>
                   <td className="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
-                    $ {formatNumber(item.sharePrice)}
+                    ${formatNumber(item.sharePrice)}
                   </td>
                   <td className=" px-3 py-4 text-sm text-gray-500 sm:table-cell">
-                    $ {formatNumber(item.numberOfShares * item.sharePrice)}
+                    ${formatNumber(item.numberOfShares * item.sharePrice)}
                   </td>
                   <td className="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
                     {item.date}

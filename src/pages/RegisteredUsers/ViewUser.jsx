@@ -13,16 +13,14 @@ export default function ViewUser() {
 
   return (
     <>
-      <div className="sm:flex sm:items-start mt-4">
-        <div className="sm:flex-auto text-left">
-          <div className="flex gap-2 items-center cursor-pointer">
-            <ArrowLeftIcon
-              className="h-5 w-5 stroke-gray-900"
-              onClick={() => window.history.back()}
-            />
-            <p className="text-gray-800 font-semibold">Back</p>
-          </div>
-        </div>
+      <div className="sm:flex-auto text-left mt-4 mb-6">
+        <button
+          className="flex gap-2 items-center cursor-pointer"
+          onClick={() => window.history.back()}
+        >
+          <ArrowLeftIcon className="h-5 w-5 stroke-gray-400 stroke-2" />
+          <p className="text-sm text-gray-400 font-semibold">Back</p>
+        </button>
       </div>
       {/* Portfolio Information */}
       <AccountOverview initialUser={initialUser} />
