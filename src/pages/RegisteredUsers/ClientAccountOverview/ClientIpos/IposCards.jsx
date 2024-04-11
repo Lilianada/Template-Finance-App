@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { getAllIpos } from "../../../../config/ipos";
 import AddUserIpos from "./Add";
 import LoadingScreen from "../../../../components/LoadingScreen";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, PlusIcon } from "@heroicons/react/24/outline";
 
 export default function IposCards() {
   const { userId } = useParams();
@@ -36,6 +36,15 @@ export default function IposCards() {
 
   return (
     <div>
+      <div className="sm:flex-auto text-left mt-4 mb-6">
+        <button
+          className="flex gap-2 items-center cursor-pointer"
+          onClick={() => window.history.back()}
+        >
+          <ArrowLeftIcon className="h-5 w-5 stroke-gray-400 stroke-2" />
+          <p className="text-sm text-gray-400 font-semibold">Back</p>
+        </button>
+      </div>
       <ul className="grid grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-3 sm:grid-cols-2 xl:gap-x-8 w-full">
         {isLoading && <LoadingScreen />}
         {!ipos || ipos.length === 0 ? (

@@ -209,12 +209,8 @@ export default function ClientBondsPage() {
                       <td className="w-2/5 max-w-12 truncate py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0 capitalize w-">
                         {item.issuerName}
                         <dl className="font-normal lg:hidden">
-                          <dt className="sr-only sm:hidden">Purchase Date</dt>
-                          <dd className="mt-1 truncate text-gray-500 sm:hidden">
-                            {item.purchaseDate}
-                          </dd>
                           <dt className="sr-only lg:hidden">Maturity Date</dt>
-                          <dd className="mt-1 truncate text-gray-700 lg:hidden">
+                          <dd className="mt-1 truncate text-gray-500 lg:hidden">
                             {item.maturityDate}
                           </dd>
                         </dl>

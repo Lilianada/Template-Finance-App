@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { formatNumber } from "../../../../config/utils";
 import LoadingScreen from "../../../../components/LoadingScreen";
 import { getAllTerms } from "../../../../config/terms";
@@ -37,8 +37,17 @@ export default function FixedTermCards() {
 
   return (
     <div>
+      <div className="sm:flex-auto text-left mt-4 mb-6">
+        <button
+          className="flex gap-2 items-center cursor-pointer"
+          onClick={() => window.history.back()}
+        >
+          <ArrowLeftIcon className="h-5 w-5 stroke-gray-400 stroke-2" />
+          <p className="text-sm text-gray-400 font-semibold">Back</p>
+        </button>
+      </div>
       <ul className="grid grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-3 sm:grid-cols-2 xl:gap-x-8 w-full">
-        {/* {isLoading && <LoadingScreen />} */}
+        
         {!fixedTerms || fixedTerms.length === 0 ? (
           <div className="w-full grid place-items-center rounded-xl border border-gray-200 p-4">
             <h5 className="text-gray-400 text-lg ">
