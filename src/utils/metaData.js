@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchMetaData, fetchTitleData } from "../src/config/settings";
+import { fetchMetaData, fetchTitleData } from "../config/settings";
 
 const UpdateHeaderData = () => {
   const [metaData, setMetaData] = useState(""); // Default state is an empty string initially

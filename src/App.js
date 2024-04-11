@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Provider } from "react-redux";
 import { checkAdminRoleAndLogoutIfNot } from "./config/utils";
-import { useAuth } from "./authState";
+import { useAuth } from "./utils/authState";
 import { db } from "./config/firebase";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ModalProvider } from "./context/ModalContext";
@@ -9,7 +9,7 @@ import { AlertProvider } from "./context/AlertContext";
 import store from "../src/store/store";
 import Skeleton from "./components/Skeleton";
 import Login from "./pages/Auth/Login";
-import ProtectedRoute from "./protectedRoutes";
+import ProtectedRoute from "./utils/protectedRoutes";
 import ForgotPassword from "./pages/Auth/ForgotPassword";
 import LoadingScreen from "./components/LoadingScreen";
 import Bonds from "./pages/Bonds";
