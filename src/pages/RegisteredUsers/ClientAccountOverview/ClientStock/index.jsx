@@ -153,7 +153,7 @@ export default function ClientStock() {
         </div>
         {isLoading && <DotLoader />}
         <div className="-mx-4 mt-8 sm:-mx-0">
-          {stocks === null ? (
+          {stocks === null || stocks.length === 0 ? (
             <div className="w-full grid place-items-center rounded-xl border border-gray-200 p-4 mt-12">
               <h5 className="text-gray-400 text-base ">
                 NO STOCK INVESTMENTS AVAILABLE.

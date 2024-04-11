@@ -43,63 +43,73 @@ export default function AccountOverview({ initialUser }) {
   // Calculate total deposits
   const calculateTotalDeposits = (deposits) => {
     let total = 0;
-    deposits.forEach((deposit) => {
-      total += convertToNumber(deposit.amount);
-    });
+    if (deposits && deposits.length > 0) {
+      deposits.forEach((deposit) => {
+        total += convertToNumber(deposit.amount);
+      });
+    }
     setTotalDeposits(total);
   };
 
   // Calculate total bonds
   const calculateTotalBonds = (bonds) => {
     let total = 0;
-    bonds.forEach((bond) => {
-      if (bond.typeOfRequest.trim().toUpperCase() === "BUY") {
-        total += convertToNumber(bond.currentValue);
-      } else if (bond.typeOfRequest.trim().toUpperCase() === "SELL") {
-        total -= convertToNumber(bond.currentValue);
-      }
-    });
+    if (bonds && bonds.length > 0) {
+      bonds.forEach((bond) => {
+        if (bond.typeOfRequest.trim().toUpperCase() === "BUY") {
+          total += convertToNumber(bond.currentValue);
+        } else if (bond.typeOfRequest.trim().toUpperCase() === "SELL") {
+          total -= convertToNumber(bond.currentValue);
+        }
+      });
+    }
     setTotalBondAmount(total);
   };
 
   // Calculate total terms
   const calculateTotalTerms = (terms) => {
     let total = 0;
-    terms.forEach((term) => {
-      if (term.type.trim().toUpperCase() === "DEPOSIT") {
-        total += convertToNumber(term.principalAmount);
-      } else if (term.type.trim().toUpperCase() === "WITHDRAWAL") {
-        total -= convertToNumber(term.principalAmount);
-      }
-    });
+    if (terms && terms.length > 0) {
+      terms.forEach((term) => {
+        if (term.type.trim().toUpperCase() === "DEPOSIT") {
+          total += convertToNumber(term.principalAmount);
+        } else if (term.type.trim().toUpperCase() === "WITHDRAWAL") {
+          total -= convertToNumber(term.principalAmount);
+        }
+      });
+    }
     setTotalTermAmount(total);
   };
 
   // Calculate total IPOs
   const calculateTotalIpos = (ipos) => {
     let total = 0;
-    ipos.forEach((ipo) => {
-      const numberOfShares = convertToNumber(ipo.numberOfShares);
-      const sharePrice = convertToNumber(ipo.sharePrice);
-      if (ipo.type.trim().toUpperCase() === "INVEST") {
-        total += numberOfShares * sharePrice;
-      } else if (ipo.type.trim().toUpperCase() === "SELL") {
-        total -= numberOfShares * sharePrice;
-      }
-    });
+    if (ipos && ipos.length > 0) {
+      ipos.forEach((ipo) => {
+        const numberOfShares = convertToNumber(ipo.numberOfShares);
+        const sharePrice = convertToNumber(ipo.sharePrice);
+        if (ipo.type.trim().toUpperCase() === "INVEST") {
+          total += numberOfShares * sharePrice;
+        } else if (ipo.type.trim().toUpperCase() === "SELL") {
+          total -= numberOfShares * sharePrice;
+        }
+      });
+    }
     setTotalIpoAmount(total);
   };
 
   // Calculate total shares
   const calculateTotalShares = (shares) => {
     let total = 0;
-    shares.forEach((share) => {
-      if (share.type.trim().toUpperCase() === "BUY") {
-        total += convertToNumber(share.value);
-      } else if (share.type.trim().toUpperCase() === "SELL") {
-        total -= convertToNumber(share.value);
-      }
-    });
+    if (shares && shares.length > 0) {
+      shares.forEach((share) => {
+        if (share.type.trim().toUpperCase() === "BUY") {
+          total += convertToNumber(share.value);
+        } else if (share.type.trim().toUpperCase() === "SELL") {
+          total -= convertToNumber(share.value);
+        }
+      });
+    }
     setTotalShares(total);
   };
 
@@ -155,7 +165,7 @@ export default function AccountOverview({ initialUser }) {
 
   return (
     <div className="py-6 bg-gray-50 px-4 my-8 rounded-md shadow">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-left">
+      <div className="mx-auto max-w-6xl text-left">
         <h2 className="text-lg font-semibold leading-6 text-gray-900 pb-4">
           Account Overview
         </h2>

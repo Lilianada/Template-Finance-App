@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import PageHeading from "../../components/PageHeading";
 import { getAllIpos } from "../../config/ipos";
 import Cards from "./Card";
-// import Cards from "./Cards";
 
 export default function Ipos() {
   const [ipos, setIpos] = useState([]);
