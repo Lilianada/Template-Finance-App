@@ -156,7 +156,8 @@ export const addCashDeposit = async (uid, depositData) => {
 };
 
 // Update a cash deposit
-export const updateCashDeposit = async (uid, depositId, updatedDepositData) => {
+export const updateCashDeposit = async (uid, details, updatedDepositData) => {
+  
   try {
     // Reference to the specific cash deposit document
     const cashDepositRef = doc(
@@ -164,13 +165,13 @@ export const updateCashDeposit = async (uid, depositId, updatedDepositData) => {
       USERS_COLLECTION,
       uid,
       CASH_DEPOSITS,
-      depositId
+      details
     );
 
     // Update the cash deposit document with the new data
     await setDoc(cashDepositRef, updatedDepositData, { merge: true });
 
-    return { success: true, id: depositId };
+    return { success: true, id: details };
   } catch (error) {
     console.error("Error in updateCashDeposit:", error);
     throw new Error(

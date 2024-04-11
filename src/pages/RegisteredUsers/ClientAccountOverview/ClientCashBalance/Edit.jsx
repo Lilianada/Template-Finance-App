@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
 import DotLoader from "../../../../components/DotLoader";
-import { convertDateToISO, formatNumber } from "../../../../config/utils";
+import { formatNumber } from "../../../../config/utils";
 import { customModal } from "../../../../utils/modalUtils";
 import { useModal } from "../../../../context/ModalContext";
 import {
   CheckIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
+import CurrencyInput from "react-currency-input-field";
 import {
   deleteCashDeposit,
   getCashTransaction,
@@ -23,11 +23,11 @@ export default function EditCashBalance() {
   const { showModal, hideModal } = useModal();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    amount: details.amount,
-    type: details.type,
-    reference: details.reference,
-    status: details.status,
-    date: details.date,
+    amount: 0,
+    type: "",
+    reference: "",
+    status: "",
+    date: "",
   });
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function EditCashBalance() {
   const fetchTransaction = async () => {
     try {
       const transaction = await getCashTransaction(userId, details);
-     
+
       setFormData({
         amount: transaction.amount,
         type: transaction.type,
@@ -53,16 +53,11 @@ export default function EditCashBalance() {
   const handleUpdate = async (e) => {
     e.preventDefault();
     setIsEditing(true);
-    
-    try {
-      const resultAction = await updateCashDeposit({
-        userId,
-        depositId: details,
-        updatedData: formData,
-      });
-      const result = resultAction.payload;
 
-      if (result.success) {
+    try {
+      const resultAction = await updateCashDeposit(userId, details, formData);
+     
+      if (resultAction.success) {
         customModal({
           showModal,
           title: "Updated!",
@@ -98,26 +93,16 @@ export default function EditCashBalance() {
   const handleChange = (event) => {
     const { name, value } = event.target;
     if (name === "date") {
-      // Check if the provided date matches the format "dd-MM-yyyy"
-      const dateRegex = /^(\d{2})-(\d{2})-(\d{4})$/;
-      if (dateRegex.test(value)) {
-        // If it matches, split the value and format it as "yyyy-MM-dd"
-        const [day, month, year] = value.split("-");
-        const formattedDate = `${year}-${month}-${day}`;
-        setFormData({ ...formData, [name]: formattedDate });
-      } else {
-        // If it doesn't match, log an error or handle it accordingly
-        console.error("Invalid date format provided");
-      }
+      const [year, month, day] = value.split("-");
+      const formattedDate = `${day}-${month}-${year}`;
+      setFormData({ ...formData, [name]: formattedDate });
     } else {
-      // For other fields, update the state directly
       setFormData((prevData) => ({
         ...prevData,
         [name]: value,
       }));
     }
   };
-  
 
   const handleDelete = () => {
     customModal({
@@ -205,13 +190,16 @@ export default function EditCashBalance() {
                 Amount
               </label>
               <div className="mt-2">
-                <input
-                  type="text"
+                <CurrencyInput
+                  decimalSeparator="."
+                  prefix="$"
                   name="amount"
-                  id="amount"
-                  onChange={handleChange}
-                  value={`$ ${formatNumber(formData.amount)}` || ""}
-                  autoComplete="amount"
+                  placeholder="$0"
+                  value={formData.amount}
+                  decimalsLimit={2}
+                  onValueChange={(value) =>
+                    handleChange({ target: { name: "amount", value } })
+                  }
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
@@ -270,11 +258,11 @@ export default function EditCashBalance() {
                 <select
                   name="status"
                   value={formData.status}
-                  onChange={handleChange}
+                  onChange={(e) => setFormData(e.target.value)}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 >
                   <option value="">Select status</option>
-                  <option value="cleared">Cleared</option>
+                  <option value="Cleared">Cleared</option>
                 </select>
               </div>
             </div>
@@ -292,7 +280,7 @@ export default function EditCashBalance() {
                   name="date"
                   id="date"
                   onChange={handleChange}
-                  value={formData.date ? convertDateToISO(formData.date) : ""}
+                  value={formData.date}
                   autoComplete="date"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -314,14 +302,28 @@ export default function EditCashBalance() {
           type="submit"
           className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
         >
-          {isEditing ? <DotLoader /> : "Update Details"}
+          {isEditing ? (
+            <div className="flex w-full justify-center align-middle gap-2">
+              <span>Updating</span>
+              <DotLoader />
+            </div>
+          ) : (
+            "Update Details"
+          )}
         </button>
         <button
           type="button"
           className="inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
           onClick={handleDelete}
         >
-          {isDeleting ? <DotLoader /> : "Delete Details"}
+          {isDeleting ? (
+            <div className="flex w-full justify-center align-middle gap-2">
+              <span>Deleting</span>
+              <DotLoader />
+            </div>
+          ) : (
+            "Delete Details"
+          )}
         </button>
       </div>
     </form>
