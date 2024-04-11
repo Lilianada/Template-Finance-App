@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PageHeading from "../../components/PageHeading";
 import { getAllIpos } from "../../config/ipos";
-import Cards from "./Cards";
+import Cards from "./Card";
+// import Cards from "./Cards";
 
 export default function Ipos() {
   const [ipos, setIpos] = useState([]);
@@ -31,18 +32,20 @@ export default function Ipos() {
     });
   };
 
-  return <div>
-    <PageHeading
+  return (
+    <div>
+      <PageHeading
         title="Add New Ipos"
         onclick="/dashboard/ipos/add"
         search={true}
         sort={true}
-    />
-    <Cards
+      />
+      <Cards
         ipos={ipos}
         handleEdit={handleEdit}
         isLoading={isLoading}
         refreshBonds={fetchIpos}
       />
-  </div>;
+    </div>
+  );
 }

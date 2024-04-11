@@ -10,12 +10,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Cards({
-  ipos, 
-  isLoading,
-  handleEdit,
-  refreshIpos,
-}) {
+export default function Cards ({ ipos, isLoading, handleEdit, refreshIpos }) {
   const [open, setOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { showModal, hideModal} = useModal();
@@ -87,10 +82,6 @@ export default function Cards({
     <LoadingScreen/>
   }
 
-  if (isLoading) {
-    <LoadingScreen/> 
-  }
-
   return (
     <ul className="grid grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-3 sm:grid-cols-2 xl:gap-x-8 w-full">
     {isLoading && <LoadingScreen />}
@@ -142,7 +133,7 @@ export default function Cards({
                         onClick={() => { setSelectedIpos(ipos.id); handleDelete(); }}
                         className={classNames(
                           active ? "bg-gray-50" : "",
-                          "block px-3 py-1 text-sm leading-6 text-gray-900 w-full cursor-pointer"
+                          "block px-3 py-1 text-sm leading-6 text-gray-900 w-full cursor-pointer text-left"
                         )}
                       >
                         Delete<span className="sr-only">, {ipos.name}</span>
