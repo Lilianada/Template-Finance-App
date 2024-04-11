@@ -4,6 +4,7 @@ import { formatNumber } from "../../../../config/utils";
 import { useModal } from "../../../../context/ModalContext";
 import { customModal } from "../../../../utils/modalUtils";
 import {
+  ArrowLeftIcon,
   CheckIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
@@ -106,11 +107,17 @@ export default function ClientBondsPage() {
 
   return (
     <div className="px-4 sm:px-6 lg:px-8">
-      <div className="sm:flex sm:items-center">
+       <div className="sm:flex sm:items-start mt-4">
         <div className="sm:flex-auto text-left">
-          <h1 className="text-base font-semibold leading-6 text-gray-900">
-            Bonds
-          </h1>
+          <div className="flex gap-4 items-center">
+            <ArrowLeftIcon
+              className="h-5 w-5 text-gray-900"
+              onClick={() => window.history.back()}
+            />
+            <h1 className="text-base font-semibold leading-6 text-gray-900">
+              Bonds
+            </h1>
+          </div>
           <p className="mt-2 text-sm text-gray-700">
             A list of all the bonds a user has purchased
           </p>

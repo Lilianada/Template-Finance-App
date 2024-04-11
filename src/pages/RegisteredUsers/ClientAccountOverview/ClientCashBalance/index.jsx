@@ -4,18 +4,22 @@ import { formatNumber } from "../../../../config/utils";
 import { useModal } from "../../../../context/ModalContext";
 import { customModal } from "../../../../utils/modalUtils";
 import {
+  ArrowLeftIcon,
   CheckIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 import LoadingScreen from "../../../../components/LoadingScreen";
-import { deleteCashDeposit, getUserCashDeposits } from "../../../../config/cashBalance";
+import {
+  deleteCashDeposit,
+  getUserCashDeposits,
+} from "../../../../config/cashBalance";
 import DotLoader from "../../../../components/DotLoader";
 
 export default function ClientCashPage() {
   const { showModal, hideModal } = useModal();
   const [cashTransaction, setCashTransaction] = useState([]);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isLoading, setIsLoading ] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { userId } = useParams();
 
@@ -29,7 +33,7 @@ export default function ClientCashPage() {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     fetchTransaction();
@@ -104,29 +108,38 @@ export default function ClientCashPage() {
 
   return (
     <div className="px-4 sm:px-6 lg:px-8">
-      <div className="sm:flex sm:items-center">
+      <div className="sm:flex sm:items-start mt-4">
         <div className="sm:flex-auto text-left">
-          <h1 className="text-base font-semibold leading-6 text-gray-900">
-            Cash Deposits
-          </h1>
+          <div className="flex gap-4 items-center">
+            <ArrowLeftIcon
+              className="h-5 w-5 text-gray-900"
+              onClick={() => window.history.back()}
+            />
+            <h1 className="text-base font-semibold leading-6 text-gray-900">
+              Cash Deposits
+            </h1>
+          </div>
           <p className="mt-2 text-sm text-gray-700">
-            A list of all the cash deposits and balances deposited into the
-            clients account.
+            All cash deposits and balances deposited into client's account.
           </p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           <button
             type="button"
             className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            onClick={() => navigate(`/dashboard/registered_users/view/add_cash_details/${userId}`)}
-            >
+            onClick={() =>
+              navigate(
+                `/dashboard/registered_users/view/add_cash_details/${userId}`
+              )
+            }
+          >
             Add transaction
           </button>
         </div>
       </div>
       {isDeleting && <LoadingScreen />}
       <div className="-mx-4 mt-8 sm:-mx-0">
-        {isLoading && <DotLoader /> }
+        {isLoading && <DotLoader />}
         {cashTransaction === null ? (
           <div className="w-full grid place-items-center rounded-xl border border-gray-200 p-4 mt-12">
             <h5 className="text-gray-400 text-base ">
@@ -213,7 +226,7 @@ export default function ClientCashPage() {
                       onClick={() => handleDelete(item.id)}
                       className="text-red-600 hover:text-red-900"
                     >
-                        Delete
+                      Delete
                       <span className="sr-only">, {item.amount}</span>
                     </button>
                   </td>

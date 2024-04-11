@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ScaleIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, ScaleIcon } from "@heroicons/react/24/outline";
 import { convertToNumber, formatNumber } from "../../../config/utils";
 import { Link } from "react-router-dom";
 import { getUserCashDeposits } from "../../../config/cashBalance";
@@ -43,7 +43,7 @@ export default function AccountOverview({ initialUser }) {
   // Calculate total deposits
   const calculateTotalDeposits = (deposits) => {
     let total = 0;
-    deposits.forEach(deposit => {
+    deposits.forEach((deposit) => {
       total += convertToNumber(deposit.amount);
     });
     setTotalDeposits(total);
@@ -52,7 +52,7 @@ export default function AccountOverview({ initialUser }) {
   // Calculate total bonds
   const calculateTotalBonds = (bonds) => {
     let total = 0;
-    bonds.forEach(bond => {
+    bonds.forEach((bond) => {
       if (bond.typeOfRequest.trim().toUpperCase() === "BUY") {
         total += convertToNumber(bond.currentValue);
       } else if (bond.typeOfRequest.trim().toUpperCase() === "SELL") {
@@ -65,7 +65,7 @@ export default function AccountOverview({ initialUser }) {
   // Calculate total terms
   const calculateTotalTerms = (terms) => {
     let total = 0;
-    terms.forEach(term => {
+    terms.forEach((term) => {
       if (term.type.trim().toUpperCase() === "DEPOSIT") {
         total += convertToNumber(term.principalAmount);
       } else if (term.type.trim().toUpperCase() === "WITHDRAWAL") {
@@ -78,7 +78,7 @@ export default function AccountOverview({ initialUser }) {
   // Calculate total IPOs
   const calculateTotalIpos = (ipos) => {
     let total = 0;
-    ipos.forEach(ipo => {
+    ipos.forEach((ipo) => {
       const numberOfShares = convertToNumber(ipo.numberOfShares);
       const sharePrice = convertToNumber(ipo.sharePrice);
       if (ipo.type.trim().toUpperCase() === "INVEST") {
@@ -93,7 +93,7 @@ export default function AccountOverview({ initialUser }) {
   // Calculate total shares
   const calculateTotalShares = (shares) => {
     let total = 0;
-    shares.forEach(share => {
+    shares.forEach((share) => {
       if (share.type.trim().toUpperCase() === "BUY") {
         total += convertToNumber(share.value);
       } else if (share.type.trim().toUpperCase() === "SELL") {
@@ -112,8 +112,13 @@ export default function AccountOverview({ initialUser }) {
       totalIpoAmount +
       totalShares;
     setBalance(totalBalance);
-  }, [totalDeposits, totalBondAmount, totalTermAmount, totalIpoAmount, totalShares]);
-
+  }, [
+    totalDeposits,
+    totalBondAmount,
+    totalTermAmount,
+    totalIpoAmount,
+    totalShares,
+  ]);
 
   const cards = [
     {
