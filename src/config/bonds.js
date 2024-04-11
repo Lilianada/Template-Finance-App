@@ -10,7 +10,6 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "./firebase";
-import { getCurrentDate } from "./utils";
 
 const ADMINDASH_COLLECTION = "admin_users";
 const USERS_COLLECTION = "users";

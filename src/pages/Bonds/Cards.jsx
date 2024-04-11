@@ -63,7 +63,7 @@ export default function Cards({ bonds, isLoading, handleEdit, refreshBonds }) {
         buttonBgColor: "bg-green-600",
         timer: 2000,
       });
-      setOpen(false);
+      setOpen(!open);
       refreshBonds();
     } catch (error) {
       customModal({

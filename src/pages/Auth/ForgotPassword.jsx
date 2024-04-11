@@ -4,28 +4,31 @@ import { getDownloadURL, ref } from "firebase/storage";
 import { auth, storage } from "../../config/firebase";
 import { sendPasswordResetEmail } from "firebase/auth";
 import DotLoader from "../../components/DotLoader";
+import { customModal } from "../../utils/modalUtils";
+import { CheckIcon } from "@heroicons/react/24/outline";
+import { useModal } from "../../context/ModalContext";
 
 export default function ForgotPassword() {
+  const { showModal } = useModal();
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [whiteLogoUrl, setWhiteLogo] = useState('');
+  const [whiteLogoUrl, setWhiteLogo] = useState("");
   const navigate = useNavigate();
 
   const fetchWhiteLogo = async () => {
-    const storageRef = ref(storage, 'gs://cvs-online.appspot.com/logos/whiteLogo/');
+    const storageRef = ref(
+      storage,
+      "gs://cvs-online.appspot.com/logos/whiteLogo/"
+    );
     try {
       const logoUrl = await getDownloadURL(storageRef);
       setWhiteLogo(logoUrl);
     } catch (error) {
-      console.error('Error fetching whiteLogo:', error);
-      // Handle errors as needed
+      console.error("Error fetching whiteLogo:", error);
     }
   };
 
   useEffect(() => {
-    // Fetch the whiteLogo when the component mounts
     fetchWhiteLogo();
   }, []);
 
@@ -35,18 +38,32 @@ export default function ForgotPassword() {
 
     sendPasswordResetEmail(auth, email)
       .then(() => {
-        setMessage("Password reset email sent. Please check your inbox.");
-        setTimeout(() => {
-            setMessage("");
-        }, 5000);
+        customModal({
+          showModal,
+          title: "Success",
+          text: "Password reset email sent. Please check your inbox.",
+          showConfirmButton: false,
+          iconBgColor: "bg-green-100",
+          iconTextColor: "text-green-600",
+          buttonBgColor: "bg-green-600",
+          icon: CheckIcon,
+          timer: 1500,
+        });
         setIsLoading(false);
-        navigate('/');
+        navigate("/");
       })
       .catch((error) => {
-        setError("Error sending password reset email. Please try again.");
-        setTimeout(() => {
-            setError("");
-        }, 5000);
+        customModal({
+          showModal,
+          title: "Error",
+          text: "Error sending password reset email. Please try again.",
+          showConfirmButton: false,
+          iconBgColor: "bg-red-100",
+          iconTextColor: "text-red-600",
+          buttonBgColor: "bg-red-600",
+          icon: CheckIcon,
+          timer: 1500,
+        });
         setIsLoading(false);
         console.log(error);
       });
@@ -69,7 +86,12 @@ export default function ForgotPassword() {
                 Please enter your email address to reset your password.
               </p>
             </div>
-            <form className="space-y-4 text-left mt-10" action="#" method="POST" onSubmit={handleResetPassword}>
+            <form
+              className="space-y-4 text-left mt-10"
+              action="#"
+              method="POST"
+              onSubmit={handleResetPassword}
+            >
               <div>
                 <div className="mt-2">
                   <input
@@ -91,14 +113,14 @@ export default function ForgotPassword() {
                   type="submit"
                   className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
-                 {isLoading ? (
-                      <div className="flex w-full justify-center align-middle gap-2">
-                        <span>Submitting</span>
-                        <DotLoader />
-                      </div>
-                    ) : (
-                      "Submit"
-                    )}
+                  {isLoading ? (
+                    <div className="flex w-full justify-center align-middle gap-2">
+                      <span>Submitting</span>
+                      <DotLoader />
+                    </div>
+                  ) : (
+                    "Submit"
+                  )}
                 </button>
               </div>
             </form>

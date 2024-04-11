@@ -19,7 +19,6 @@ export default function Login() {
   const { showAlert, hideAlert } = useAlert();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [logoUrl, setLogoUrl] = useState("");
   const navigate = useNavigate();
@@ -90,7 +89,7 @@ export default function Login() {
       customAlert({
         showAlert,
         title: "Access Denied",
-        description: error ,
+        description: error.message ,
         textColor: "text-red-800",
         icon: XCircleIcon,
         iconBgColor: "bg-red-100",
@@ -99,9 +98,6 @@ export default function Login() {
         onClose: hideAlert,
         timer: 3000,
       });
-      setError(error.message);
-      setIsLoading(false);
-      setTimeout(() => setError(""), 4000);
     }
   };
   return (

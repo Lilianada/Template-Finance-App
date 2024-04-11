@@ -4,7 +4,6 @@ import {
 } from "react";
 import { useNavigate } from "react-router-dom";
 import account_details from "../../assets/images/account_details.png";
-import transactions_icon from "../../assets/images/transaction.png";
 import bonds_icon from "../../assets/images/bond.png";
 import fixedTerm_icon from "../../assets/images/deposit.png";
 import ipos_icon from "../../assets/images/ipo.png";
@@ -28,11 +27,6 @@ export default function Dashboard() {
       icon: account_details,
       href: "/dashboard/registered_users",
     },
-    // {
-    //   title: "Cash Deposits",
-    //   icon: transactions_icon,
-    //   href: "/dashboard/cash_deposits",
-    // },
     {
       title: "Bonds",
       icon: bonds_icon,
@@ -112,7 +106,7 @@ export default function Dashboard() {
               });
           }}
           onCancel={() => setOpenModal(false)}
-          Icon={ExclamationTriangleIcon} // Your Icon Component
+          Icon={ExclamationTriangleIcon} 
           iconBgColor="bg-red-100"
           buttonBgColor="bg-red-600"
           iconTextColor="text-red-600"

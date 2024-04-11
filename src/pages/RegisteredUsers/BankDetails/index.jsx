@@ -16,7 +16,6 @@ import { getUser } from "../../../config/user";
 export default function BankDetails({ initialUser }) {
   const { showModal, hideModal } = useModal();
   const user = initialUser.uid;
-  const [isLoading, setIsLoading] = useState(false);
   const [bankingDetails, setBankingDetails] = useState([]);
   const [isDeleting, setIsDeleting] = useState(false);
   const navigate = useNavigate();
@@ -44,7 +43,6 @@ export default function BankDetails({ initialUser }) {
   };
 
   const fetchUserCountry = async () => {
-    setIsLoading(true);
     if (!user) {
       console.log("No UID found.");
       return;
@@ -60,9 +58,7 @@ export default function BankDetails({ initialUser }) {
       }
     } catch (error) {
       console.log("Error fetching user data: ", error);
-    } finally {
-      setIsLoading(false);
-    }
+    } 
   };
 
   const handleDelete = async () => {
@@ -229,7 +225,7 @@ export default function BankDetails({ initialUser }) {
         </div>
       </div>
       ) : (
-        <div>No banking details found</div> // Render a message if bankingDetails is null
+        <div>No banking details found</div> 
       )}
     </div>
   );

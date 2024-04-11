@@ -9,7 +9,6 @@ import CurrencyInput from "react-currency-input-field";
 
 export default function AddFixedTerm() {
     const [isLoading, setIsLoading] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
     const { showModal } = useModal();
     const [formData, setFormData] = useState({
       image: "",

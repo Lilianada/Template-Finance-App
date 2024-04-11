@@ -39,7 +39,7 @@ const CountrySelect = ({ value, onChange }) => {
 export default function AddNewUser() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const [password, setPassword] = useState(123456);
+  const password = 123456;
   const { showModal, hideModal } = useModal();
   const [formData, setFormData] = useState({
     title: "",
