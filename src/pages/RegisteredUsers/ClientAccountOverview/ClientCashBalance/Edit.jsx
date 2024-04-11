@@ -9,16 +9,16 @@ import {
   CheckIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
-import { deleteCashDeposit, updateCashDeposit } from "../../../../config/cashBalance";
+import {
+  deleteCashDeposit,
+  getCashTransaction,
+  updateCashDeposit,
+} from "../../../../config/cashBalance";
 
 export default function EditCashBalance() {
   const location = useLocation();
   const { userId } = useParams();
   const { details } = location.state || {};
-
-  const cashTransaction = useSelector(
-    (state) => state.cashDeposits.userCashDeposits
-  );
   const [isDeleting, setIsDeleting] = useState(false);
   const { showModal, hideModal } = useModal();
   const [isEditing, setIsEditing] = useState(false);
@@ -36,10 +36,15 @@ export default function EditCashBalance() {
 
   const fetchTransaction = async () => {
     try {
-      const result = cashTransaction.find(
-        (transaction) => transaction.id === details
-      );
-      setFormData(result);
+      const transaction = await getCashTransaction(userId, details);
+     
+      setFormData({
+        amount: transaction.amount,
+        type: transaction.type,
+        reference: transaction.reference,
+        status: transaction.status,
+        date: transaction.date,
+      });
     } catch (error) {
       console.error(error);
     }
@@ -48,7 +53,7 @@ export default function EditCashBalance() {
   const handleUpdate = async (e) => {
     e.preventDefault();
     setIsEditing(true);
-
+    
     try {
       const resultAction = await updateCashDeposit({
         userId,
@@ -93,14 +98,26 @@ export default function EditCashBalance() {
   const handleChange = (event) => {
     const { name, value } = event.target;
     if (name === "date") {
-      const [year, month, day] = value.split("-");
-      const formattedDate = `${day}-${month}-${year}`;
-      setFormData({ ...formData, [name]: formattedDate });
+      // Check if the provided date matches the format "dd-MM-yyyy"
+      const dateRegex = /^(\d{2})-(\d{2})-(\d{4})$/;
+      if (dateRegex.test(value)) {
+        // If it matches, split the value and format it as "yyyy-MM-dd"
+        const [day, month, year] = value.split("-");
+        const formattedDate = `${year}-${month}-${day}`;
+        setFormData({ ...formData, [name]: formattedDate });
+      } else {
+        // If it doesn't match, log an error or handle it accordingly
+        console.error("Invalid date format provided");
+      }
     } else {
-      // For all other fields
-      setFormData({ ...formData, [name]: value });
+      // For other fields, update the state directly
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
     }
   };
+  
 
   const handleDelete = () => {
     customModal({

@@ -16,7 +16,6 @@ export default function EditBondsDetails({
   setOpen,
   open,
   bond,
-  setBond,
   userId,
   refreshDetails,
 }) {

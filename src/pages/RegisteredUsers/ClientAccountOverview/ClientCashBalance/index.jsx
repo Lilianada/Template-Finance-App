@@ -9,20 +9,25 @@ import {
 } from "@heroicons/react/24/outline";
 import LoadingScreen from "../../../../components/LoadingScreen";
 import { deleteCashDeposit, getUserCashDeposits } from "../../../../config/cashBalance";
+import DotLoader from "../../../../components/DotLoader";
 
 export default function ClientCashPage() {
   const { showModal, hideModal } = useModal();
   const [cashTransaction, setCashTransaction] = useState([]);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isLoading, setIsLoading ] = useState(false);
   const navigate = useNavigate();
   const { userId } = useParams();
 
   const fetchTransaction = async () => {
+    setIsLoading(true);
     try {
       const result = await getUserCashDeposits(userId);
       setCashTransaction(result);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -121,6 +126,7 @@ export default function ClientCashPage() {
       </div>
       {isDeleting && <LoadingScreen />}
       <div className="-mx-4 mt-8 sm:-mx-0">
+        {isLoading && <DotLoader /> }
         {cashTransaction === null ? (
           <div className="w-full grid place-items-center rounded-xl border border-gray-200 p-4 mt-12">
             <h5 className="text-gray-400 text-base ">
