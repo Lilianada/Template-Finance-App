@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import {
   Bars3Icon,
-  BanknotesIcon,
   DocumentChartBarIcon,
   CalendarIcon,
   CreditCardIcon,
   HomeIcon,
-  WrenchScrewdriverIcon,
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import Header from "./Header";
@@ -21,17 +19,11 @@ const navigation = [
     icon: UserGroupIcon,
     current: false,
   },
-  // {
-  //   name: "Cash Deposits",
-  //   to: "/dashboard/cash_deposits",
-  //   icon: BanknotesIcon,
-  //   current: false,
-  // },
-  { 
-    name: "Bonds", 
-    to: "/dashboard/bonds", 
-    icon: DocumentChartBarIcon, 
-    current: false 
+  {
+    name: "Bonds",
+    to: "/dashboard/bonds",
+    icon: DocumentChartBarIcon,
+    current: false,
   },
   {
     name: "Fixed Term Deposits",
@@ -39,19 +31,43 @@ const navigation = [
     icon: CreditCardIcon,
     current: false,
   },
-  { 
-    name: "Ipos", 
-    to: "/dashboard/ipos", 
-    icon: CalendarIcon, 
-    current: false 
+  {
+    name: "Ipos",
+    to: "/dashboard/ipos",
+    icon: CalendarIcon,
+    current: false,
   },
 ];
 
 const requests = [
-  { id: 1, name: "Users Request", to: "/dashboard/user_requests", initial: "U", current: false },
-  { id: 1, name: "Bonds Request", to: "/dashboard/bonds_requests", initial: "B", current: false },
-  { id: 2, name: "Ipos Request", to: "/dashboard/ipos_requests", initial: "I", current: false },
-  { id: 3, name: "Fixed Term Requests", to: "/dashboard/fixedTerms_requests", initial: "F", current: false, },
+  {
+    id: 1,
+    name: "Users Request",
+    to: "/dashboard/user_requests",
+    initial: "U",
+    current: false,
+  },
+  {
+    id: 1,
+    name: "Bonds Request",
+    to: "/dashboard/bonds_requests",
+    initial: "B",
+    current: false,
+  },
+  {
+    id: 2,
+    name: "Ipos Request",
+    to: "/dashboard/ipos_requests",
+    initial: "I",
+    current: false,
+  },
+  {
+    id: 3,
+    name: "Fixed Term Requests",
+    to: "/dashboard/fixedTerms_requests",
+    initial: "F",
+    current: false,
+  },
 ];
 
 export default function Skeleton() {
@@ -90,63 +106,6 @@ export default function Skeleton() {
 
           <main className="pt-4 lg:pt-8 pb-10 lg:mx-4 sm:mx-6">
             <div className="px-2">
-              {/* <div className="pb-8">
-                  <nav className="sm:hidden" aria-label="Back">
-                    <Link
-                      to="#"
-                      className="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700"
-                    >
-                      <ChevronLeftIcon
-                        className="-ml-1 mr-1 h-5 w-5 flex-shrink-0 text-gray-400"
-                        aria-hidden="true"
-                      />
-                      Back
-                    </Link>
-                  </nav>
-                  <nav className="hidden sm:flex" aria-label="Breadcrumb">
-                    <ol className="flex items-center space-x-4">
-                      <li>
-                        <div className="flex">
-                          <Link
-                            to="#"
-                            className="text-sm font-medium text-gray-500 hover:text-gray-700"
-                          >
-                            Jobs
-                          </Link>
-                        </div>
-                      </li>
-                      <li>
-                        <div className="flex items-center">
-                          <ChevronRightIcon
-                            className="h-5 w-5 flex-shrink-0 text-gray-400"
-                            aria-hidden="true"
-                          />
-                          <Link
-                            to="#"
-                            className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"
-                          >
-                            Engineering
-                          </Link>
-                        </div>
-                      </li>
-                      <li>
-                        <div className="flex items-center">
-                          <ChevronRightIcon
-                            className="h-5 w-5 flex-shrink-0 text-gray-400"
-                            aria-hidden="true"
-                          />
-                          <Link
-                            to="#"
-                            aria-current="page"
-                            className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"
-                          >
-                            Back End Developer
-                          </Link>
-                        </div>
-                      </li>
-                    </ol>
-                  </nav>
-                </div> */}
               <Outlet />
             </div>
           </main>
