@@ -6,7 +6,6 @@ import { db } from "./config/firebase";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ModalProvider } from "./context/ModalContext";
 import { AlertProvider } from "./context/AlertContext";
-import "./App.css";
 import store from "../src/store/store";
 import Skeleton from "./components/Skeleton";
 import Login from "./pages/Auth/Login";
