@@ -45,12 +45,6 @@ const navigation = [
     icon: CalendarIcon, 
     current: false 
   },
-  { 
-    name: "Settings", 
-    to: "/dashboard/settings", 
-    icon: WrenchScrewdriverIcon, 
-    current: false 
-  },
 ];
 
 const requests = [

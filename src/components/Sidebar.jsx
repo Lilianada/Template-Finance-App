@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Dialog, Transition } from '@headlessui/react';
 import {
+  Cog6ToothIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import Logo from "../assets/images/white_logo.png"
@@ -121,7 +122,7 @@ const updatedRequests = requests.map((item) => ({
                       ))}
                     </ul>
                   </li>
-                  {/* <li className="mt-auto">
+                  <li className="mt-auto">
                     <Link
                       to="/settings"
                       className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 hover:bg-gray-800 hover:text-white"
@@ -129,7 +130,7 @@ const updatedRequests = requests.map((item) => ({
                       <Cog6ToothIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
                       Settings
                     </Link>
-                  </li> */}
+                  </li>
                 </ul>
               </nav>
             </div>

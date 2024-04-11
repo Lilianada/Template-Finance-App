@@ -54,7 +54,7 @@ import LoadingScreen from '../../components/LoadingScreen';
       </div>
         <div className="sm:flex sm:items-center text-left">
           <div className="sm:flex-auto">
-            <h1 className="text-lg font-semibold leading-6 text-gray-900">Users</h1>
+            <h1 className="text-lg font-semibold leading-6 text-gray-900">Registered Users</h1>
             <p className="mt-2 text-sm text-gray-700">
               A list of all the users in your account including their full name, email, mobile phone and user id.
             </p>
