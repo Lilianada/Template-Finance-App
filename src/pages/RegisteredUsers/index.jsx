@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { getRegisteredUsers } from '../../config/user';
 import { useNavigate } from 'react-router-dom';
-import DotLoader from '../../components/DotLoader';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import LoadingScreen from '../../components/LoadingScreen';
   
