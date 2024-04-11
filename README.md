@@ -71,4 +71,6 @@ This project is licensed under the MIT License (see LICENSE file for details).
 * Screenshots or documentation for the admin dashboard interface.
 * Any additional features or functionalities not mentioned here.
 
-**By Lilian Okeke:**
+###   Author
+
+Lilian Okeke
