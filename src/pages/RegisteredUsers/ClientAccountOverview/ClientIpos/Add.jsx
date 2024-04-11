@@ -7,7 +7,6 @@ import {
   ExclamationTriangleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import CurrencyInput from "react-currency-input-field";
 import { Dialog, Transition } from "@headlessui/react";
 import { addIposToUserCollection } from "../../../../config/ipos";
 import { getUser } from "../../../../config/user";

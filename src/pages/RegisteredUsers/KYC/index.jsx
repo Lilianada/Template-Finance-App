@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import DotLoader from "../../../components/DotLoader";
 import { getUserKyc } from "../../../config/user";
+import DotLoader from "../../../components/DotLoader";
 
 export default function ClientKYC({ initialUser }) {
   const navigate = useNavigate();
   const [kycDetails, setKycDetails] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [viewUser, setViewUser] = useState(initialUser || {});
 
   const fetchKycDetails = async () => {
     setIsLoading(true);
     try {
-      const details = await getUserKyc(viewUser.uid);
+      const details = await getUserKyc(initialUser.uid);
       setKycDetails(details);
     } catch (error) {
       console.error("Error fetching KYC details:", error);
@@ -41,12 +40,13 @@ export default function ClientKYC({ initialUser }) {
           View and edit KYC details.
         </p>
       </div>
+      {isLoading && <DotLoader/>}
       {kycDetails === null || kycDetails.length === 0 ? (
         <div className="mt-8 flex justify-end space-x-3">
           <button
             type="button"
             className="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-900"
-            onClick={() => handleEdit(viewUser.uid)}
+            onClick={() => handleEdit(initialUser.uid)}
           >
             Add KYC
           </button>
@@ -274,7 +274,7 @@ export default function ClientKYC({ initialUser }) {
             <button
               type="button"
               className="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-900"
-              onClick={() => handleEdit(viewUser.uid)}
+              onClick={() => handleEdit(initialUser.uid)}
             >
               Edit KYC
             </button>

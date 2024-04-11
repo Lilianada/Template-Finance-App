@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import { PaperClipIcon } from "@heroicons/react/20/solid";
 import {
   deleteDocument,
-  downloadFile,
   fetchUserDocument,
 } from "../../../config/documents";
 import {
-  ArrowDownTrayIcon,
   CheckIcon,
   ExclamationCircleIcon,
   ExclamationTriangleIcon,
@@ -103,30 +101,6 @@ export default function ClientDoc({ initialUser }) {
     }
   };
 
-  const download = async (doc) => {
-    setIsDownloading(true);
-    
-    try {
-     await downloadFile(doc);
-  
-      customModal({
-        showModal,
-        title: "Success",
-        text: "Document has been downloaded successfully.",
-        showConfirmButton: false,
-        iconBgColor: "bg-green-100",
-        iconTextColor: "text-green-600",
-        buttonBgColor: "bg-green-600",
-        icon: CheckIcon,
-        timer: 1500,
-      });
-    } catch (error) {
-      console.error("Error downloading file:", error);
-    } finally {
-      setIsDownloading(false);
-    }
-  };
-
   return (
     <div className="py-6 bg-gray-50 px-4 my-8 rounded-md shadow">
       <div className="px-4 sm:px-0 text-left">
@@ -180,20 +154,6 @@ export default function ClientDoc({ initialUser }) {
                     >
                       Remove
                     </button>
-                    {/* <span className="text-gray-200" aria-hidden="true">
-                      |
-                    </span>
-                    <span className="text-gray-500">
-                      <button
-                        title="download file"
-                        onClick={(e) => download(doc)}
-                      >
-                        <ArrowDownTrayIcon
-                          className="h-6 w-6 text-green-600"
-                          aria-hidden="true"
-                        />
-                      </button>
-                    </span> */}
                   </div>
                 </li>
               ))

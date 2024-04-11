@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import DotLoader from "../../../../components/DotLoader";
-import { formatNumber } from "../../../../config/utils";
 import { customModal } from "../../../../utils/modalUtils";
 import { useModal } from "../../../../context/ModalContext";
 import {

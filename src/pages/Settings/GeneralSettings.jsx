@@ -109,17 +109,6 @@ export default function GeneralSettings() {
       });
   };
 
-  const toggleChatFeature = () => {
-    const updatedValue = !isChatEnabled;
-    setIsChatEnabled(updatedValue);
-
-    updateChatFeature(updatedValue)
-      .then(() => {})
-      .catch((error) => {
-        console.error("Error updating chat feature: ", error);
-      });
-  };
-
   const toggleToolsFeature = () => {
     const updatedValue = !isToolsEnabled;
     setIsToolsEnabled(updatedValue);

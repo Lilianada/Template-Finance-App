@@ -7,7 +7,6 @@ import {
   CheckIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
-import { getFunctions, httpsCallable } from "firebase/functions";
 import DotLoader from "../../../components/DotLoader";
 import { deleteUser } from "firebase/auth";
 
