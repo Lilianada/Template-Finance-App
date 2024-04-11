@@ -52,8 +52,6 @@ export default function EditBankDetails({ initialUser }) {
       bsbNumber,
       accountNumber,
       branch,
-      swiftCode,
-      iban,
     } = formData;
 
     if (!accountName || !bankName || !bsbNumber || !accountNumber || !branch) {
@@ -131,7 +129,6 @@ export default function EditBankDetails({ initialUser }) {
         iconTextColor: "text-red-600",
         timer: 0,
       });
-      //   fetchSubCollection("bankingDetails", setBankingDetails);
     } catch (error) {
       console.error("Failed to delete Banking Details:", error);
       customModal({

@@ -13,7 +13,7 @@ import { addBondUser } from "../../../../config/bonds";
 import { Dialog, Transition } from "@headlessui/react";
 import { getUser } from "../../../../config/user";
 
-export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
+export default function AddUserBonds({ setOpen, open, bond, userId }) {
   const [bondAmount, setBondAmount] = useState(0);
   const [typeOfRequest, setTypeOfRequest] = useState("");
   const [date, setDate] = useState("");
@@ -87,23 +87,6 @@ export default function AddUserBonds({ setOpen, open, bond, setBond, userId }) {
       });
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    if (name === "date") {
-      const parts = value.split("-");
-      const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
-      setBond((prevFormData) => ({
-        ...prevFormData,
-        [name]: formattedDate,
-      }));
-    } else {
-      setBond((prevFormData) => ({
-        ...prevFormData,
-        [name]: value,
-      }));
     }
   };
 
