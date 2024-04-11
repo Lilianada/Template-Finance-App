@@ -10,14 +10,10 @@ import {
   CheckIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
-import {
-  addNewCashDeposit,
-  deleteExistingCashDeposit,
-} from "../../../../store/cash/cashSlice";
+import { addCashDeposit, deleteCashDeposit } from "../../../../config/cashBalance";
 
 export default function AddCashBalance() {
   const { userId } = useParams();
-  const dispatch = useDispatch();
   const [isDeleting, setIsDeleting] = useState(false);
   const { showModal, hideModal } = useModal();
   const [isAdding, setIsAdding] = useState(false);
@@ -43,12 +39,11 @@ export default function AddCashBalance() {
     };
 
     try {
-      const resultAction = await dispatch(
-        addNewCashDeposit({
+      const resultAction = await addCashDeposit({
           userId,
           depositData: newData,
         })
-      );
+      
       const result = resultAction.payload;
 
       if (result && result.success) {
@@ -126,7 +121,7 @@ export default function AddCashBalance() {
   const confirmDelete = async (id) => {
     setIsDeleting(true);
     try {
-      dispatch(deleteExistingCashDeposit({ userId, depositId: id }));
+      await deleteCashDeposit({ userId, depositId: id });;
       customModal({
         showModal,
         title: "Success!",

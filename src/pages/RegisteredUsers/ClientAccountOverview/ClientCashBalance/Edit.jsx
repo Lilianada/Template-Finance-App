@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
 import DotLoader from "../../../../components/DotLoader";
 import { convertDateToISO, formatNumber } from "../../../../config/utils";
@@ -9,17 +9,13 @@ import {
   CheckIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
-import {
-  deleteExistingCashDeposit,
-  fetchUserCashDeposits,
-  updateExistingCashDeposit,
-} from "../../../../store/cash/cashSlice";
+import { deleteCashDeposit, updateCashDeposit } from "../../../../config/cashBalance";
 
 export default function EditCashBalance() {
   const location = useLocation();
   const { userId } = useParams();
   const { details } = location.state || {};
-  const dispatch = useDispatch();
+
   const cashTransaction = useSelector(
     (state) => state.cashDeposits.userCashDeposits
   );
@@ -35,9 +31,8 @@ export default function EditCashBalance() {
   });
 
   useEffect(() => {
-    dispatch(fetchUserCashDeposits(userId));
     fetchTransaction();
-  }, [dispatch, userId]);
+  }, []);
 
   const fetchTransaction = async () => {
     try {
@@ -55,13 +50,11 @@ export default function EditCashBalance() {
     setIsEditing(true);
 
     try {
-      const resultAction = await dispatch(
-        updateExistingCashDeposit({
-          userId,
-          depositId: details,
-          updatedData: formData,
-        })
-      );
+      const resultAction = await updateCashDeposit({
+        userId,
+        depositId: details,
+        updatedData: formData,
+      });
       const result = resultAction.payload;
 
       if (result.success) {
@@ -137,7 +130,7 @@ export default function EditCashBalance() {
   const confirmDelete = async () => {
     setIsDeleting(true);
     try {
-      dispatch(deleteExistingCashDeposit({userId, depositId: details.id}));
+      await deleteCashDeposit({ userId, depositId: details.id });
       customModal({
         showModal,
         title: "Success!",
