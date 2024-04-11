@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { formatNumber } from "../../../../config/utils";
 import { useModal } from "../../../../context/ModalContext";
@@ -10,16 +9,13 @@ import {
 } from "@heroicons/react/24/outline";
 import LoadingScreen from "../../../../components/LoadingScreen";
 import { deleteCashDeposit, getUserCashDeposits } from "../../../../config/cashBalance";
-// import { deleteExistingCashDeposit, fetchUserCashDeposits } from "../../../../store/cash/cashSlice";
 
 export default function ClientCashPage() {
   const { showModal, hideModal } = useModal();
   const [cashTransaction, setCashTransaction] = useState([]);
-  const [selectedId, setSelectedId] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const navigate = useNavigate();
   const { userId } = useParams();
-  // const cashTransaction = useSelector(state => state.cashDeposits.userCashDeposits);
 
   const fetchTransaction = async () => {
     try {

@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { ScaleIcon } from "@heroicons/react/24/outline";
 import { convertToNumber, formatNumber } from "../../../config/utils";
 import { Link } from "react-router-dom";
-import { fetchUserTerms } from "../../../store/terms/termsSlice";
-import { fetchUserBonds } from "../../../store/bonds/bondsSlice";
-import { fetchUserIpos } from "../../../store/ipos/iposSlice";
-import { fetchUserCashDeposits } from "../../../store/cash/cashSlice";
-import { fetchUserStocks } from "../../../store/stocks/stocksSlice";
+import { getUserCashDeposits } from "../../../config/cashBalance";
+import { getUserFixedTerm } from "../../../config/terms";
+import { getUserBonds } from "../../../config/bonds";
+import { getStockFromUserDB } from "../../../config/stock";
+import { getUserIpos } from "../../../config/ipos";
 
 export default function AccountOverview({ initialUser }) {
   const userId = initialUser.uid;
@@ -21,13 +21,13 @@ export default function AccountOverview({ initialUser }) {
   const [balance, setBalance] = useState(0);
 
   useEffect(() => {
-    const fetchUserData = () => {
+    const fetchUserData = async () => {
       try {
-        dispatch(fetchUserBonds(userId));
-        dispatch(fetchUserTerms(userId));
-        dispatch(fetchUserIpos(userId));
-        dispatch(fetchUserCashDeposits(userId));
-        dispatch(fetchUserStocks(userId));
+        await getUserCashDeposits(userId);
+        await getUserFixedTerm(userId);
+        await getStockFromUserDB(userId);
+        await getUserBonds(userId);
+        await getUserIpos(userId);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
