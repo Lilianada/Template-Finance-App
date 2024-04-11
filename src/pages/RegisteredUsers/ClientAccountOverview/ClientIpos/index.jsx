@@ -5,6 +5,7 @@ import { deleteUserIpo, getUserIpos } from "../../../../config/ipos";
 import { customModal } from "../../../../utils/modalUtils";
 import LoadingScreen from "../../../../components/LoadingScreen";
 import {
+  ArrowLeftIcon,
   CheckIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
@@ -100,8 +101,18 @@ export default function ClientIposPage() {
   };
 
   return (
-    <div className="px-4 ">
-      <div className="sm:flex sm:items-center">
+    <div className="">
+    <div className="sm:flex-auto text-left mt-4 mb-6">
+      <button
+        className="flex gap-2 items-center cursor-pointer"
+        onClick={() => window.history.back()}
+      >
+        <ArrowLeftIcon className="h-5 w-5 stroke-gray-400 stroke-2" />
+        <p className="text-sm text-gray-400 font-semibold">Back</p>
+      </button>
+    </div>
+    <div className="bg-gray-50 px-4 sm:px-6 lg:px-8 py-6 rounded-lg">
+      <div className="sm:flex sm:items-start">
         <div className="sm:flex-auto text-left">
           <h1 className="text-base font-semibold leading-6 text-gray-900">
             IPOs
@@ -175,7 +186,7 @@ export default function ClientIposPage() {
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 bg-white text-left">
+            <tbody className="divide-y divide-gray-200 bg-gray-50 text-left">
               {ipos.map((item, index) => (
                 <tr key={index}>
                   <td className="w-2/5 max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0 capitalize">
@@ -240,6 +251,7 @@ export default function ClientIposPage() {
         refreshDetails={fetchIpos}
       />
       </div>
+    </div>
     </div>
   );
 }

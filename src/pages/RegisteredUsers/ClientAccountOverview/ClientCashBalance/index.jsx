@@ -107,18 +107,23 @@ export default function ClientCashPage() {
   };
 
   return (
-    <div className="px-4 sm:px-6 lg:px-8">
-      <div className="sm:flex sm:items-start mt-4">
+    <div className="">
+    <div className="sm:flex-auto text-left mt-4 mb-6">
+      <button
+        className="flex gap-2 items-center cursor-pointer"
+        onClick={() => window.history.back()}
+      >
+        <ArrowLeftIcon className="h-5 w-5 stroke-gray-400 stroke-2" />
+        <p className="text-sm text-gray-400 font-semibold">Back</p>
+      </button>
+    </div>
+          {isLoading && <DotLoader />}
+    <div className="bg-gray-50 px-4 sm:px-6 lg:px-8 py-6 rounded-lg">
+      <div className="sm:flex sm:items-start">
         <div className="sm:flex-auto text-left">
-          <div className="flex gap-4 items-center">
-            <ArrowLeftIcon
-              className="h-5 w-5 text-gray-900"
-              onClick={() => window.history.back()}
-            />
             <h1 className="text-base font-semibold leading-6 text-gray-900">
               Cash Deposits
             </h1>
-          </div>
           <p className="mt-2 text-sm text-gray-700">
             All cash deposits and balances deposited into client's account.
           </p>
@@ -139,7 +144,6 @@ export default function ClientCashPage() {
       </div>
       {isDeleting && <LoadingScreen />}
       <div className="-mx-4 mt-8 sm:-mx-0">
-        {isLoading && <DotLoader />}
         {cashTransaction === null ? (
           <div className="w-full grid place-items-center rounded-xl border border-gray-200 p-4 mt-12">
             <h5 className="text-gray-400 text-base ">
@@ -236,6 +240,7 @@ export default function ClientCashPage() {
           </table>
         )}
       </div>
+    </div>
     </div>
   );
 }
