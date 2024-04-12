@@ -87,7 +87,6 @@ export default function Notifications() {
   const handleDeleteAll = async () => {
     setIsDeleting(true);
     try {
-      // Call the deleteAllNotifications function to remove all notifications from Firestore
       await deleteAllNotifications();
       customModal({
         showModal,
@@ -100,7 +99,6 @@ export default function Notifications() {
         buttonBgColor: "bg-green-600",
         timer: 2000,
       });
-      // Update the component's state to remove all notifications
       setNotifications([]);
     } catch (error) {
       customModal({
@@ -123,10 +121,8 @@ export default function Notifications() {
   const handleDeleteNotification = async (itemId) => {
     setIsDeleting(true);
     try {
-      // Call the deleteNotification function to remove the notification from Firestore
       await deleteNotification(itemId);
-
-      // Update the component's state to reflect the changes
+      
       setNotifications((prevNotifications) =>
         prevNotifications.filter(
           (notification) => notification.id !== itemId

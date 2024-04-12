@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
+import { db } from "./config/firebase";
 import { Provider } from "react-redux";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { checkAdminRoleAndLogoutIfNot } from "./config/utils";
 import { useAuth } from "./utils/authState";
-import { db } from "./config/firebase";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ModalProvider } from "./context/ModalContext";
 import { AlertProvider } from "./context/AlertContext";
 import store from "../src/store/store";

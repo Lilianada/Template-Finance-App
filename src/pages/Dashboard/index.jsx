@@ -4,7 +4,6 @@ import account_details from "../../assets/images/account_details.png";
 import bonds_icon from "../../assets/images/bond.png";
 import fixedTerm_icon from "../../assets/images/deposit.png";
 import ipos_icon from "../../assets/images/ipo.png";
-import logout_icon from "../../assets/images/logout.png";
 import notification_icon from "../../assets/images/notification.png";
 import settings_icon from "../../assets/images/settings.png";
 import { Link } from "react-router-dom";
@@ -48,11 +47,6 @@ export default function Dashboard() {
       icon: settings_icon,
       href: "/dashboard/settings",
     },
-    // {
-    //   title: "Logout",
-    //   icon: logout_icon,
-    //   onClick: () => setOpenModal(true),
-    // },
   ];
 
   return (
