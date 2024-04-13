@@ -23,6 +23,7 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom'
+import ChatBox from './ChatBox'
 
 const user = {
   name: 'Whitney Francis',
@@ -784,6 +785,7 @@ export default function ChatInbox() {
                     </li>
                   ))}
                 </ul>
+                <ChatBox/>
               </div>
             </section>
 
