@@ -48,6 +48,7 @@ import BondsRequests from "./pages/BondsRequest";
 import Notifications from "./pages/Notifications";
 import IposRequests from "./pages/IposRequest";
 import FixedTermRequests from "./pages/FixedTermRequest";
+import Chat from "./pages/Chat";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -356,6 +357,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <Notifications />
+                    </ProtectedRoute>
+                  }
+                />
+              <Route
+                  path="chat"
+                  element={
+                    <ProtectedRoute>
+                      <Chat />
                     </ProtectedRoute>
                   }
                 />
