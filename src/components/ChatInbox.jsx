@@ -1,304 +1,165 @@
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import {
-  ArchiveBoxIcon as ArchiveBoxIconMini,
   EllipsisVerticalIcon,
 } from "@heroicons/react/20/solid";
 import { Link } from "react-router-dom";
 import ChatBox from "./ChatBox";
-import { closeChat, subscribeToChatUpdates } from "../config/chat";
+import { closeChat, fetchChatMessages, fetchChats, sendMessage, subscribeToChatUpdates } from "../config/chat";
 import { customModal } from "../utils/modalUtils";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { CheckIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { db } from "../config/firebase";
+import { useModal } from "../context/ModalContext";
+import { formatTimestamp } from "../config/utils";
 
-const messages = [
-  {
-    id: 1,
-    subject: "Velit placeat sit ducimus non sed",
-    sender: "Gloria Roberston",
-    href: "#",
-    date: "1d ago",
-    datetime: "2021-01-27T16:35",
-    preview:
-      "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
-  },
-  {
-    id: 2,
-    subject:
-      "Nemo mollitia repudiandae adipisci explicabo optio consequatur tempora ut nihil",
-    sender: "Virginia Abshire",
-    href: "#",
-    date: "1d ago",
-    datetime: "2021-01-27T16:35",
-    preview:
-      "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
-  },
-  {
-    id: 3,
-    subject:
-      "Doloremque reprehenderit et harum quas explicabo nulla architecto dicta voluptatibus",
-    sender: "Kyle Gulgowski",
-    href: "#",
-    date: "1d ago",
-    datetime: "2021-01-27T16:35",
-    preview:
-      "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
-  },
-  {
-    id: 4,
-    subject: "Eos sequi et aut ex impedit",
-    sender: "Hattie Haag",
-    href: "#",
-    date: "1d ago",
-    datetime: "2021-01-27T16:35",
-    preview:
-      "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
-  },
-  {
-    id: 5,
-    subject: "Quisquam veniam explicabo",
-    sender: "Wilma Glover",
-    href: "#",
-    date: "1d ago",
-    datetime: "2021-01-27T16:35",
-    preview:
-      "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
-  },
-  {
-    id: 6,
-    subject:
-      "Est ratione molestiae modi maiores consequatur eligendi et excepturi magni",
-    sender: "Dolores Morissette",
-    href: "#",
-    date: "1d ago",
-    datetime: "2021-01-27T16:35",
-    preview:
-      "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
-  },
-  {
-    id: 7,
-    subject: "Commodi deserunt aut veniam rem ipsam",
-    sender: "Guadalupe Walsh",
-    href: "#",
-    date: "1d ago",
-    datetime: "2021-01-27T16:35",
-    preview:
-      "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
-  },
-  {
-    id: 8,
-    subject: "Illo illum aut debitis earum",
-    sender: "Jasmine Hansen",
-    href: "#",
-    date: "1d ago",
-    datetime: "2021-01-27T16:35",
-    preview:
-      "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
-  },
-  {
-    id: 9,
-    subject: "Qui dolore iste ut est cumque sed",
-    sender: "Ian Volkman",
-    href: "#",
-    date: "1d ago",
-    datetime: "2021-01-27T16:35",
-    preview:
-      "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
-  },
-  {
-    id: 10,
-    subject: "Aut sed aut illum delectus maiores laboriosam ex",
-    sender: "Rafael Klocko",
-    href: "#",
-    date: "1d ago",
-    datetime: "2021-01-27T16:35",
-    preview:
-      "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
-  },
-];
-
-const message = {
-  subject: "Re: New pricing for existing customers",
-  sender: "joearmstrong@example.com",
-  status: "Open",
-  items: [
-    {
-      id: 1,
-      author: "Joe Armstrong",
-      date: "Yesterday at 7:24am",
-      datetime: "2021-01-28T19:24",
-      body: "<p>Thanks so much! Can't wait to try it out.</p>",
-    },
-    {
-      id: 2,
-      author: "Monica White",
-      date: "Wednesday at 4:35pm",
-      datetime: "2021-01-27T16:35",
-      body: `
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Malesuada at ultricies tincidunt elit et, enim. Habitant nunc, adipiscing non fermentum, sed est a, aliquet. Lorem in vel libero vel augue aliquet dui commodo.</p>
-        <p>Nec malesuada sed sit ut aliquet. Cras ac pharetra, sapien purus vitae vestibulum auctor faucibus ullamcorper. Leo quam tincidunt porttitor neque, velit sed. Tortor mauris ornare ut tellus sed aliquet amet venenatis condimentum. Convallis accumsan et nunc eleifend.</p>
-        <p><strong style="font-weight: 600;">Monica White</strong><br/>Customer Service</p>
-      `,
-    },
-    {
-      id: 3,
-      author: "Joe Armstrong",
-      date: "Wednesday at 4:09pm",
-      datetime: "2021-01-27T16:09",
-      body: `
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Malesuada at ultricies tincidunt elit et, enim. Habitant nunc, adipiscing non fermentum, sed est a, aliquet. Lorem in vel libero vel augue aliquet dui commodo.</p>
-        <p>Nec malesuada sed sit ut aliquet. Cras ac pharetra, sapien purus vitae vestibulum auctor faucibus ullamcorper. Leo quam tincidunt porttitor neque, velit sed. Tortor mauris ornare ut tellus sed aliquet amet venenatis condimentum. Convallis accumsan et nunc eleifend.</p>
-        <p>– Joe</p>
-      `,
-    },
-  ],
-};
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function ChatInbox() {
-    const [selectedChat, setSelectedChat] = useState(null);
-    const [chats, setChats] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
-    const [newMessage, setNewMessage] = useState("");
-    const unsubscribeRef = useRef(null);
-  
-    //Fetch chats
-    const loadChats = async () => {
-      try {
-        fetchChats(db, setChats);
-      } catch (error) {
-        console.error(error);
-        setError("Failed to load chats");
-      } finally {
+    const { showModal, hideModal } = useModal();
+  const [selectedChat, setSelectedChat] = useState(null);
+  const [chats, setChats] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [newMessage, setNewMessage] = useState("");
+  const unsubscribeRef = useRef(null);
+
+  const loadChats = async () => {
+    try {
+      fetchChats(db, setChats);
+      console.log(chats)
+    } catch (error) {
+      console.error(error);
+      setError("Failed to load chats");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    loadChats();
+  }, []);
+
+  const handleChatSelection = (userUid, userName) => {
+    setLoading(true);
+    if (unsubscribeRef.current) {
+      unsubscribeRef.current();
+    }
+    unsubscribeRef.current = fetchChatMessages(
+      userUid,
+      (chats) => {
+        if (chats.length > 0) {
+          setSelectedChat({
+            userId: userUid,
+            messages: newMessage,
+            userName: userName,
+            chatId: chats[0].chatId,
+          });
+        } else {
+          setSelectedChat(null);
+        }
+        setLoading(false);
+      },
+      (error) => {
+        console.error("Failed to fetch chat messages:", error);
+        setError(error.message);
         setLoading(false);
       }
-    };
-  
-    useEffect(() => {
-      setLoading(true);
-      loadChats();
-    }, []);
-  
-    //Handle chat selection
-    const handleChatSelection = (userUid, userName) => {
-      setLoading(true);
-  
-      // Unsubscribe from any previous chat updates
+    );
+  };
+
+  useEffect(() => {
+    return () => {
       if (unsubscribeRef.current) {
         unsubscribeRef.current();
       }
-  
-      // Subscribe to the new chat's updates
-      unsubscribeRef.current = fetchChatMessages(
-        userUid,
-        (chats) => {
-          if (chats.length > 0) {
-            setSelectedChat({
-              userId: userUid,
-              messages: newMessage,
-              userName: userName,
-              chatId: chats[0].chatId,
-            });
-          } else {
-            setSelectedChat(null); // Handle case where there are no chats
-          }
-          setLoading(false);
-        },
-        (error) => {
-          console.error("Failed to fetch chat messages:", error);
-          setError(error.message);
-          setLoading(false);
-        }
-      );
     };
-  
-    useEffect(() => {
-      return () => {
-        // Cleanup: unsubscribe from the current chat when the component unmounts
-        if (unsubscribeRef.current) {
-          unsubscribeRef.current();
-        }
-      };
-    }, []);
-  
-    // Close chat/ delete chat
-    const handleCloseChat = async (userId) => {
-        customModal({
+  }, []);
+
+  const handleCloseChat = async (userId) => {
+    customModal({
+      showModal,
+      showConfirmButton: true,
+      title: "Are you sure?",
+      text: "Do you want to close this chat?",
+      icon: ExclamationTriangleIcon,
+      iconBgColor: 'bg-red-100',
+      iconTextColor: 'bg-red-600',
+      buttonBgColor: 'bg-red-600',
+      confirmButtonBgColor: 'bg-red-600',
+      confirmButtonText: 'Yes, close it',
+      cancelButtonBgColor: 'bg-white',
+      cancelButtonText: 'Cancel',
+      onCancel: hideModal,
+      onConfirm: async () => {
+        try {
+          setLoading(true);
+          await closeChat(db, userId);
+          customModal({
             showModal,
-            showConfirmButton: true,
-            title: "Are you sure?",
-            text: "Do you want to close this chat?",
+            title: 'Closed!',
+            text: 'The chat has been closed.',
+            icon: CheckIcon,
+            iconBgColor: 'bg-green-100',
+            iconTextColor: 'bg-green-600',
+            showConfirmButton: false,
+            buttonBgColor: 'bg-green-600'
+          });
+          setChats(chats.filter((chat) => chat.id !== chat.chatId));
+          setSelectedChat(null);
+          loadChats();
+        } catch (err) {
+          console.error(err);
+          customModal({
+            showModal,
+            title: 'Error',
+            text: 'Failed to close the chat.',
             icon: ExclamationTriangleIcon,
             iconBgColor: 'bg-red-100',
             iconTextColor: 'bg-red-600',
-            buttonBgColor: 'bg-red-600',
-            confirmButtonBgColor: 'bg-red-600',
-            confirmButtonText: 'Yes, close it',
-            cancelButtonBgColor: 'bg-white',
-            cancelButtonText: 'Cancel',
-            onCancel: hideModal(),
-            onConfirm: 
-        }).then(async (result) => {
-        if (result.isConfirmed) {
-          try {
-            setLoading(true);
-            await closeChat(db, userId);
-  
-            Swal.fire("Closed!", "The chat has been closed.", "success");
-  
-            // Update chats in state and reset selected chat
-            setChats(chats.filter((chat) => chat.id !== chat.chatId));
-            setSelectedChat(null);
-            loadChats();
-          } catch (err) {
-            console.error(err);
-            Swal.fire("Error", "Failed to close the chat", "error");
-          } finally {
-            setLoading(false);
-          }
-        }
-      });
-    };
-  
-    // Send message
-    const handleSendMessage = async (event) => {
-      event.preventDefault();
-  
-      try {
-        setLoading(true);
-        await sendMessage(selectedChat.userId, newMessage);
-        setNewMessage("");
-      } catch (err) {
-        console.error("Error sending message:", err);
-        setError("Failed to send message");
-      } finally {
-        setLoading(false);
-      }
-    };
-  
-    // Real-time chat updates
-    useEffect(() => {
-      if (!selectedChat) return undefined;
-  
-      const userUid = selectedChat.userId;
-      const chatId = selectedChat.chatId;
-  
-      const unsubscribe = subscribeToChatUpdates(
-        userUid,
-        chatId,
-        (updatedMessages) => {
-          setSelectedChat((currentSelectedChat) => {
-            return { ...currentSelectedChat, messages: updatedMessages };
+            showConfirmButton: false,
+            buttonBgColor: 'bg-red-600'
           });
+        } finally {
+          setLoading(false);
         }
-      );
-  
-      return () => unsubscribe();
-    }, [selectedChat?.userUid, selectedChat?.id]);
+      }
+    });
+  };
+
+  const handleSendMessage = async (event) => {
+    event.preventDefault();
+    try {
+      setLoading(true);
+      await sendMessage(selectedChat.userId, newMessage);
+      setNewMessage("");
+    } catch (err) {
+      console.error("Error sending message:", err);
+      setError("Failed to send message");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!selectedChat) return undefined;
+    const userUid = selectedChat.userId;
+    const chatId = selectedChat.chatId;
+    const unsubscribe = subscribeToChatUpdates(
+      userUid,
+      chatId,
+      (updatedMessages) => {
+        setSelectedChat((currentSelectedChat) => {
+          return { ...currentSelectedChat, messages: updatedMessages };
+        });
+      }
+    );
+    return () => unsubscribe();
+  }, [selectedChat?.userUid, selectedChat?.id]);
+
    
   return (
     <>
@@ -337,10 +198,10 @@ export default function ChatInbox() {
                         id="message-heading"
                         className="text-base font-medium text-gray-900"
                       >
-                       You are now chatting with  {message.sender}
+                       You are now chatting with {selectedChat?.userName}
                       </h2>
                       <p className="mt-1 truncate text-sm text-gray-400">
-                      {message.sender}
+                      {selectedChat?.userName}
                       </p>
                     </div>
 
@@ -372,8 +233,8 @@ export default function ChatInbox() {
                             <div className="py-1">
                               <Menu.Item>
                                 {({ active }) => (
-                                  <button
-                                    type="button"
+                                  <Link
+                                    to={`/dashboard/registered_users/view/${selectedChat.id}`}
                                     className={classNames(
                                       active
                                         ? "bg-gray-100 text-gray-900"
@@ -382,13 +243,14 @@ export default function ChatInbox() {
                                     )}
                                   >
                                     <span>View User</span>
-                                  </button>
+                                  </Link>
                                 )}
                               </Menu.Item>
                               <Menu.Item>
                                 {({ active }) => (
                                   <button
                                     type="button"
+                                    onClick={() => handleCloseChat(selectedChat.id)}
                                     className={classNames(
                                       active
                                         ? "bg-gray-100 text-gray-900"
@@ -396,7 +258,7 @@ export default function ChatInbox() {
                                       "flex w-full justify-between px-4 py-2 text-sm"
                                     )}
                                   >
-                                    <span>Delete Chat</span>
+                                    <span>Close Chat</span>
                                   </button>
                                 )}
                               </Menu.Item>
@@ -409,18 +271,19 @@ export default function ChatInbox() {
                 </div>
                 {/* Thread section*/}
                 <ul className="space-y-2 py-4 sm:space-y-4 sm:px-6 lg:px-8">
-                  {message.items.map((item) => (
+                  {chats.map((item, index) => (
                     <li
-                      key={item.id}
                       className="bg-white px-4 py-6 shadow sm:rounded-lg sm:px-6"
+                      key={index}
+                      onClick={() => handleChatSelection(item.chatId, item.userName)}
+                      title="Click to view chat"
                     >
                       <div className="sm:flex sm:items-baseline sm:justify-between">
                         <h3 className="text-sm font-medium">
-                          <span className="text-gray-900">{item.author}</span>{" "}
-                          {/* <span className="text-gray-600">wrote</span> */}
+                          <span className="text-gray-900">{item.userName}</span>
                         </h3>
                         <p className="mt-1 whitespace-nowrap text-sm text-gray-600 sm:ml-3 sm:mt-0">
-                          <time dateTime={item.datetime}>{item.date}</time>
+                          <time dateTime={formatTimestamp(item.timeStamp)}>{item.date}</time>
                         </p>
                       </div>
                       <div
@@ -453,7 +316,7 @@ export default function ChatInbox() {
                   className="min-h-0 flex-1 overflow-y-auto"
                 >
                   <ul className="hidden lg:block divide-y divide-gray-200 border-b border-gray-200">
-                    {messages.map((message) => (
+                    {chats.map((message) => (
                       <li
                         key={message.id}
                         className="relative bg-white pr-4 pl-2 py-5 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600 hover:bg-gray-50"
@@ -469,12 +332,12 @@ export default function ChatInbox() {
                                 aria-hidden="true"
                               />
                               <p className="truncate text-sm font-medium text-gray-900">
-                                {message.sender}
+                                {message.userName}
                               </p>
                             </Link>
                           </div>
                           <time
-                            dateTime={message.datetime}
+                            dateTime={formatTimestamp(message.timeStamp)}
                             className="flex-shrink-0 whitespace-nowrap text-sm text-gray-500"
                           >
                             {message.date}
@@ -482,14 +345,14 @@ export default function ChatInbox() {
                         </div>
                         <div className="mt-1">
                           <p className="line-clamp-2 text-sm text-gray-600">
-                            {message.preview}
+                            {message.chat}
                           </p>
                         </div>
                       </li>
                     ))}
                   </ul>
                   <ul className="block lg:hidden divide-y divide-gray-200 border-b border-gray-200">
-                    {messages.map((message) => (
+                    {chats.map((message) => (
                       <li
                         key={message.id}
                         className="relative bg-white pr-4 py-5 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600 hover:bg-gray-50"
@@ -505,7 +368,7 @@ export default function ChatInbox() {
                                 aria-hidden="true"
                               />
                               <p className="truncate text-sm font-medium text-gray-900">
-                                {message.sender}
+                                {message.userName}
                               </p>
                             </Link>
                           </div>
