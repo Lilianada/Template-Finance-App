@@ -5,13 +5,154 @@ import {
 } from "@heroicons/react/20/solid";
 import { Link } from "react-router-dom";
 import ChatBox from "./ChatBox";
-import { closeChat, fetchChatMessages, fetchChats, sendMessage, subscribeToChatUpdates } from "../config/chat";
-import { customModal } from "../utils/modalUtils";
+import { closeChat, fetchChatMessages, fetchChats, sendMessage, subscribeToChatUpdates } from "../../config/chat";
+import { customModal } from "../../utils/modalUtils";
 import { CheckIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import { db } from "../config/firebase";
-import { useModal } from "../context/ModalContext";
-import { formatTimestamp } from "../config/utils";
+import { db } from "../../config/firebase";
+import { useModal } from "../../context/ModalContext";
 
+const messages = [
+  {
+    id: 1,
+    subject: "Velit placeat sit ducimus non sed",
+    sender: "Gloria Roberston",
+    href: "#",
+    date: "1d ago",
+    datetime: "2021-01-27T16:35",
+    preview:
+      "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
+  },
+  {
+    id: 2,
+    subject:
+      "Nemo mollitia repudiandae adipisci explicabo optio consequatur tempora ut nihil",
+    sender: "Virginia Abshire",
+    href: "#",
+    date: "1d ago",
+    datetime: "2021-01-27T16:35",
+    preview:
+      "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
+  },
+  {
+    id: 3,
+    subject:
+      "Doloremque reprehenderit et harum quas explicabo nulla architecto dicta voluptatibus",
+    sender: "Kyle Gulgowski",
+    href: "#",
+    date: "1d ago",
+    datetime: "2021-01-27T16:35",
+    preview:
+      "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
+  },
+  {
+    id: 4,
+    subject: "Eos sequi et aut ex impedit",
+    sender: "Hattie Haag",
+    href: "#",
+    date: "1d ago",
+    datetime: "2021-01-27T16:35",
+    preview:
+      "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
+  },
+  {
+    id: 5,
+    subject: "Quisquam veniam explicabo",
+    sender: "Wilma Glover",
+    href: "#",
+    date: "1d ago",
+    datetime: "2021-01-27T16:35",
+    preview:
+      "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
+  },
+  {
+    id: 6,
+    subject:
+      "Est ratione molestiae modi maiores consequatur eligendi et excepturi magni",
+    sender: "Dolores Morissette",
+    href: "#",
+    date: "1d ago",
+    datetime: "2021-01-27T16:35",
+    preview:
+      "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
+  },
+  {
+    id: 7,
+    subject: "Commodi deserunt aut veniam rem ipsam",
+    sender: "Guadalupe Walsh",
+    href: "#",
+    date: "1d ago",
+    datetime: "2021-01-27T16:35",
+    preview:
+      "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
+  },
+  {
+    id: 8,
+    subject: "Illo illum aut debitis earum",
+    sender: "Jasmine Hansen",
+    href: "#",
+    date: "1d ago",
+    datetime: "2021-01-27T16:35",
+    preview:
+      "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
+  },
+  {
+    id: 9,
+    subject: "Qui dolore iste ut est cumque sed",
+    sender: "Ian Volkman",
+    href: "#",
+    date: "1d ago",
+    datetime: "2021-01-27T16:35",
+    preview:
+      "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
+  },
+  {
+    id: 10,
+    subject: "Aut sed aut illum delectus maiores laboriosam ex",
+    sender: "Rafael Klocko",
+    href: "#",
+    date: "1d ago",
+    datetime: "2021-01-27T16:35",
+    preview:
+      "Doloremque dolorem maiores assumenda dolorem facilis. Velit vel in a rerum natus facere. Enim rerum eaque qui facilis. Numquam laudantium sed id dolores omnis in. Eos reiciendis deserunt maiores et accusamus quod dolor.",
+  },
+];
+
+const message = {
+  subject: "Re: New pricing for existing customers",
+  sender: "joearmstrong@example.com",
+  status: "Open",
+  items: [
+    {
+      id: 1,
+      author: "Joe Armstrong",
+      date: "Yesterday at 7:24am",
+      datetime: "2021-01-28T19:24",
+      body: "<p>Thanks so much! Can't wait to try it out.</p>",
+    },
+    {
+      id: 2,
+      author: "Monica White",
+      date: "Wednesday at 4:35pm",
+      datetime: "2021-01-27T16:35",
+      body: `
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Malesuada at ultricies tincidunt elit et, enim. Habitant nunc, adipiscing non fermentum, sed est a, aliquet. Lorem in vel libero vel augue aliquet dui commodo.</p>
+        <p>Nec malesuada sed sit ut aliquet. Cras ac pharetra, sapien purus vitae vestibulum auctor faucibus ullamcorper. Leo quam tincidunt porttitor neque, velit sed. Tortor mauris ornare ut tellus sed aliquet amet venenatis condimentum. Convallis accumsan et nunc eleifend.</p>
+        <p><strong style="font-weight: 600;">Monica White</strong><br/>Customer Service</p>
+      `,
+    },
+    {
+      id: 3,
+      author: "Joe Armstrong",
+      date: "Wednesday at 4:09pm",
+      datetime: "2021-01-27T16:09",
+      body: `
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Malesuada at ultricies tincidunt elit et, enim. Habitant nunc, adipiscing non fermentum, sed est a, aliquet. Lorem in vel libero vel augue aliquet dui commodo.</p>
+        <p>Nec malesuada sed sit ut aliquet. Cras ac pharetra, sapien purus vitae vestibulum auctor faucibus ullamcorper. Leo quam tincidunt porttitor neque, velit sed. Tortor mauris ornare ut tellus sed aliquet amet venenatis condimentum. Convallis accumsan et nunc eleifend.</p>
+        <p>– Joe</p>
+      `,
+    },
+  ],
+};
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -28,8 +169,8 @@ export default function ChatInbox() {
 
   const loadChats = async () => {
     try {
-      fetchChats(db, setChats);
-      console.log(chats)
+      const fetchedChats = fetchChats();
+      setChats(fetchedChats);
     } catch (error) {
       console.error(error);
       setError("Failed to load chats");
@@ -94,39 +235,39 @@ export default function ChatInbox() {
       cancelButtonBgColor: 'bg-white',
       cancelButtonText: 'Cancel',
       onCancel: hideModal,
-      onConfirm: async () => {
-        try {
-          setLoading(true);
-          await closeChat(db, userId);
-          customModal({
-            showModal,
-            title: 'Closed!',
-            text: 'The chat has been closed.',
-            icon: CheckIcon,
-            iconBgColor: 'bg-green-100',
-            iconTextColor: 'bg-green-600',
-            showConfirmButton: false,
-            buttonBgColor: 'bg-green-600'
-          });
-          setChats(chats.filter((chat) => chat.id !== chat.chatId));
-          setSelectedChat(null);
-          loadChats();
-        } catch (err) {
-          console.error(err);
-          customModal({
-            showModal,
-            title: 'Error',
-            text: 'Failed to close the chat.',
-            icon: ExclamationTriangleIcon,
-            iconBgColor: 'bg-red-100',
-            iconTextColor: 'bg-red-600',
-            showConfirmButton: false,
-            buttonBgColor: 'bg-red-600'
-          });
-        } finally {
-          setLoading(false);
-        }
-      }
+    //   onConfirm: async () => {
+    //     try {
+    //       setLoading(true);
+    //       await closeChat(db, userId);
+    //       customModal({
+    //         showModal,
+    //         title: 'Closed!',
+    //         text: 'The chat has been closed.',
+    //         icon: CheckIcon,
+    //         iconBgColor: 'bg-green-100',
+    //         iconTextColor: 'bg-green-600',
+    //         showConfirmButton: false,
+    //         buttonBgColor: 'bg-green-600'
+    //       });
+    //       setChats(chats.filter((chat) => chat.id !== chat.chatId));
+    //       setSelectedChat(null);
+    //       loadChats();
+    //     } catch (err) {
+    //       console.error(err);
+    //       customModal({
+    //         showModal,
+    //         title: 'Error',
+    //         text: 'Failed to close the chat.',
+    //         icon: ExclamationTriangleIcon,
+    //         iconBgColor: 'bg-red-100',
+    //         iconTextColor: 'bg-red-600',
+    //         showConfirmButton: false,
+    //         buttonBgColor: 'bg-red-600'
+    //       });
+    //     } finally {
+    //       setLoading(false);
+    //     }
+    //   }
     });
   };
 
@@ -198,10 +339,10 @@ export default function ChatInbox() {
                         id="message-heading"
                         className="text-base font-medium text-gray-900"
                       >
-                       You are now chatting with {selectedChat?.userName}
+                       You are now chatting with  {message.sender}
                       </h2>
                       <p className="mt-1 truncate text-sm text-gray-400">
-                      {selectedChat?.userName}
+                      {message.sender}
                       </p>
                     </div>
 
@@ -233,8 +374,8 @@ export default function ChatInbox() {
                             <div className="py-1">
                               <Menu.Item>
                                 {({ active }) => (
-                                  <Link
-                                    to={`/dashboard/registered_users/view/${selectedChat.id}`}
+                                  <button
+                                    type="button"
                                     className={classNames(
                                       active
                                         ? "bg-gray-100 text-gray-900"
@@ -243,14 +384,14 @@ export default function ChatInbox() {
                                     )}
                                   >
                                     <span>View User</span>
-                                  </Link>
+                                  </button>
                                 )}
                               </Menu.Item>
                               <Menu.Item>
                                 {({ active }) => (
                                   <button
                                     type="button"
-                                    onClick={() => handleCloseChat(selectedChat.id)}
+                                    onClick={() => handleCloseChat(selectedChat.userId)}
                                     className={classNames(
                                       active
                                         ? "bg-gray-100 text-gray-900"
@@ -275,7 +416,7 @@ export default function ChatInbox() {
                     <li
                       className="bg-white px-4 py-6 shadow sm:rounded-lg sm:px-6"
                       key={index}
-                      onClick={() => handleChatSelection(item.chatId, item.userName)}
+                      onClick={() => handleChatSelection(item.userId, item.userName)}
                       title="Click to view chat"
                     >
                       <div className="sm:flex sm:items-baseline sm:justify-between">
@@ -283,7 +424,7 @@ export default function ChatInbox() {
                           <span className="text-gray-900">{item.userName}</span>
                         </h3>
                         <p className="mt-1 whitespace-nowrap text-sm text-gray-600 sm:ml-3 sm:mt-0">
-                          <time dateTime={formatTimestamp(item.timeStamp)}>{item.date}</time>
+                          <time dateTime={item.datetime}>{item.date}</time>
                         </p>
                       </div>
                       <div
@@ -297,96 +438,6 @@ export default function ChatInbox() {
               </div>
             </section>
 
-            {/* Message list*/}
-            <aside className=" order-first block flex-shrink-0">
-              <div className="relative flex h-full w-20 sm:w-40 lg:w-96 flex-col border-r border-gray-200 bg-gray-100">
-                <div className="flex-shrink-0 border-b">
-                  <div className="flex h-16 flex-col justify-center bg-white pr-4">
-                    {/* message header */}
-                    <div className="flex items-baseline space-x-3">
-                      <h2 className="text-lg font-medium text-gray-900">
-                        Inbox
-                      </h2>
-                    </div>
-                  </div>
-                </div>
-
-                <nav
-                  aria-label="Message list"
-                  className="min-h-0 flex-1 overflow-y-auto"
-                >
-                  <ul className="hidden lg:block divide-y divide-gray-200 border-b border-gray-200">
-                    {chats.map((message) => (
-                      <li
-                        key={message.id}
-                        className="relative bg-white pr-4 pl-2 py-5 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600 hover:bg-gray-50"
-                      >
-                        <div className="flex justify-between space-x-3">
-                          <div className="min-w-0 flex-1">
-                            <Link
-                              to={message.href}
-                              className="block focus:outline-none"
-                            >
-                              <span
-                                className="absolute inset-0"
-                                aria-hidden="true"
-                              />
-                              <p className="truncate text-sm font-medium text-gray-900">
-                                {message.userName}
-                              </p>
-                            </Link>
-                          </div>
-                          <time
-                            dateTime={formatTimestamp(message.timeStamp)}
-                            className="flex-shrink-0 whitespace-nowrap text-sm text-gray-500"
-                          >
-                            {message.date}
-                          </time>
-                        </div>
-                        <div className="mt-1">
-                          <p className="line-clamp-2 text-sm text-gray-600">
-                            {message.chat}
-                          </p>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                  <ul className="block lg:hidden divide-y divide-gray-200 border-b border-gray-200">
-                    {chats.map((message) => (
-                      <li
-                        key={message.id}
-                        className="relative bg-white pr-4 py-5 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600 hover:bg-gray-50"
-                      >
-                        <div className="flex justify-between space-x-3">
-                          <div className="min-w-0 flex-1">
-                            <Link
-                              to={message.href}
-                              className="block focus:outline-none"
-                            >
-                              <span
-                                className="absolute inset-0"
-                                aria-hidden="true"
-                              />
-                              <p className="truncate text-sm font-medium text-gray-900">
-                                {message.userName}
-                              </p>
-                            </Link>
-                          </div>
-                        </div>
-                        <div className="mt-1">
-                          <time
-                            dateTime={message.datetime}
-                            className="flex-shrink-0 whitespace-nowrap text-sm text-gray-500"
-                          >
-                            {message.date}
-                          </time>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </nav>
-              </div>
-            </aside>
           </main>
         </div>
       </div>

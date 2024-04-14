@@ -1,5 +1,5 @@
 import React from 'react'
-import ChatInbox from '../../components/ChatInbox'
+import ChatInbox from './ChatInbox'
 
 export default function Chat() {
   return (
