@@ -6,6 +6,7 @@ import {
   CreditCardIcon,
   HomeIcon,
   UserGroupIcon,
+  ChatBubbleLeftRightIcon,
 } from "@heroicons/react/24/outline";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
@@ -37,6 +38,12 @@ const navigation = [
     icon: CalendarIcon,
     current: false,
   },
+  {
+    name: "Chat",
+    to: "/dashboard/chat",
+    icon: ChatBubbleLeftRightIcon,
+    current: false,
+  }
 ];
 
 const requests = [
@@ -48,21 +55,21 @@ const requests = [
     current: false,
   },
   {
-    id: 1,
+    id: 2,
     name: "Bonds Request",
     to: "/dashboard/bonds_requests",
     initial: "B",
     current: false,
   },
   {
-    id: 2,
+    id: 3,
     name: "Ipos Request",
     to: "/dashboard/ipos_requests",
     initial: "I",
     current: false,
   },
   {
-    id: 3,
+    id:4,
     name: "Fixed Term Requests",
     to: "/dashboard/fixedTerms_requests",
     initial: "F",

@@ -33,7 +33,7 @@ export default function ChatThread({
       <ul className="space-y-2 py-4 sm:space-y-4 sm:px-6 lg:px-8">
         {chats.map((item, index) => (
           <li
-            className={`bg-white px-4 py-6 shadow sm:rounded-lg sm:px-6 ${item.user === 'admin' ? 'border-s-teal-700' : 'border-0'} `}
+            className={`bg-white px-4 py-2 shadow sm:rounded-lg sm:px-6 ${item.user === 'admin' ? 'border-s-teal-700' : 'border-0'} `}
             key={index}
           >
             {item.user === "admin" ? (

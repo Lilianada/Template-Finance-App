@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from "react";
-import ChatBox from "./ChatBox";
 import {
+  closeChat,
   fetchChatMessages,
   fetchChats,
   sendMessage,
@@ -8,6 +8,7 @@ import {
 } from "../../config/chat";
 import { customModal } from "../../utils/modalUtils";
 import {
+  CheckIcon,
   EllipsisVerticalIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
@@ -23,7 +24,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function ChatInbox({}) {
+export default function ChatInbox() {
   const { showModal, hideModal } = useModal();
   const [selectedChat, setSelectedChat] = useState(null);
   const [chats, setChats] = useState([]);
@@ -96,44 +97,45 @@ export default function ChatInbox({}) {
       iconBgColor: "bg-red-100",
       iconTextColor: "bg-red-600",
       buttonBgColor: "bg-red-600",
-      confirmButtonBgColor: "bg-red-600",
-      confirmButtonText: "Yes, close it",
-      cancelButtonBgColor: "bg-white",
       cancelButtonText: "Cancel",
+      confirmButtonBgColor: "bg-red-600",
+      confirmButtonTextColor: "text-white",
+      cancelButtonBgColor: "bg-white",
+      cancelButtonTextColor: "text-gray-900",
       onCancel: hideModal,
-      //   onConfirm: async () => {
-      //     try {
-      //       setLoading(true);
-      //       await closeChat(db, userId);
-      //       customModal({
-      //         showModal,
-      //         title: 'Closed!',
-      //         text: 'The chat has been closed.',
-      //         icon: CheckIcon,
-      //         iconBgColor: 'bg-green-100',
-      //         iconTextColor: 'bg-green-600',
-      //         showConfirmButton: false,
-      //         buttonBgColor: 'bg-green-600'
-      //       });
-      //       setChats(chats.filter((chat) => chat.id !== chat.chatId));
-      //       setSelectedChat(null);
-      //       loadChats();
-      //     } catch (err) {
-      //       console.error(err);
-      //       customModal({
-      //         showModal,
-      //         title: 'Error',
-      //         text: 'Failed to close the chat.',
-      //         icon: ExclamationTriangleIcon,
-      //         iconBgColor: 'bg-red-100',
-      //         iconTextColor: 'bg-red-600',
-      //         showConfirmButton: false,
-      //         buttonBgColor: 'bg-red-600'
-      //       });
-      //     } finally {
-      //       setLoading(false);
-      //     }
-      //   }
+      onConfirm: async () => {
+        try {
+          setLoading(true);
+          await closeChat(db, userId);
+          customModal({
+            showModal,
+            title: "Closed!",
+            text: "The chat has been closed.",
+            icon: CheckIcon,
+            iconBgColor: "bg-green-100",
+            iconTextColor: "bg-green-600",
+            showConfirmButton: false,
+            buttonBgColor: "bg-green-600",
+          });
+          setChats(chats.filter((chat) => chat.id !== chat.chatId));
+          setSelectedChat(null);
+          loadChats();
+        } catch (err) {
+          console.error(err);
+          customModal({
+            showModal,
+            title: "Error",
+            text: "Failed to close the chat.",
+            icon: ExclamationTriangleIcon,
+            iconBgColor: "bg-red-100",
+            iconTextColor: "bg-red-600",
+            showConfirmButton: false,
+            buttonBgColor: "bg-red-600",
+          });
+        } finally {
+          setLoading(false);
+        }
+      },
     });
   };
 
@@ -195,80 +197,78 @@ export default function ChatInbox({}) {
                             </h2>
                           ) : (
                             <h1 className="text-lg font-medium text-gray-900">
-                              Click
-                              on a chat to start responding.
+                              Click on a chat to start responding.
                             </h1>
                           )}
                         </div>
                       </div>
 
-                        <Menu
-                          as="div"
-                          className="relative ml-3 inline-block text-left"
-                        >
-                          <div>
-                            <Menu.Button className="-my-2 flex items-center rounded-full bg-white p-2 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600">
-                              <span className="sr-only">Open options</span>
-                              <EllipsisVerticalIcon
-                                className="h-5 w-5"
-                                aria-hidden="true"
-                              />
-                            </Menu.Button>
-                          </div>
+                      <Menu
+                        as="div"
+                        className="relative ml-3 inline-block text-left"
+                      >
+                        <div>
+                          <Menu.Button className="-my-2 flex items-center rounded-full bg-white p-2 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                            <span className="sr-only">Open options</span>
+                            <EllipsisVerticalIcon
+                              className="h-5 w-5"
+                              aria-hidden="true"
+                            />
+                          </Menu.Button>
+                        </div>
 
-                          <Transition
-                            as={Fragment}
-                            enter="transition ease-out duration-100"
-                            enterFrom="transform opacity-0 scale-95"
-                            enterTo="transform opacity-100 scale-100"
-                            leave="transition ease-in duration-75"
-                            leaveFrom="transform opacity-100 scale-100"
-                            leaveTo="transform opacity-0 scale-95"
-                          >
-                            <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                              <div className="py-1">
-                                <Menu.Item>
-                                  {({ active }) => (
-                                    <button
-                                      type="button"
-                                      className={classNames(
-                                        active
-                                          ? "bg-gray-100 text-gray-900"
-                                          : "text-gray-700",
-                                        "flex w-full justify-between px-4 py-2 text-sm"
-                                      )}
-                                    >
-                                      <span>View User</span>
-                                    </button>
-                                  )}
-                                </Menu.Item>
-                                <Menu.Item>
-                                  {({ active }) => (
-                                    <button
-                                      type="button"
-                                      onClick={() =>
-                                        handleCloseChat(selectedChat.userId)
-                                      }
-                                      className={classNames(
-                                        active
-                                          ? "bg-gray-100 text-gray-900"
-                                          : "text-gray-700",
-                                        "flex w-full justify-between px-4 py-2 text-sm"
-                                      )}
-                                    >
-                                      <span>Close Chat</span>
-                                    </button>
-                                  )}
-                                </Menu.Item>
-                              </div>
-                            </Menu.Items>
-                          </Transition>
-                        </Menu>
+                        <Transition
+                          as={Fragment}
+                          enter="transition ease-out duration-100"
+                          enterFrom="transform opacity-0 scale-95"
+                          enterTo="transform opacity-100 scale-100"
+                          leave="transition ease-in duration-75"
+                          leaveFrom="transform opacity-100 scale-100"
+                          leaveTo="transform opacity-0 scale-95"
+                        >
+                          <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <div className="py-1">
+                              <Menu.Item>
+                                {({ active }) => (
+                                  <button
+                                    type="button"
+                                    className={classNames(
+                                      active
+                                        ? "bg-gray-100 text-gray-900"
+                                        : "text-gray-700",
+                                      "flex w-full justify-between px-4 py-2 text-sm"
+                                    )}
+                                  >
+                                    <span>View User</span>
+                                  </button>
+                                )}
+                              </Menu.Item>
+                              <Menu.Item>
+                                {({ active }) => (
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      handleCloseChat(selectedChat.userId)
+                                    }
+                                    className={classNames(
+                                      active
+                                        ? "bg-gray-100 text-gray-900"
+                                        : "text-gray-700",
+                                      "flex w-full justify-between px-4 py-2 text-sm"
+                                    )}
+                                  >
+                                    <span>Close Chat</span>
+                                  </button>
+                                )}
+                              </Menu.Item>
+                            </div>
+                          </Menu.Items>
+                        </Transition>
+                      </Menu>
                     </div>
                   </div>
                 </div>
               </div>
-             
 
               <div className="min-h-0 flex-1 overflow-y-auto">
                 {loading ? (
@@ -288,8 +288,6 @@ export default function ChatInbox({}) {
                     <h4>Click on a chat to start responding.</h4>
                   </div>
                 )}
-
-                {/* <ChatBox handleSendMessage={handleSendMessage} /> */}
               </div>
             </section>
             <ChatList handleChatSelection={handleChatSelection} chats={chats} />
