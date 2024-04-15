@@ -94,13 +94,14 @@ export default function ChatInbox() {
       text: "Do you want to close this chat?",
       icon: ExclamationTriangleIcon,
       iconBgColor: "bg-red-100",
-      iconTextColor: "bg-red-600",
+      iconTextColor: "text-red-600",
       buttonBgColor: "bg-red-600",
       cancelButtonText: "Cancel",
       confirmButtonBgColor: "bg-red-600",
+      confirmButtonText: "Yes, close it",
       confirmButtonTextColor: "text-white",
       cancelButtonBgColor: "bg-white",
-      cancelButtonTextColor: "text-gray-900",
+      cancelButtonTextColor: "text-gray-800",
       onCancel: hideModal,
       onConfirm: async () => {
         try {

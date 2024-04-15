@@ -1,7 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { fetchChatMessages } from "../../config/chat";
-import { Menu, Transition } from "@headlessui/react";
-import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import ChatBox from "./ChatBox";
 import { formatTimestamp } from "../../config/utils";
 
@@ -13,7 +11,7 @@ export default function ChatThread({
 }) {
   const [chats, setChats] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const userId = selectedChat.userId || "69IiqbUbNaVywdRdkvoWFJDvPqq1";
+  const userId = selectedChat.userId;
 
   useEffect(() => {
     if (selectedChat) {
