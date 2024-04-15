@@ -32,7 +32,6 @@ export default function ChatInbox() {
   const [error, setError] = useState("");
   const [newMessage, setNewMessage] = useState("");
   const unsubscribeRef = useRef(null);
-  console.log(chats);
 
   //Fetch chats
   const loadChats = async () => {
@@ -155,7 +154,6 @@ export default function ChatInbox() {
 
   useEffect(() => {
     if (!selectedChat) return undefined;
-    console.log(selectedChat);
     const userUid = selectedChat.userId;
     const chatId = selectedChat.chatId;
     const unsubscribe = subscribeToChatUpdates(
@@ -283,7 +281,7 @@ export default function ChatInbox() {
                     setNewMessage={setNewMessage}
                   />
                 ) : (
-                  <div className="grid place-items-center w-full h-full bg-gray-50">
+                  <div className="grid place-items-center w-full h-[calc(100vh_-_196px)]  bg-gray-50">
                     <ChatBubbleLeftIcon className="h-20 text-gray-400" />
                     <h4>Click on a chat to start responding.</h4>
                   </div>

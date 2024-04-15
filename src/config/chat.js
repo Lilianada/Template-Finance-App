@@ -155,7 +155,6 @@ import {
         collection(db, "users", userUid, CHATS_SUBCOLLECTION)
       );
       const chatId = newChatRef.id;
-      console.log(chatId);
       // Initialize the new chat document with the chat message and other data
       await setDoc(newChatRef, {
         chat: chatMessage,
