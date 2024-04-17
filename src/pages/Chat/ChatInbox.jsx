@@ -178,7 +178,7 @@ export default function ChatInbox() {
         {/* Bottom section */}
         <div className="flex min-h-0 flex-1 overflow-hidden">
           {/* Main area */}
-          <main className="min-w-0 flex-1 border-t border-gray-200 flex">
+          <main className="min-w-0 flex-1 border-t border-gray-200 flex flex-col sm:flex-row">
             <section
               aria-labelledby="message-heading"
               className="flex h-full min-w-0 flex-1 flex-col overflow-hidden xl:order-last"
