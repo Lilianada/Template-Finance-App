@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { fetchChatMessages } from "../../config/chat";
 import ChatBox from "./ChatBox";
 import { formatTimestamp } from "../../config/utils";

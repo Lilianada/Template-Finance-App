@@ -19,6 +19,7 @@ import { db } from "../../config/firebase";
 import LoadingScreen from "../../components/LoadingScreen";
 import { ChatBubbleLeftIcon } from "@heroicons/react/20/solid";
 import { Menu, Transition } from "@headlessui/react";
+import { Link } from "react-router-dom";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -169,6 +170,8 @@ export default function ChatInbox() {
     return () => unsubscribe();
   }, [selectedChat?.userUid, selectedChat?.id]);
 
+  const viewUser = selectedChat ? selectedChat.userId : "";
+
   return (
     <>
       <div className="flex h-full flex-col">
@@ -229,8 +232,8 @@ export default function ChatInbox() {
                             <div className="py-1">
                               <Menu.Item>
                                 {({ active }) => (
-                                  <button
-                                    type="button"
+                                  <Link
+                                    to={`/dashboard/registered_users/view/${viewUser}`}
                                     className={classNames(
                                       active
                                         ? "bg-gray-100 text-gray-900"
@@ -239,7 +242,7 @@ export default function ChatInbox() {
                                     )}
                                   >
                                     <span>View User</span>
-                                  </button>
+                                  </Link>
                                 )}
                               </Menu.Item>
                               <Menu.Item>
