@@ -189,7 +189,7 @@ export default function ChatInbox() {
                   <div className="px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between py-4">
                       <div>
-                        <div className="isolate rounded-md shadow-sm sm:space-x-3 sm:shadow-none">
+                        <div className="isolate rounded-md sm:space-x-3 ">
                           {selectedChat ? (
                             <h2
                               id="message-heading"

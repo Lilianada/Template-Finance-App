@@ -4,7 +4,7 @@ import { formatTimestamp } from "../../config/utils";
 export default function ChatList({ handleChatSelection, chats }) {
   return (
     <aside className=" order-first block flex-shrink-0">
-      <div className="relative flex h-full w-full sm:w-60 lg:w-96 flex-col border-r border-l border-gray-200 bg-gray-100">
+      <div className="relative flex h-full w-full sm:w-60 lg:w-96 flex-col border-r border-l sm:border-none border-gray-200 bg-gray-100">
         <div className="flex-shrink-0 border-b">
           <div className="flex h-16 flex-col justify-center bg-white px-2 sm:px-4">
             {/* message header */}
