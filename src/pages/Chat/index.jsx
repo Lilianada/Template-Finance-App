@@ -24,7 +24,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function ChatInbox() {
+export default function Chat() {
   const { showModal, hideModal } = useModal();
   const [selectedChat, setSelectedChat] = useState(null);
   const [chats, setChats] = useState([]);
