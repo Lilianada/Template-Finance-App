@@ -9,8 +9,8 @@ import {
   ChatBubbleLeftRightIcon,
 } from "@heroicons/react/24/outline";
 import Header from "./Header";
-import Sidebar from "./Sidebar";
 import { Outlet } from "react-router-dom";
+import SideBar from "./Sidebar";
 
 const navigation = [
   { name: "Home", to: "/dashboard", icon: HomeIcon, current: true },
@@ -52,6 +52,7 @@ const requests = [
     name: "Users Request",
     to: "/dashboard/user_requests",
     initial: "U",
+    count: 3,
     current: false,
   },
   {
@@ -59,6 +60,7 @@ const requests = [
     name: "Bonds Request",
     to: "/dashboard/bonds_requests",
     initial: "B",
+    count: 3,
     current: false,
   },
   {
@@ -66,6 +68,7 @@ const requests = [
     name: "Ipos Request",
     to: "/dashboard/ipos_requests",
     initial: "I",
+    count: 3,
     current: false,
   },
   {
@@ -73,6 +76,7 @@ const requests = [
     name: "Fixed Term Requests",
     to: "/dashboard/fixedTerms_requests",
     initial: "F",
+    count: 3,
     current: false,
   },
 ];
@@ -81,9 +85,8 @@ export default function Skeleton() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <>
       <div>
-        <Sidebar
+        <SideBar
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
           navigation={navigation}
@@ -118,6 +121,5 @@ export default function Skeleton() {
           </main>
         </div>
       </div>
-    </>
   );
 }
