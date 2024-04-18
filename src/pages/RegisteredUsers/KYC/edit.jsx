@@ -17,6 +17,9 @@ import {
   primaryPurpose,
   purposeOfTrading,
   riskReward,
+  stockExperiences,
+  stockInvestent,
+  stockInvestents,
   tradingExperience,
   tradingKnowledgeAssessment,
   tradingStrategy,
@@ -213,6 +216,7 @@ function EditKyc() {
                       Your goal
                     </h2>
                   </div>
+                  
                   <div className=" lg:w-[720px] sm:w-full flex flex-col gap-4">
                     {/* Purpose of trade */}
                     <div className="space-y-2">
@@ -298,7 +302,7 @@ function EditKyc() {
                         Over the last year, how many times have you invested in
                         stocks and/or ETFs?
                       </p>
-                      {["1-10", "10-20", "20 plus"].map((investment, index) => (
+                      {stockExperiences.map((investment, index) => (
                         <div key={index}>
                           <label className="inline-flex items-center">
                             <input
@@ -322,7 +326,7 @@ function EditKyc() {
                         In the last year, how much have you invested in stocks
                         and/or ETFs?
                       </p>
-                      {["$1 - $500", "$500 - $2000", "$2000 plus"].map(
+                      {stockInvestents.map(
                         (investment, index) => (
                           <div key={index}>
                             <label className="inline-flex items-center">
