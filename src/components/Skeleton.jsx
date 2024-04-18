@@ -10,7 +10,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Header from "./Header";
 import { Outlet } from "react-router-dom";
-import SideBar from "./Sidebar";
+import Sidebar from "./Sidebar";
 
 const navigation = [
   { name: "Home", to: "/dashboard", icon: HomeIcon, current: true },
@@ -86,7 +86,7 @@ export default function Skeleton() {
 
   return (
       <div>
-        <SideBar
+        <Sidebar
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
           navigation={navigation}

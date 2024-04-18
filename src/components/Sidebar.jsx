@@ -131,24 +131,14 @@ export default function Sidebar({
                               <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-[0.625rem] font-medium text-gray-400 group-hover:text-white">
                                 {item.initial}
                               </span>
-                              <span className="truncate">{item.name}</span>
-                              <item.icon
-                                className={classNames(
-                                  item.current
-                                    ? "text-gray-500"
-                                    : "text-gray-400 group-hover:text-gray-500",
-                                  "mr-3 h-6 w-6 flex-shrink-0"
-                                )}
-                                aria-hidden="true"
-                              />
                               {item.name}
                               {item.count ? (
                                 <span
                                   className={classNames(
                                     item.current
-                                      ? "bg-white"
-                                      : "bg-gray-100 group-hover:bg-gray-200",
-                                    "ml-3 inline-block rounded-full py-0.5 px-3 text-xs font-medium"
+                                      ? "bg-gray-700"
+                                      : "bg-gray-800 group-hover:bg-gray-700",
+                                    "ml-3 inline-block rounded-full py-1 px-3 text-xs font-medium"
                                   )}
                                 >
                                   {item.count}

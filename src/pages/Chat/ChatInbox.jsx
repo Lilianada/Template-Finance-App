@@ -1,6 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import {
-  closeChat,
   fetchChatMessages,
   fetchChats,
   sendMessage,
@@ -19,7 +18,7 @@ import { db } from "../../config/firebase";
 import LoadingScreen from "../../components/LoadingScreen";
 import { ChatBubbleLeftIcon } from "@heroicons/react/20/solid";
 import { Menu, Transition } from "@headlessui/react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -30,7 +29,7 @@ export default function ChatInbox() {
   const [selectedChat, setSelectedChat] = useState(null);
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [closing, setClosing] = useState(false);
   const [newMessage, setNewMessage] = useState("");
   const unsubscribeRef = useRef(null);
 
@@ -40,7 +39,6 @@ export default function ChatInbox() {
       fetchChats(db, setChats);
     } catch (error) {
       console.error(error);
-      setError("Failed to load chats");
     } finally {
       setLoading(false);
     }
@@ -73,7 +71,6 @@ export default function ChatInbox() {
       },
       (error) => {
         console.error("Failed to fetch chat messages:", error);
-        setError(error.message);
         setLoading(false);
       }
     );
@@ -104,40 +101,46 @@ export default function ChatInbox() {
       cancelButtonBgColor: "bg-white",
       cancelButtonTextColor: "text-gray-800",
       onCancel: hideModal,
-      onConfirm: async () => {
-        try {
-          setLoading(true);
-          await closeChat(db, userId);
-          customModal({
-            showModal,
-            title: "Closed!",
-            text: "The chat has been closed.",
-            icon: CheckIcon,
-            iconBgColor: "bg-green-100",
-            iconTextColor: "bg-green-600",
-            showConfirmButton: false,
-            buttonBgColor: "bg-green-600",
-          });
-          setChats(chats.filter((chat) => chat.id !== chat.chatId));
-          setSelectedChat(null);
-          loadChats();
-        } catch (err) {
-          console.error(err);
-          customModal({
-            showModal,
-            title: "Error",
-            text: "Failed to close the chat.",
-            icon: ExclamationTriangleIcon,
-            iconBgColor: "bg-red-100",
-            iconTextColor: "bg-red-600",
-            showConfirmButton: false,
-            buttonBgColor: "bg-red-600",
-          });
-        } finally {
-          setLoading(false);
-        }
+      onConfirm:  () => {
+        closeChat(userId);
+        hideModal();
       },
     });
+  };
+
+  const closeChat = async (userId) => {
+    try {
+      setClosing(true);
+      await closeChat(db, userId);
+      customModal({
+        showModal,
+        title: "Successful!",
+        text: "The chat has been closed.",
+        icon: CheckIcon,
+        iconBgColor: "bg-green-100",
+        iconTextColor: "bg-green-600",
+        showConfirmButton: false,
+        buttonBgColor: "bg-green-600",
+      });
+      hideModal();
+      setChats(chats.filter((chat) => chat.id !== chat.chatId));
+      setSelectedChat(null);
+      loadChats();
+    } catch (err) {
+      console.error(err);
+      customModal({
+        showModal,
+        title: "Error",
+        text: "Failed to close the chat.",
+        icon: ExclamationTriangleIcon,
+        iconBgColor: "bg-red-100",
+        iconTextColor: "bg-red-600",
+        showConfirmButton: false,
+        buttonBgColor: "bg-red-600",
+      });
+    } finally {
+      setClosing(false);
+    }
   };
 
   const handleSendMessage = async (event) => {
@@ -148,7 +151,6 @@ export default function ChatInbox() {
       setNewMessage("");
     } catch (err) {
       console.error("Error sending message:", err);
-      setError("Failed to send message");
     } finally {
       setLoading(false);
     }
@@ -170,8 +172,6 @@ export default function ChatInbox() {
     return () => unsubscribe();
   }, [selectedChat?.userUid, selectedChat?.id]);
 
-  const viewUser = selectedChat ? selectedChat.userId : "";
-
   return (
     <>
       <div className="flex h-full flex-col">
@@ -187,53 +187,45 @@ export default function ChatInbox() {
               <div className="flex-shrink-0 border-b border-gray-200 bg-white">
                 <div className="flex h-16 flex-col justify-center">
                   <div className="px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between py-4">
-                      <div>
-                        <div className="isolate rounded-md sm:space-x-3 ">
-                          {selectedChat ? (
-                            <h2
-                              id="message-heading"
-                              className="text-base font-medium text-gray-900"
+                    <div className="isolate rounded-md sm:space-x-3 ">
+                      {selectedChat ? (
+                        <div className="flex justify-between py-4">
+                          <h2
+                            id="message-heading"
+                            className="text-base font-medium text-gray-900"
+                          >
+                            You are now chatting with {selectedChat.userName}
+                          </h2>
+                          <Menu
+                            as="div"
+                            className="relative ml-3 inline-block text-left"
+                          >
+                            <div>
+                              <Menu.Button className="-my-2 flex items-center rounded-full bg-white p-2 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                                <span className="sr-only">Open options</span>
+                                <EllipsisVerticalIcon
+                                  className="h-5 w-5"
+                                  aria-hidden="true"
+                                />
+                              </Menu.Button>
+                            </div>
+
+                            <Transition
+                              as={Fragment}
+                              enter="transition ease-out duration-100"
+                              enterFrom="transform opacity-0 scale-95"
+                              enterTo="transform opacity-100 scale-100"
+                              leave="transition ease-in duration-75"
+                              leaveFrom="transform opacity-100 scale-100"
+                              leaveTo="transform opacity-0 scale-95"
                             >
-                              You are now chatting with {selectedChat.userName}
-                            </h2>
-                          ) : (
-                            <h1 className="text-lg font-medium text-gray-900">
-                              Click on a chat to start responding.
-                            </h1>
-                          )}
-                        </div>
-                      </div>
-
-                      <Menu
-                        as="div"
-                        className="relative ml-3 inline-block text-left"
-                      >
-                        <div>
-                          <Menu.Button className="-my-2 flex items-center rounded-full bg-white p-2 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600">
-                            <span className="sr-only">Open options</span>
-                            <EllipsisVerticalIcon
-                              className="h-5 w-5"
-                              aria-hidden="true"
-                            />
-                          </Menu.Button>
-                        </div>
-
-                        <Transition
-                          as={Fragment}
-                          enter="transition ease-out duration-100"
-                          enterFrom="transform opacity-0 scale-95"
-                          enterTo="transform opacity-100 scale-100"
-                          leave="transition ease-in duration-75"
-                          leaveFrom="transform opacity-100 scale-100"
-                          leaveTo="transform opacity-0 scale-95"
-                        >
-                          <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            <div className="py-1">
-                              <Menu.Item>
+                              <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <div className="py-1">
+                                  {/* <Menu.Item>
                                 {({ active }) => (
-                                  <Link
-                                    to={`/dashboard/registered_users/view/${viewUser}`}
+                                  <button
+                                  type="button"
+                                    onClick={() => handleViewUser(selectedChat.userId)}
                                     className={classNames(
                                       active
                                         ? "bg-gray-100 text-gray-900"
@@ -242,31 +234,37 @@ export default function ChatInbox() {
                                     )}
                                   >
                                     <span>View User</span>
-                                  </Link>
-                                )}
-                              </Menu.Item>
-                              <Menu.Item>
-                                {({ active }) => (
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      handleCloseChat(selectedChat.userId)
-                                    }
-                                    className={classNames(
-                                      active
-                                        ? "bg-gray-100 text-gray-900"
-                                        : "text-gray-700",
-                                      "flex w-full justify-between px-4 py-2 text-sm"
-                                    )}
-                                  >
-                                    <span>Close Chat</span>
                                   </button>
                                 )}
-                              </Menu.Item>
-                            </div>
-                          </Menu.Items>
-                        </Transition>
-                      </Menu>
+                              </Menu.Item> */}
+                                  <Menu.Item>
+                                    {({ active }) => (
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          handleCloseChat(selectedChat.userId)
+                                        }
+                                        className={classNames(
+                                          active
+                                            ? "bg-gray-100 text-gray-900"
+                                            : "text-gray-700",
+                                          "flex w-full justify-between px-4 py-2 text-sm"
+                                        )}
+                                      >
+                                        <span>Close Chat</span>
+                                      </button>
+                                    )}
+                                  </Menu.Item>
+                                </div>
+                              </Menu.Items>
+                            </Transition>
+                          </Menu>
+                        </div>
+                      ) : (
+                        <h1 className="text-lg font-medium text-gray-900">
+                          Click on a chat to start responding.
+                        </h1>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -292,6 +290,7 @@ export default function ChatInbox() {
                 )}
               </div>
             </section>
+            {closing && <LoadingScreen />}
             <ChatList handleChatSelection={handleChatSelection} chats={chats} />
           </main>
         </div>

@@ -26,14 +26,14 @@ export default function ChatList({ handleChatSelection, chats }) {
                 className="relative bg-white px-2 sm:pl-3 sm:pr-4 py-5 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600 hover:bg-gray-50"
               >
                 <div className="flex justify-between space-x-3">
-                  <div className="min-w-0 flex-1 truncate">
+                  <div className="w-full flex-1 truncate">
                     <button
                       onClick={() =>
                         handleChatSelection(user.userId, user.userName)
                       }
-                      className="block focus:outline-none"
+                      className="text-full w-full block focus:outline-none"
                     >
-                      <p className="truncate text-sm font-medium text-gray-900">
+                      <p className="w-full truncate text-sm font-medium text-gray-900">
                         {user.userName}
                       </p>
                     </button>
@@ -60,9 +60,9 @@ export default function ChatList({ handleChatSelection, chats }) {
                       onClick={() =>
                         handleChatSelection(user.userId, user.userName)
                       }
-                      className="block focus:outline-none"
+                      className="text-left w-full block focus:outline-none"
                     >
-                      <p className=" text-sm font-medium text-gray-900">
+                      <p className="w-full text-sm font-medium text-gray-900">
                         {user.userName}
                       </p>
                     </button>
