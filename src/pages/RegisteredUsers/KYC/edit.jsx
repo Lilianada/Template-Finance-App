@@ -6,6 +6,8 @@ import {
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 import {
+  cryptoExperiences,
+  cryptoInvestments,
   educationExperience,
   familyMembers,
   financialStatus,
@@ -373,7 +375,7 @@ function EditKyc() {
                         Over the last year, how many times have you invested in
                         crypto?
                       </p>
-                      {["1-10", "10-20", "20 plus"].map((investment, index) => (
+                      {cryptoExperiences.map((investment, index) => (
                         <div key={index}>
                           <label className="inline-flex items-center">
                             <input
@@ -398,7 +400,7 @@ function EditKyc() {
                       <p className="mt-1 text-sm text-gray-500">
                         How much did you invest?
                       </p>
-                      {["$1-$500", "$500-$2000", "$2000 plus"].map(
+                      {cryptoInvestments.map(
                         (investment, index) => (
                           <div key={index}>
                             <label className="inline-flex items-center">

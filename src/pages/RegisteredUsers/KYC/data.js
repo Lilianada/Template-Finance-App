@@ -146,3 +146,7 @@ export const riskReward = [
   export const stockInvestents = ["$1 - $500", "$500 - $2000", "$2000 plus"];
 
 export const stockExperiences = ["1-10", "10-20", "20 plus"]
+
+export const cryptoInvestments = ["$1 - $500", "$500 - $2000", "$2000 plus"];
+
+export const cryptoExperiences = ["1-10", "10-20", "20 plus"]
