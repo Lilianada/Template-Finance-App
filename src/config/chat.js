@@ -191,9 +191,7 @@ import {
       // console.log('Snapshot data:', snapshot.data());
       if (snapshot.exists()) {
         callback(snapshot.data().messages);
-      } else {
-        console.log("No such document!");
-      }
+      } 
     });
   
     return unsubscribe;

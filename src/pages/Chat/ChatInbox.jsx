@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from "react";
 import {
+  closeChat,
   fetchChatMessages,
   fetchChats,
   sendMessage,
@@ -18,7 +19,6 @@ import { db } from "../../config/firebase";
 import LoadingScreen from "../../components/LoadingScreen";
 import { ChatBubbleLeftIcon } from "@heroicons/react/20/solid";
 import { Menu, Transition } from "@headlessui/react";
-import { useNavigate } from "react-router-dom";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -102,13 +102,13 @@ export default function ChatInbox() {
       cancelButtonTextColor: "text-gray-800",
       onCancel: hideModal,
       onConfirm:  () => {
-        closeChat(userId);
+        closeUserChat(userId);
         hideModal();
       },
     });
   };
 
-  const closeChat = async (userId) => {
+  const closeUserChat = async (userId) => {
     try {
       setClosing(true);
       await closeChat(db, userId);
@@ -118,11 +118,11 @@ export default function ChatInbox() {
         text: "The chat has been closed.",
         icon: CheckIcon,
         iconBgColor: "bg-green-100",
-        iconTextColor: "bg-green-600",
-        showConfirmButton: false,
+        iconTextColor: "text-green-600",
         buttonBgColor: "bg-green-600",
+        timer: 2000,
+        showConfirmButton: false,
       });
-      hideModal();
       setChats(chats.filter((chat) => chat.id !== chat.chatId));
       setSelectedChat(null);
       loadChats();
