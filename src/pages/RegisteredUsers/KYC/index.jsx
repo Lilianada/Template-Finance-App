@@ -45,7 +45,7 @@ export default function ClientKYC({ initialUser }) {
         <div className="mt-8 flex justify-end space-x-3">
           <button
             type="button"
-            className="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-900"
+            className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
             onClick={() => handleEdit(initialUser.uid)}
           >
             Add KYC
