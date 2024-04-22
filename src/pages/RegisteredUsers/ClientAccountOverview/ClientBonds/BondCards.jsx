@@ -133,7 +133,7 @@ export default function BondCards() {
                 </div>
                 <div className="col-span-1 flex shadow-sm">
                   <div className="flex flex-1 items-center justify-between rounded-md truncate  bg-black mt-6">
-                    <div className="flex-1 truncate px-4 py-2 text-sm">
+                    <div className="flex-1 truncate px-4 py-2 text-sm flex items-center justify-between">
                       <p className="text-white font-bold text-xl">
                         {bond.couponRate}%
                       </p>
