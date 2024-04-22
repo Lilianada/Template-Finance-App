@@ -189,7 +189,7 @@ export default function ClientCashPage() {
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 bg-white text-left">
+            <tbody className="divide-y divide-gray-200 bg-gray-50 text-left">
               {cashTransaction.map((item, index) => (
                 <tr key={index}>
                   <td className="w-2/5 max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0 capitalize w-">
