@@ -129,7 +129,7 @@ export default function BondsRequests() {
       customModal({
         showModal,
         title: "Success",
-        text: `Request status has been updated to ${newStatus}.`,
+        text: `Request has been ${newStatus} successfully and status updated.`,
         showConfirmButton: false,
         icon: CheckIcon,
         iconBgColor: "bg-green-100",
