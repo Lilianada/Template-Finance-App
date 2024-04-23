@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ArrowLeftIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { formatNumber } from "../../../../config/utils";
-import LoadingScreen from "../../../../components/LoadingScreen";
 import { getAllTerms } from "../../../../config/terms";
 import AddUserTerms from "./Add";
 
@@ -85,25 +84,25 @@ export default function FixedTermCards() {
                   </dd>
                 </div>
                 <div className="flex justify-between gap-x-4 py-3">
-                  <dt className="text-gray-500">Principal Amount</dt>
-                  <dd className="flex items-start gap-x-2">
-                    <div className="font-medium text-gray-900">
-                      {formatNumber(term.minAmount)}
-                    </div>
-                  </dd>
-                </div>
-                <div className="col-span-1 flex shadow-sm">
-                  <div className="flex flex-1 items-center justify-between rounded-md truncate  bg-black mt-6">
-                    <div className="flex-1 truncate px-4 py-2 text-sm">
-                      <p className="text-white font-bold text-xl">
-                        {term.interestRate}%
-                      </p>
-                      <p className="font-medium text-white hover:text-white">
-                        Fixed Term Interest
-                      </p>
+                    <dt className="text-gray-500">Principal Amount</dt>
+                    <dd className="flex items-start gap-x-2">
+                      <div className="font-medium text-gray-900">
+                        ${formatNumber(term.minAmount)}
+                      </div>
+                    </dd>
+                  </div>
+                  <div className="col-span-1 flex shadow-sm">
+                    <div className="flex flex-1 items-center justify-between rounded-md truncate  bg-black mt-6">
+                      <div className="flex-1 truncate px-4 py-2 text-sm flex justify-between items-center">
+                        <p className="text-white font-bold text-xl">
+                          {term.interestRate}%
+                        </p>
+                        <p className="font-medium text-white hover:text-white">
+                          Fixed Term Interest
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
               </dl>
             </li>
           ))
