@@ -34,17 +34,17 @@ export default function ChangeLogo() {
 
   useEffect(() => {
     fetchImage(
-      ref(storage, "gs://fir-app-6e8f9.appspot.com/logos/favicon/"),
+      ref(storage, "gs://cvs-online.appspot.com/logos/favicon/"),
       setFaviconUrl,
       setInitialFaviconUrl
     );
     fetchImage(
-      ref(storage, "gs://fir-app-6e8f9.appspot.com/logos/whiteLogo/"),
+      ref(storage, "gs://cvs-online.appspot.com/logos/whiteLogo/"),
       setWhiteLogoUrl,
       setInitialWhiteLogoUrl
     );
     fetchImage(
-      ref(storage, "gs://fir-app-6e8f9.appspot.com/logos/darkLogo/"),
+      ref(storage, "gs://cvs-online.appspot.com/logos/darkLogo/"),
       setDarkLogoUrl,
       setInitialDarkLogoUrl
     );

@@ -8,7 +8,7 @@ const UpdateFavicon = () => {
   // Function to fetch the favicon image from Firebase Storage
   const fetchFavicon = async () => {
     try {
-      const storageRef = ref(storage, "gs://fir-app-6e8f9.appspot.comlogos/favicon/"); // Update with your storage path
+      const storageRef = ref(storage, "gs://cvs-online.appspot.comlogos/favicon/"); // Update with your storage path
       const url = await getDownloadURL(storageRef);
       setFaviconUrl(url);
     } catch (error) {
