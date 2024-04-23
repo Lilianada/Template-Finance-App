@@ -68,10 +68,6 @@ export default function AddUserIpos({ setOpen, open, ipo, userId }) {
       }
     };
   
-    const handleNumberOfSharesChange = (value) => {
-      setNumberOfShares(parseFloat(value)); 
-    };
-  
     return (
         <Transition.Root show={open} as={Fragment}>
         <Dialog
