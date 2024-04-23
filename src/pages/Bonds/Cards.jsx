@@ -135,7 +135,7 @@ export default function Cards({ bonds, isLoading, handleEdit, refreshBonds }) {
                           onClick={() => handleDelete(bond.id)}
                           className={classNames(
                             active ? "bg-gray-50" : "",
-                            "block px-3 py-1 text-sm leading-6 text-gray-900 w-full cursor-pointer"
+                            "block px-3 py-1 text-sm leading-6 text-gray-900 w-full cursor-pointer text-left"
                           )}
                         >
                           Delete<span className="sr-only">, {bond.name}</span>

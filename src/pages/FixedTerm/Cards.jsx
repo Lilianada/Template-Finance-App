@@ -134,7 +134,7 @@ export default function Cards({fixedTerms, isLoading, handleEdit, refreshTerms})
                           onClick={() => { setSelectedTerm(term.id); handleDelete(); }}
                           className={classNames(
                             active ? "bg-gray-50" : "",
-                            "block px-3 py-1 text-sm leading-6 text-gray-900 w-full cursor-pointer"
+                            "block px-3 py-1 text-sm leading-6 text-gray-900 w-full cursor-pointer text-left"
                           )}
                         >
                           Delete<span className="sr-only">, {term.name}</span>
@@ -163,7 +163,7 @@ export default function Cards({fixedTerms, isLoading, handleEdit, refreshTerms})
               <div className="flex justify-between gap-x-4 py-3">
                 <dt className="text-gray-500">Principal Amount</dt>
                 <dd className="flex items-start gap-x-2">
-                  <div className="font-medium text-gray-900">{formatNumber(term.minAmount)}</div>
+                  <div className="font-medium text-gray-900">${formatNumber(term.minAmount)}</div>
                 </dd>
               </div>
               <div className="col-span-1 flex shadow-sm">
