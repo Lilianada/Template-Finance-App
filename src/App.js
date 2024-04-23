@@ -49,6 +49,7 @@ import Notifications from "./pages/Notifications";
 import IposRequests from "./pages/IposRequest";
 import FixedTermRequests from "./pages/FixedTermRequest";
 import Chat from "./pages/Chat";
+import ChangePassword from "./pages/Auth/ChangePassword";
 
 function App() {
   const { loadingAuthState } = useAuth();
@@ -370,6 +371,7 @@ function App() {
                 />
               </Route>
               <Route path="/" index element={<Login />} />
+              <Route path="/change-password" element={<ChangePassword />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
             </Routes>
           </Router>

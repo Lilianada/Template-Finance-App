@@ -98,6 +98,8 @@ export default function Login() {
         onClose: hideAlert,
         timer: 3000,
       });
+    } finally {
+      setIsLoading(false);
     }
   };
   

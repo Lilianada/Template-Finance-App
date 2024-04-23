@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUser } from "../../../config/user";
+import { deleteUser, getUser } from "../../../config/user";
 import { customModal } from "../../../utils/modalUtils";
 import { useModal } from "../../../context/ModalContext";
 import {
@@ -8,7 +8,6 @@ import {
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 import DotLoader from "../../../components/DotLoader";
-import { deleteUser } from "firebase/auth";
 
 export default function ClientInfo({ initialUser }) {
   const navigate = useNavigate();
