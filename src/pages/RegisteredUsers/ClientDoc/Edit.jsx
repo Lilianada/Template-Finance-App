@@ -158,7 +158,7 @@ export default function EditDoc({ setOpen, open, doc, userId, refresh }) {
                       Update User Document
                     </h2>
                     <p className="mt-1 text-sm leading-6 text-gray-600 flex">
-                      Re-upload file even when you only want to change the document name. Ensure there is a (✔️) in front of the file name before submitting.
+                      Ensure there is a (✔️) in front of the file name before submitting.
                     </p>
                   </div>
 

@@ -180,7 +180,7 @@ export default function ChangePassword() {
               <h3 className="text-base font-semibold leading-6 text-gray-900">
                 Change Password
               </h3>
-              <p className="mt-1 text-sm text-gray-500 inline-flex gap-2">
+              <div className="mt-1 text-sm text-gray-500 inline-flex gap-2">
                 Update the password associated with your account.
                 <Popover className="relative">
                 <Popover.Button className="inline-flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900">
@@ -224,7 +224,7 @@ export default function ChangePassword() {
                   </Popover.Panel>
                 </Transition>
               </Popover>
-              </p>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:max-w-xl sm:grid-cols-6">
