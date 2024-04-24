@@ -12,7 +12,6 @@ import {
   ExclamationCircleIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
-import DotLoader from "../../components/DotLoader";
 import LoadingScreen from "../../components/LoadingScreen";
 
 export default function Notifications() {
