@@ -58,7 +58,7 @@ export default function BankDetails({ initialUser }) {
       }
     } catch (error) {
       console.log("Error fetching user data: ", error);
-    } 
+    }
   };
 
   const handleDelete = async () => {
@@ -143,89 +143,106 @@ export default function BankDetails({ initialUser }) {
           Banking Details
         </h3>
       </div>
-        {bankingDetails ? ( 
-      <div className="mt-6 text-left">
-        <dl className="grid grid-cols-1 sm:grid-cols-2">
-          <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
-            <dt className="text-sm font-medium leading-6 text-gray-900">
-              Account name
-            </dt>
-            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-              {bankingDetails.accountName || "N/A"}
-            </dd>
-          </div>
-          <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
-            <dt className="text-sm font-medium leading-6 text-gray-900">
-              Bank Name
-            </dt>
-            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-              {bankingDetails.bankName || "N/A"}
-            </dd>
-          </div>
-          <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
-            <dt className="text-sm font-medium leading-6 text-gray-900">
-              Branch
-            </dt>
-            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-              {bankingDetails.branch || "N/A"}
-            </dd>
-          </div>
-          <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
-            <dt className="text-sm font-medium leading-6 text-gray-900">
-              BSB Number
-            </dt>
-            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-              {bankingDetails.bsbNumber || "N/A"}
-            </dd>
-          </div>
-          <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
-            <dt className="text-sm font-medium leading-6 text-gray-900">
-              Account Number
-            </dt>
-            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-              {bankingDetails.accountNumber || "N/A"}
-            </dd>
-          </div>
-          {country !== "AU" && (
-            <>
+      {!bankingDetails || bankingDetails.length === 0 ? (
+        <div className="w-full grid place-items-center rounded-xl border border-gray-200 p-4 mt-8">
+          <h5 className="text-gray-400 text-lg">
+            NO BANKING DETAIL HAS BEEN ADDED YET.
+          </h5>
+        </div>
+      ) : (
+        bankingDetails(
+          <div className="mt-6 text-left">
+            <dl className="grid grid-cols-1 sm:grid-cols-2">
               <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
                 <dt className="text-sm font-medium leading-6 text-gray-900">
-                  Swift Code
+                  Account name
                 </dt>
                 <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                  {bankingDetails.swiftCode || "N/A"}
+                  {bankingDetails.accountName}
                 </dd>
               </div>
               <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
                 <dt className="text-sm font-medium leading-6 text-gray-900">
-                  IBAN
+                  Bank Name
                 </dt>
                 <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                  {bankingDetails.iban || "N/A"}
+                  {bankingDetails.bankName}
                 </dd>
               </div>
-            </>
-          )}
-        </dl>
+              <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+                <dt className="text-sm font-medium leading-6 text-gray-900">
+                  Branch
+                </dt>
+                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                  {bankingDetails.branch}
+                </dd>
+              </div>
+              <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+                <dt className="text-sm font-medium leading-6 text-gray-900">
+                  BSB Number
+                </dt>
+                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                  {bankingDetails.bsbNumber}
+                </dd>
+              </div>
+              <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+                <dt className="text-sm font-medium leading-6 text-gray-900">
+                  Account Number
+                </dt>
+                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                  {bankingDetails.accountNumber}
+                </dd>
+              </div>
+              {country !== "AU" && (
+                <>
+                  <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+                    <dt className="text-sm font-medium leading-6 text-gray-900">
+                      Swift Code
+                    </dt>
+                    <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                      {bankingDetails.swiftCode}
+                    </dd>
+                  </div>
+                  <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+                    <dt className="text-sm font-medium leading-6 text-gray-900">
+                      IBAN
+                    </dt>
+                    <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                      {bankingDetails.iban}
+                    </dd>
+                  </div>
+                </>
+              )}
+            </dl>
+            <div className="mt-6 flex space-x-3 justify-end">
+              <button
+                type="button"
+                className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                onClick={() => handleEdit(bankingDetailId)}
+              >
+                Edit Details
+              </button>
+              <button
+                type="button"
+                className="inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                onClick={() => handleDelete(bankingDetailId)}
+              >
+                Delete Details
+              </button>
+            </div>
+          </div>
+        )
+      )}
+      {bankingDetails.length === 0 && (
         <div className="mt-6 flex space-x-3 justify-end">
           <button
             type="button"
-            className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+            className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             onClick={() => handleEdit(bankingDetailId)}
           >
-            Edit Details
-          </button>
-          <button
-            type="button"
-            className="inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
-            onClick={() => handleDelete(bankingDetailId)}
-          >
-            Delete Details
+            Add Details
           </button>
         </div>
-      </div>
-      ) : (
-        <div>No banking details found</div> 
       )}
     </div>
   );
