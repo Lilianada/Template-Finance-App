@@ -10,6 +10,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { updateDocument } from "../../../config/documents";
 import { customModal } from "../../../utils/modalUtils";
 
+
 export default function EditDoc({ setOpen, open, doc, userId, refresh }) {
   const { showModal } = useModal(); 
   const [isLoading, setIsLoading] = useState(false);
@@ -24,37 +25,57 @@ export default function EditDoc({ setOpen, open, doc, userId, refresh }) {
     }
   }, [doc]);
 
-
   const handleUpdate = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
+  
     try {
-      
-      await updateDocument(userId, doc[0].id, fileDescription, file);
+      // Ensure file and fileDescription are properly defined
+      if (!fileDescription) {
+        throw new Error('File description must be provided.');
+      }
 
-      customModal({
-        showModal,
-        title: 'Success',
-        text: 'Document has been updated successfully.',
-        showConfirmButton: false,
-        iconBgColor: 'bg-green-100',
-        iconTextColor: 'text-green-600',
-        buttonBgColor: 'bg-green-600',
-        icon: CheckIcon,
-        timer: 1500,
-      });
+      if (!doc || !doc[0].id) {
+        await updateDocument(userId, fileDescription, file);
+        customModal({
+          showModal,
+          title: 'Success',
+          text: 'Document has been added successfully.',
+          showConfirmButton: false,
+          iconBgColor: 'bg-green-100',
+          iconTextColor: 'text-green-600',
+          buttonBgColor: 'bg-green-600',
+          icon: CheckIcon,
+          timer: 1500,
+        });
+        
+      } else {
+        await updateDocument(userId, fileDescription, file, doc[0].id);
+        customModal({
+          showModal,
+          title: 'Success',
+          text: 'Document has been updated successfully.',
+          showConfirmButton: false,
+          iconBgColor: 'bg-green-100',
+          iconTextColor: 'text-green-600',
+          buttonBgColor: 'bg-green-600',
+          icon: CheckIcon,
+          timer: 1500,
+        });
+      }
+      
       setFileDescription('');
       setFile(null);
-      setOpen(false);
-      refresh();
+      setOpen(false); // Assuming this controls a modal or form visibility
+      refresh(); // Refresh the list or state that depends on this document
     } catch (error) {
       console.error('Error during document update:', error);
-
+  
+      // Provide feedback on failure
       customModal({
         showModal,
         title: 'Error',
-        text: 'An error occurred while updating document. Please try again later.',
+        text: `An error occurred while updating the document: ${error.message}`,
         showConfirmButton: false,
         icon: ExclamationCircleIcon,
         iconBgColor: 'bg-red-100',
@@ -63,9 +84,10 @@ export default function EditDoc({ setOpen, open, doc, userId, refresh }) {
         timer: 1500,
       });
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Ensure loading state is cleared
     }
   };
+  
 
   const handleChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -194,7 +216,7 @@ export default function EditDoc({ setOpen, open, doc, userId, refresh }) {
                   </button>
                   <button
                     type="submit"
-                    className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+                    className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >
                     {isLoading ? (
                       <div className="flex w-full justify-center align-middle gap-2">
