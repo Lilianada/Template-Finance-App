@@ -13,7 +13,6 @@ http://www.apache.org/licenses/LICENSE-2.0
 * limitations under the License.
 */
 import {
-  setDoc,
   collection,
   deleteDoc,
   doc,

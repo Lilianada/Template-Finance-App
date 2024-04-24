@@ -87,7 +87,6 @@ export default function EditDoc({ setOpen, open, doc, userId, refresh }) {
       setIsLoading(false); // Ensure loading state is cleared
     }
   };
-  
 
   const handleChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -101,7 +100,6 @@ export default function EditDoc({ setOpen, open, doc, userId, refresh }) {
     }
   };
   
-
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog

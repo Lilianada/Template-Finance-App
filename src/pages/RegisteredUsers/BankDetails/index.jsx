@@ -150,7 +150,7 @@ export default function BankDetails({ initialUser }) {
           </h5>
         </div>
       ) : (
-        bankingDetails(
+        bankingDetails && (
           <div className="mt-6 text-left">
             <dl className="grid grid-cols-1 sm:grid-cols-2">
               <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
