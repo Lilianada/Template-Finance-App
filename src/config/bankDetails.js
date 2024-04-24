@@ -6,7 +6,7 @@ import {
   query,
   getDocs,
   where,
-  updateDoc,
+  setDoc,
 } from "firebase/firestore";
 import { db } from "./firebase";
 
@@ -20,17 +20,16 @@ export async function manageBankingDetails(uid, formData, detailsId) {
     uid,
     BANKING_DETAILS_SUB_COLLECTION
   );
-
   if (detailsId) {
-    const updateBankingDetailsRef = doc(
+    const updateBankingDetailsRef = collection(
       db,
       USERS_COLLECTION,
       uid,
       BANKING_DETAILS_SUB_COLLECTION,
-      detailsId
     );
+    const bankRef = doc(updateBankingDetailsRef, detailsId)
     try {
-      await addDoc(updateBankingDetailsRef, {
+      await setDoc(bankRef, {
         accountName: formData.accountName,
         bankName: formData.bankName,
         branch: formData.branch,
@@ -50,7 +49,8 @@ export async function manageBankingDetails(uid, formData, detailsId) {
       where("bankName", "==", formData.bankName),
       where("branch", "==", formData.branch),
       where("bsbNumber", "==", formData.bsbNumber),
-      where("accountNumber", "==", formData.accountNumber)
+      where("accountNumber", "==", formData.accountNumber),
+      where("swiftCode", "==", formData.swiftCode)
     );
 
     // Execute the query to check for existing documents
