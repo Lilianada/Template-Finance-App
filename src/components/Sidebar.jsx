@@ -104,6 +104,18 @@ export default function Sidebar({
                                 aria-hidden="true"
                               />
                               {item.name}
+                              {item.count ? (
+                                <span
+                                  className={classNames(
+                                    item.current
+                                      ? "bg-gray-700"
+                                      : "bg-gray-800 group-hover:bg-gray-700",
+                                    "ml-3 inline-block rounded-full py-1 px-3 text-xs font-medium"
+                                  )}
+                                >
+                                  {item.count}
+                                </span>
+                              ) : null}
                             </Link>
                           </li>
                         ))}
