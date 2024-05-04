@@ -52,7 +52,7 @@ exports.deleteUserAccount = functions.https.onCall(async (data, context) => {
       await adminUserDoc.delete();
   
       // Delete user data from Firebase Storage
-      const bucket = storage.bucket("gs://equity-west-securities.appspot.com");
+      const bucket = storage.bucket("gs://fir-app-6e8f9.appspot.com");
       const userFolder = `users/${userId}`;
       await bucket.deleteFiles({
         prefix: userFolder,
@@ -74,3 +74,44 @@ exports.deleteUserAccount = functions.https.onCall(async (data, context) => {
       }
     }
   });
+
+  exports.deleteUserByPhone = functions.https.onCall(async (data, context) => {
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "The function must be called while authenticated."
+      );
+    }
+  
+    const phoneNumber = data.phoneNumber;
+    if (!phoneNumber) {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "Please provide a phone number."
+      );
+    }
+  
+    try {
+      // Retrieve the user ID associated with the phone number
+      const userRecord = await admin.auth().getUserByPhoneNumber(phoneNumber);
+      const userId = userRecord.uid;
+  
+      // Optional: Delete user's Firestore document
+      const userDoc = admin.firestore().doc(`users/${userId}`);
+      await userDoc.delete();
+  
+      // Delete the user from Firebase Authentication
+      await admin.auth().deleteUser(userId);
+  
+      return { success: true, message: "User deleted successfully." };
+    } catch (error) {
+      console.error("Error deleting user by phone:", error);
+  
+      if (error.code === "auth/user-not-found") {
+        throw new functions.https.HttpsError("not-found", "User not found.");
+      } else {
+        throw new functions.https.HttpsError("unknown", "Failed to delete user.");
+      }
+    }
+  });
+  

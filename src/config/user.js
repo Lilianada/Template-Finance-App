@@ -9,7 +9,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "./firebase";
+import { auth, db } from "./firebase";
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -51,16 +51,38 @@ export const fetchUserRequests = async (db) => {
   return allUserRequests;
 };
 
+//Delete user from auth table
+export async function deleteUserByPhone(phoneNumber) {
+  console.log("Deleting user by phone number:", phoneNumber);
+  const functionsInstance = getFunctions();
+  const deleteFunction = httpsCallable(functionsInstance, "deleteUserByPhone");
+
+  try {
+    const result = await deleteFunction({ phoneNumber });
+    console.log(result.data.message);
+    return result.data;
+  } catch (error) {
+    console.error("Error calling deleteUserByPhone function:", error);
+    throw error;
+  }
+}
+
 //handle user approval
 export const handleUserApproval = async (db, auth, userId, requestData) => {
+
   try {
+    // Step 0: Delete the first instance created of the user from Firebase Authentication
+   const result = await deleteUserByPhone(requestData.mobilePhone);
+
+   if (result.success === true) {
     // Step 1: Create the user with Firebase Authentication
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       requestData.email,
       requestData.password
     );
-
+    // 
+    
     const user = userCredential.user;
     // Send email verification
     await sendEmailVerification(user);
@@ -75,6 +97,8 @@ export const handleUserApproval = async (db, auth, userId, requestData) => {
       country: requestData.country,
       jointAccount: requestData.jointAccount,
       secondaryAccountHolder: requestData.secondaryAccountHolder,
+      uid: newUserId,
+      userId: newUserId,
     });
 
     // Step 3: Delete the admin request
@@ -99,10 +123,13 @@ export const handleUserApproval = async (db, auth, userId, requestData) => {
             <p>Thank you for joining us!</p>`,
       },
     });
+  }
 
     return "User request approved successfully.";
   } catch (error) {
     console.error("Error approving user:", error);
+    // Rollback in case of failure after creating the user
+    await deleteUserByPhone(requestData.mobilePhone);
     throw new Error(`Error approving user: ${error.message}`);
   }
 };
@@ -246,9 +273,10 @@ export function updateUser(uid, userData) {
 
 //delete user
 export async function deleteUser(uid) {
+  console.log("Deleting user:", uid);
   const functionsInstance = getFunctions();
   const deleteFunction = httpsCallable(functionsInstance, "deleteUserAccount");
-  
+
   await deleteFunction({ userId: uid });
 
   const userDoc = doc(db, USERS_COLLECTION, uid);
