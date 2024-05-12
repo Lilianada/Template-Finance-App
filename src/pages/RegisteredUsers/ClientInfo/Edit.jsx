@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Select from "react-select";
-import { getUser } from "../../../config/user";
+import { deleteUser, getUser } from "../../../config/user";
 import DotLoader from "../../../components/DotLoader";
 import { customModal } from "../../../utils/modalUtils";
 import {
@@ -11,7 +11,6 @@ import {
 } from "@heroicons/react/24/outline";
 import { useModal } from "../../../context/ModalContext";
 import { updateUserAsync } from "../../../store/user/userSlice";
-import { deleteUser } from "firebase/auth";
 
 const CountrySelect = ({ value, onChange }) => {
   const [countries, setCountries] = useState([]);

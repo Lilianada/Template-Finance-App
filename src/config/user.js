@@ -9,7 +9,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { auth, db } from "./firebase";
+import { db } from "./firebase";
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -273,15 +273,22 @@ export function updateUser(uid, userData) {
 
 //delete user
 export async function deleteUser(uid) {
-  console.log("Deleting user:", uid);
-  const functionsInstance = getFunctions();
-  const deleteFunction = httpsCallable(functionsInstance, "deleteUserAccount");
+  try {
+    console.log(uid);
+    const functionsInstance = getFunctions();
+    const deleteFunction = httpsCallable(functionsInstance, "deleteUserAccount");
+    await deleteFunction({ userId: uid });
 
-  await deleteFunction({ userId: uid });
+    const userDoc = doc(db, USERS_COLLECTION, uid);
+    await deleteDoc(userDoc);
 
-  const userDoc = doc(db, USERS_COLLECTION, uid);
-  return deleteDoc(userDoc);
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    return { success: false, message: "Failed to delete user." };
+  }
 }
+
 
 // Fetch all users
 export async function getRegisteredUsers() {
