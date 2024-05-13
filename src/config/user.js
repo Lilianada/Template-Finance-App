@@ -274,18 +274,20 @@ export function updateUser(uid, userData) {
 //delete user
 export async function deleteUser(uid) {
   try {
-    console.log(uid);
     const functionsInstance = getFunctions();
     const deleteFunction = httpsCallable(functionsInstance, "deleteUserAccount");
+
+    // Call the Cloud Function to delete the user account
     await deleteFunction({ userId: uid });
 
-    const userDoc = doc(db, USERS_COLLECTION, uid);
-    await deleteDoc(userDoc);
+    // If the Cloud Function call is successful, delete the user document from Firestore
+    const userDocRef = doc(db, USERS_COLLECTION, uid);
+    await deleteDoc(userDocRef);
 
-    return { success: true };
+    return { success: true, message: "User deleted successfully" };
   } catch (error) {
     console.error("Error deleting user:", error);
-    return { success: false, message: "Failed to delete user." };
+    return { success: false, message: error.message };
   }
 }
 
