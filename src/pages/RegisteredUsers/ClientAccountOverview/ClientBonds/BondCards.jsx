@@ -61,7 +61,7 @@ export default function BondCards() {
             >
               <div className="flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-50 p-4 flex-col">
                 <button
-                  className="block text-gray-400 hover:text-indigo-500 relative ml-auto"
+                  className="block text-gray-400 hover:text-teal-500 relative ml-auto"
                   onClick={() => handleInvest(bond)}
                 >
                   <span className="sr-only">Open options</span>
@@ -88,7 +88,7 @@ export default function BondCards() {
                   <dd className="flex items-start gap-x-2">
                     <Link
                       to={bond.companyWebsite}
-                      className="font-medium text-indigo-700 cursor-pointer hover:text-indigo-400 rounded-md py-1 px-2 text-xs ring-1 ring-inset"
+                      className="font-medium text-teal-700 cursor-pointer hover:text-teal-400 rounded-md py-1 px-2 text-xs ring-1 ring-inset"
                     >
                       URL
                     </Link>

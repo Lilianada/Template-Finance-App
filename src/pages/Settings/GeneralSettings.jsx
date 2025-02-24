@@ -192,7 +192,7 @@ export default function GeneralSettings() {
                       type="checkbox"
                       checked={strongPasswordPolicy}
                       onChange={togglePasswordPolicy}
-                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                      className="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500"
                     />
                   </div>
                   <div className="ml-3 text-sm leading-6">
@@ -224,7 +224,7 @@ export default function GeneralSettings() {
                       type="checkbox"
                       checked={isToolsEnabled}
                       onChange={toggleToolsFeature}
-                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                      className="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500"
                     />
                   </div>
                   <div className="ml-3 text-sm leading-6">
@@ -248,7 +248,7 @@ export default function GeneralSettings() {
                       type="checkbox"
                       checked={isIposEnabled}
                       onChange={toggleIposFeature}
-                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                      className="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500"
                     />
                   </div>
                   <div className="ml-3 text-sm leading-6">
@@ -272,7 +272,7 @@ export default function GeneralSettings() {
                       type="checkbox"
                       checked={isBondsEnabled}
                       onChange={toggleBondsFeature}
-                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                      className="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500"
                     />
                   </div>
                   <div className="ml-3 text-sm leading-6">
@@ -296,7 +296,7 @@ export default function GeneralSettings() {
                       type="checkbox"
                       checked={isTermsEnabled}
                       onChange={toggleTermsFeature}
-                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                      className="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500"
                     />
                   </div>
                   <div className="ml-3 text-sm leading-6">
@@ -328,7 +328,7 @@ export default function GeneralSettings() {
                       checked={displayIposTables}
                       onChange={toggleTablesFeature}
                       type="checkbox"
-                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                      className="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500"
                     />
                   </div>
                   <div className="ml-3 text-sm leading-6">
@@ -345,14 +345,6 @@ export default function GeneralSettings() {
                 </div>
               </div>
             </fieldset>
-          </div>
-          <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
-            <button
-              type="submit"
-              className="inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Save
-            </button>
           </div>
         </div>
       </form>

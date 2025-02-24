@@ -190,7 +190,7 @@ export default function AccountOverview({ initialUser }) {
             </div>
             <div className="bg-gray-50 px-5 py-3">
               <div className="text-sm">
-                <div className="font-medium text-indigo-700 hover:text-indigo-900">
+                <div className="font-medium text-teal-700 hover:text-teal-900">
                   Total value of all accounts
                 </div>
               </div>
@@ -221,7 +221,7 @@ export default function AccountOverview({ initialUser }) {
                 <div className="text-sm">
                   <Link
                     to={card.href}
-                    className="font-medium text-indigo-700 hover:text-indigo-900"
+                    className="font-medium text-teal-700 hover:text-teal-900"
                   >
                     View breakdown
                   </Link>

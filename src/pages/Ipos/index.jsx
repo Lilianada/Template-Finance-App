@@ -17,6 +17,9 @@ export default function Ipos() {
     try {
       setIsLoading(true);
       const results = await getAllIpos();
+      if (!results) {
+        return;
+      }
       setIpos(results);
     } catch (err) {
       console.error("Error fetching ipos:", err);

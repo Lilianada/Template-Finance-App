@@ -131,7 +131,7 @@ export default function ClientCashPage() {
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           <button
             type="button"
-            className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="block rounded-md bg-teal-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600"
             onClick={() =>
               navigate(
                 `/dashboard/registered_users/view/add_cash_details/${userId}`
@@ -220,7 +220,7 @@ export default function ClientCashPage() {
                   <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                     <button
                       onClick={() => handleEdit(item.id)}
-                      className="text-indigo-600 hover:text-indigo-900"
+                      className="text-teal-600 hover:text-teal-900"
                     >
                       Edit<span className="sr-only">, {item.amount}</span>
                     </button>

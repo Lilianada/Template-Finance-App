@@ -32,6 +32,16 @@ const CountrySelect = ({ value, onChange }) => {
       options={countries}
       value={countries.find((c) => c.label === value) || ""}
       onChange={handleCountryChange}
+      styles={{
+        control: (provided, state) => ({
+          ...provided,
+          borderColor: state.isFocused ? 'none' : provided.borderColor,
+          boxShadow: state.isFocused ? 'none' : provided.boxShadow,
+          '&:hover': {
+            borderColor: state.isFocused ? 'none' : provided.borderColor,
+          },
+        }),
+      }}
     />
   );
 };
@@ -186,7 +196,7 @@ export default function AddNewUser() {
                   id="jointAccount"
                   onChange={handleChange}
                   checked={formData.jointAccount || false}
-                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                  className="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-600"
                 />
               </div>
               <label
@@ -211,7 +221,7 @@ export default function AddNewUser() {
                   autoComplete="title"
                   onChange={handleChange}
                   value={formData.title || ""}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:max-w-xs sm:text-sm sm:leading-6"
                 >
                   <option value="">Select Title</option>
                   <option value="Miss">Miss</option>
@@ -241,7 +251,7 @@ export default function AddNewUser() {
                   value={formData.fullName || ""}
                   required
                   autoComplete="given-name"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -262,7 +272,7 @@ export default function AddNewUser() {
                     onChange={handleChange}
                     value={formData.secondaryTitle || ""}
                     autoComplete="secondaryTitle"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6"
                   />
                 </div>
               </div>
@@ -284,7 +294,7 @@ export default function AddNewUser() {
                     onChange={handleChange}
                     value={formData.secondaryAccountHolder || ""}
                     autoComplete="given-name"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6"
                   />
                 </div>
               </div>
@@ -307,7 +317,7 @@ export default function AddNewUser() {
                   autoComplete="homePhone"
                   placeholder="e.g. +234-567-8901"
                   required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -329,7 +339,7 @@ export default function AddNewUser() {
                   placeholder="e.g. +234-567-8901"
                   value={formData.mobilePhone || ""}
                   autoComplete="mobilePhone"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -350,7 +360,7 @@ export default function AddNewUser() {
                   value={formData.email || ""}
                   autoComplete="email"
                   required
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -371,7 +381,7 @@ export default function AddNewUser() {
                   value={formData.address || ""}
                   required
                   autoComplete="homePhone-address"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -392,7 +402,7 @@ export default function AddNewUser() {
                   value={formData.city || ""}
                   required
                   autoComplete="address-level2"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -413,7 +423,7 @@ export default function AddNewUser() {
                   value={formData.postcode || ""}
                   required
                   autoComplete="post-code"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -431,7 +441,7 @@ export default function AddNewUser() {
                 onChange={(e) =>
                   setFormData({ ...formData, country: e.target.value })
                 }
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:max-w-xs sm:text-sm sm:leading-6"
                 required
               />
             </div>
@@ -449,7 +459,7 @@ export default function AddNewUser() {
         </button>
         <button
           type="submit"
-          className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+          className="inline-flex items-center rounded-md bg-teal-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
         >
           {isLoading ? (
             <div className="flex w-full justify-center align-middle gap-2">

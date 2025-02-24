@@ -20,11 +20,18 @@ import {
   purposeOfTrading,
   riskReward,
   stockExperiences,
-  stockInvestent,
   stockInvestents,
   tradingExperience,
   tradingKnowledgeAssessment,
   tradingStrategy,
+  investmentExperience,
+  investmentKnowledge,
+  investmentStrategy,
+  currency,
+  liquidNetWorth,
+  totalNetWorth,
+  riskProfile,
+  relevantInvestment,
 } from "./data";
 import { getUserKyc, updateUserKyc } from "../../../config/user";
 import DotLoader from "../../../components/DotLoader";
@@ -60,6 +67,15 @@ function EditKyc() {
       limit: "",
     },
     familyAssessment: [],
+
+    investExperience: "",
+    investKnowledge: "",
+    investStrategy: "",
+    riskProfile: "",
+    relevantInvestment: "",
+    selectCurrency: "",
+    liquidNetWorth: "",
+    totalNet: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -92,6 +108,15 @@ function EditKyc() {
             investAmount: details.investAmount || "",
             risk: details.risk || { name: "", limit: "" },
             familyAssessment: details.familyAssessment || [],
+
+            investExperience: details.investExperience || "",
+            investKnowledge: details.investKnowledge || "",
+            investStrategy: details.investStrategy || "",
+            riskProfile: details.riskProfile || "",
+            relevantInvestment: details.relevantInvestment || "",
+            selectCurrency: details.selectCurrency || "",
+            liquidNetWorth: details.liquidNetWorth || "",
+            totalNet: details.totalNet || "",
           }));
         } else {
           setFormData({
@@ -120,11 +145,20 @@ function EditKyc() {
               limit: "",
             },
             familyAssessment: [],
+
+            investExperience: "",
+            investKnowledge: "",
+            investStrategy: "",
+            riskProfile: "",
+            relevantInvestment: "",
+            selectCurrency: "",
+            liquidNetWorth: "",
+            totalNet: "",
           });
         }
       } catch (err) {
         console.error("Error fetching KYC details:", err);
-      } 
+      }
     };
 
     if (userId) {
@@ -218,7 +252,7 @@ function EditKyc() {
                       Your goal
                     </h2>
                   </div>
-                  
+
                   <div className=" lg:w-[720px] sm:w-full flex flex-col gap-4">
                     {/* Purpose of trade */}
                     <div className="space-y-2">
@@ -229,7 +263,7 @@ function EditKyc() {
                         name="purpose"
                         value={formData.purpose}
                         onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
                       >
                         <option value="">Select your primary purpose</option>
                         {primaryPurpose.map((purpose, index) => (
@@ -249,7 +283,7 @@ function EditKyc() {
                         name="investments"
                         value={formData.investments}
                         onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
                       >
                         <option value="">
                           Select your planned investments
@@ -262,6 +296,29 @@ function EditKyc() {
                       </select>
                     </div>
 
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        Investement Strategy
+                      </p>
+                      <div className="mt-2">
+                        <select
+                          name="investStrategy"
+                          value={formData.investStrategy}
+                          onChange={handleChange}
+                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
+                        >
+                          <option value="">
+                            Select your investment strategy
+                          </option>
+                          {investmentStrategy.map((investment, index) => (
+                            <option value={investment} key={index}>
+                              {investment}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
                     {/*Investment window */}
                     <div className="space-y-2">
                       <p className="mt-1 text-sm text-gray-500">
@@ -271,7 +328,7 @@ function EditKyc() {
                         name="investWindow"
                         value={formData.investWindow}
                         onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
                       >
                         <option value="">Select your investment window</option>
                         {investmentWindow.map((investment, index) => (
@@ -313,7 +370,7 @@ function EditKyc() {
                               value={investment}
                               checked={formData.stockExperience === investment}
                               onChange={handleChange}
-                              className="form-radio h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                              className="form-radio h-4 w-4 text-teal-600 border-gray-300 focus:ring-teal-500"
                             />
                             <span className="ml-2 text-sm text-gray-700">
                               {investment}
@@ -328,29 +385,27 @@ function EditKyc() {
                         In the last year, how much have you invested in stocks
                         and/or ETFs?
                       </p>
-                      {stockInvestents.map(
-                        (investment, index) => (
-                          <div key={index}>
-                            <label className="inline-flex items-center">
-                              <input
-                                type="radio"
-                                name="stocksInvestment"
-                                value={investment}
-                                checked={
-                                  formData.stocksInvestment.includes(
-                                    investment
-                                  ) || false
-                                }
-                                onChange={handleChange}
-                                className="form-radio h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
-                              />
-                              <span className="ml-2 text-sm text-gray-700">
-                                {investment}
-                              </span>
-                            </label>
-                          </div>
-                        )
-                      )}
+                      {stockInvestents.map((investment, index) => (
+                        <div key={index}>
+                          <label className="inline-flex items-center">
+                            <input
+                              type="radio"
+                              name="stocksInvestment"
+                              value={investment}
+                              checked={
+                                formData.stocksInvestment.includes(
+                                  investment
+                                ) || false
+                              }
+                              onChange={handleChange}
+                              className="form-radio h-4 w-4 text-teal-600 border-gray-300 focus:ring-teal-500"
+                            />
+                            <span className="ml-2 text-sm text-gray-700">
+                              {investment}
+                            </span>
+                          </label>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -386,7 +441,7 @@ function EditKyc() {
                                 investment
                               )}
                               onChange={handleChange}
-                              className="form-radio h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                              className="form-radio h-4 w-4 text-teal-600 border-gray-300 focus:ring-teal-500"
                             />
                             <span className="ml-2 text-sm text-gray-700">
                               {investment}
@@ -400,29 +455,27 @@ function EditKyc() {
                       <p className="mt-1 text-sm text-gray-500">
                         How much did you invest?
                       </p>
-                      {cryptoInvestments.map(
-                        (investment, index) => (
-                          <div key={index}>
-                            <label className="inline-flex items-center">
-                              <input
-                                type="radio"
-                                name="cryptoInvestment"
-                                value={investment}
-                                checked={
-                                  formData.cryptoInvestment.includes(
-                                    investment
-                                  ) || false
-                                }
-                                onChange={handleChange}
-                                className="form-radio h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
-                              />
-                              <span className="ml-2 text-sm text-gray-700">
-                                {investment}
-                              </span>
-                            </label>
-                          </div>
-                        )
-                      )}
+                      {cryptoInvestments.map((investment, index) => (
+                        <div key={index}>
+                          <label className="inline-flex items-center">
+                            <input
+                              type="radio"
+                              name="cryptoInvestment"
+                              value={investment}
+                              checked={
+                                formData.cryptoInvestment.includes(
+                                  investment
+                                ) || false
+                              }
+                              onChange={handleChange}
+                              className="form-radio h-4 w-4 text-teal-600 border-gray-300 focus:ring-teal-500"
+                            />
+                            <span className="ml-2 text-sm text-gray-700">
+                              {investment}
+                            </span>
+                          </label>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -462,7 +515,7 @@ function EditKyc() {
                                 investment
                               )}
                               onChange={handleChange}
-                              className="form-radio h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                              className="form-radio h-4 w-4 text-teal-600 border-gray-300 focus:ring-teal-500"
                             />
                             <span className="ml-2 text-sm text-gray-700">
                               {investment}
@@ -488,7 +541,7 @@ function EditKyc() {
                                   investment
                                 )}
                                 onChange={handleChange}
-                                className="form-radio h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                                className="form-radio h-4 w-4 text-teal-600 border-gray-300 focus:ring-teal-500"
                               />
                               <span className="ml-2 text-sm text-gray-700">
                                 {investment}
@@ -512,11 +565,55 @@ function EditKyc() {
                       id="plan-heading"
                       className="text-lg font-medium leading-6 text-gray-900"
                     >
-                      Your Trading Knowldge and Experience
+                      Trading Knowldge and Experience
                     </h2>
                   </div>
                   <div className=" lg:w-[720px] sm:w-full flex flex-col gap-4">
                     {/* Trading Experience */}
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        Are you accustomed to making your own financial
+                        decisions?
+                      </p>
+                      <select
+                        name="investExperience"
+                        value={formData.investExperience}
+                        onChange={handleChange}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
+                      >
+                        <option value="">
+                          Select your investment experience
+                        </option>
+                        {investmentExperience.map((investment, index) => (
+                          <option value={investment} key={index}>
+                            {investment}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        Please pick any of the following that matches your
+                        knowledge.
+                      </p>
+                      <select
+                        name="investKnowledge"
+                        value={formData.investKnowledge}
+                        onChange={handleChange}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
+                      >
+                        <option value="">
+                          Select your investment knowledge
+                        </option>
+                        {investmentKnowledge.map((investment, index) => (
+                          <option value={investment} key={index}>
+                            {investment}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
                     <div className="space-y-2">
                       <p className="mt-1 text-sm text-gray-500">
                         Trading Experience
@@ -525,7 +622,7 @@ function EditKyc() {
                         name="tradeExperience"
                         value={formData.tradeExperience}
                         onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
                       >
                         <option value="">Select your trading experience</option>
                         {tradingExperience.map((experience, index) => (
@@ -534,6 +631,33 @@ function EditKyc() {
                           </option>
                         ))}
                       </select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        Please tick any of the following investments you
+                        consider yourself to be familiar with from your previous
+                        investment experience.
+                      </p>
+                      {relevantInvestment.map((item, index) => (
+                        <div key={index}>
+                          <label className="inline-flex items-center">
+                            <input
+                              type="checkbox"
+                              name="relevantInvestment"
+                              value={item}
+                              checked={formData.relevantInvestment.includes(
+                                item
+                              )}
+                              onChange={handleChange}
+                              className="form-checkbox h-4 w-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
+                            />
+                            <span className="ml-2 text-sm text-gray-700">
+                              {item}
+                            </span>
+                          </label>
+                        </div>
+                      ))}
                     </div>
 
                     {/* Trading education experience */}
@@ -555,7 +679,7 @@ function EditKyc() {
                                 experience
                               )}
                               onChange={handleChange}
-                              className="form-checkbox h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                              className="form-checkbox h-4 w-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
                             />
                             <span className="ml-2 text-sm text-gray-700">
                               {experience}
@@ -582,7 +706,7 @@ function EditKyc() {
                                 investment
                               )}
                               onChange={handleChange}
-                              className="form-checkbox h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                              className="form-checkbox h-4 w-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
                             />
                             <span className="ml-2 text-sm text-gray-700">
                               {investment}
@@ -601,7 +725,7 @@ function EditKyc() {
                         name="tradeStrategy"
                         value={formData.tradeStrategy}
                         onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
                       >
                         <option value="">Select your trading strategy</option>
                         {tradingStrategy.map((strategy, index) => (
@@ -622,7 +746,7 @@ function EditKyc() {
                         name="purposeTrading"
                         value={formData.purposeTrading}
                         onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
                       >
                         <option value="">Select your purpose of trading</option>
                         {purposeOfTrading.map((purpose, index) => (
@@ -642,7 +766,7 @@ function EditKyc() {
                         name="investAmount"
                         value={formData.investAmount}
                         onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
                       >
                         <option value="">
                           Select how much you are willing to invest
@@ -650,6 +774,26 @@ function EditKyc() {
                         {investmentAmount.map((attitude, index) => (
                           <option value={attitude} key={index}>
                             {attitude}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        Please select one of the following which matches your
+                        circumstances.
+                      </p>
+                      <select
+                        name="riskProfile"
+                        value={formData.riskProfile}
+                        onChange={handleChange}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
+                      >
+                        <option value="">Select your risk profile</option>
+                        {riskProfile.map((item, index) => (
+                          <option value={item} key={index}>
+                            {item}
                           </option>
                         ))}
                       </select>
@@ -680,14 +824,14 @@ function EditKyc() {
                                 <div
                                   className={`relative border p-4 flex cursor-pointer focus:outline-none rounded-lg ${
                                     checked
-                                      ? "bg-indigo-50 border-indigo-200 z-10"
+                                      ? "bg-teal-50 border-teal-200 z-10"
                                       : "border-gray-200"
                                   }`}
                                 >
                                   <span
                                     className={`h-4 w-4 mt-0.5 cursor-pointer rounded-full border flex items-center justify-center ${
                                       checked
-                                        ? "bg-indigo-600 border-transparent"
+                                        ? "bg-teal-600 border-transparent"
                                         : "bg-white border-gray-300"
                                     }`}
                                     aria-hidden="true"
@@ -731,7 +875,7 @@ function EditKyc() {
                               value={item}
                               checked={formData.familyAssessment.includes(item)}
                               onChange={handleChange}
-                              className="form-checkbox h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                              className="form-checkbox h-4 w-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
                             />
                             <span className="ml-2 text-sm text-gray-700">
                               {item}
@@ -754,11 +898,31 @@ function EditKyc() {
                       id="plan-heading"
                       className="text-lg font-medium leading-6 text-gray-900"
                     >
-                      Your Finacial Status
+                      Finacial Status
                     </h2>
                   </div>
 
                   <div className="lg:w-[720px] sm:w-full flex flex-col gap-4">
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        Please select one of the following currencies for the
+                        below options.
+                      </p>
+                      <select
+                        name="selectCurrency"
+                        value={formData.selectCurrency}
+                        onChange={handleChange}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
+                      >
+                        <option value="">Select your currency</option>
+                        {currency.map((item, index) => (
+                          <option value={item} key={index}>
+                            {item}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
                     <div className="space-y-2">
                       <p className="mt-1 text-sm text-gray-500">
                         Your sources of income Your answer is considered as the
@@ -773,7 +937,7 @@ function EditKyc() {
                               value={item}
                               checked={formData.financialStats.includes(item)}
                               onChange={handleChange}
-                              className="form-checkbox h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                              className="form-checkbox h-4 w-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
                             />
                             <span className="ml-2 text-sm text-gray-700">
                               {item}
@@ -792,7 +956,7 @@ function EditKyc() {
                         name="job"
                         value={formData.job}
                         onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
                       >
                         <option value="">Select your occupation</option>
                         {occupation.map((item, index) => (
@@ -813,19 +977,19 @@ function EditKyc() {
                         value={formData.employerDets}
                         onChange={handleChange}
                         placeholder="Company Name, Address, Position"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
                       />
                     </div>
 
                     <div className="space-y-2">
                       <p className="mt-1 text-sm text-gray-500">
-                        Your net annual income (USD)
+                        Net annual income
                       </p>
                       <select
                         name="netIncome"
                         value={formData.netIncome}
                         onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
                       >
                         <option value="">Select your net annual income</option>
                         {netAnnualIncome.map((item, index) => (
@@ -838,17 +1002,55 @@ function EditKyc() {
 
                     <div className="space-y-2">
                       <p className="mt-1 text-sm text-gray-500">
-                        Your total cash and liquid assets (USD). Such as savings
+                        Liquid Net Worth.
+                      </p>
+                      <select
+                        name="liquidNetWorth"
+                        value={formData.liquidNetWorth}
+                        onChange={handleChange}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
+                      >
+                        <option value="">Select liquid net worth</option>
+                        {liquidNetWorth.map((item, index) => (
+                          <option value={item} key={index}>
+                            {item}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        Total Net Worth.
+                      </p>
+                      <select
+                        name="totalNet"
+                        value={formData.totalNetWorth}
+                        onChange={handleChange}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
+                      >
+                        <option value="">Select total net worth</option>
+                        {totalNetWorth.map((item, index) => (
+                          <option value={item} key={index}>
+                            {item}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <p className="mt-1 text-sm text-gray-500">
+                        Total cash and liquid assets (USD). Such as savings
                         accounts, brokerage accounts etc.
                       </p>
                       <select
                         name="assets"
                         value={formData.assets}
                         onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
                       >
                         <option value="">
-                          Select your total cash and liquid assets
+                          Select total cash and liquid assets
                         </option>
                         {netAnnualIncome.map((item, index) => (
                           <option value={item} key={index}>
@@ -864,23 +1066,23 @@ function EditKyc() {
 
             {/* Submit Button */}
             <div className="mt-8 flex justify-end space-x-3">
-            <button
-              type="button"
-              className="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-900"
-              disabled={isSubmitting}
-              onClick={() => window.history.back()}
-            >
-             Cancel
-            </button>
-
-            <button
-              type="submit"
-              className="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white transition ease-in focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
-              disabled={isSubmitting}
+              <button
+                type="button"
+                className="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-900"
+                disabled={isSubmitting}
+                onClick={() => window.history.back()}
               >
-             {isSubmitting ? <DotLoader /> : "Submit"}
-            </button>
-              </div>
+                Cancel
+              </button>
+
+              <button
+                type="submit"
+                className="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 bg-teal-600 hover:bg-teal-700 focus:ring-teal-500 focus:ring-offset-teal-200 text-white transition ease-in focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? <DotLoader /> : "Submit"}
+              </button>
+            </div>
           </div>
         </form>
       </div>

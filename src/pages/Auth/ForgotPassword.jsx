@@ -18,7 +18,7 @@ export default function ForgotPassword() {
   const fetchWhiteLogo = async () => {
     const storageRef = ref(
       storage,
-      "gs://cvs-online.appspot.com/logos/whiteLogo/"
+      "gs://maryana-893ef.appspot.com/logos/whiteLogo/"
     );
     try {
       const logoUrl = await getDownloadURL(storageRef);
@@ -103,7 +103,7 @@ export default function ForgotPassword() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6"
                   />
                 </div>
               </div>
@@ -111,7 +111,7 @@ export default function ForgotPassword() {
               <div>
                 <button
                   type="submit"
-                  className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className="flex w-full justify-center rounded-md bg-teal-600 px-3 py-2.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600"
                 >
                   {isLoading ? (
                     <div className="flex w-full justify-center align-middle gap-2">
@@ -129,7 +129,7 @@ export default function ForgotPassword() {
               Remembered your password?{" "}
               <Link
                 to="/"
-                className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+                className="font-semibold leading-6 text-teal-600 hover:text-teal-500"
               >
                 Sign In
               </Link>

@@ -59,7 +59,7 @@ export default function IposCards() {
             >
               <div className="flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-50 p-4 flex-col">
                 <button
-                  className="block text-gray-400 hover:text-indigo-500 relative ml-auto"
+                  className="block text-gray-400 hover:text-teal-500 relative ml-auto"
                   onClick={() => handleInvest(ipo)}
                 >
                   <span className="sr-only">Open options</span>

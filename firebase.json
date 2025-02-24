@@ -3,7 +3,7 @@
     "rules": "database.rules.json"
   },
   "firestore": {
-    "rules": "firestore.rules",
+    "rules": "                          ",
     "indexes": "firestore.indexes.json"
   },
   "functions": [
@@ -20,5 +20,8 @@
   ],
   "storage": {
     "rules": "storage.rules"
+  },
+  "remoteconfig": {
+    "template": "remoteconfig.template.json"
   }
 }

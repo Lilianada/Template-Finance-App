@@ -280,11 +280,11 @@ export default function AddUserStock() {
               name="symbol"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm uppercase"
+              className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm uppercase"
             />
             <button
               onClick={fetchStockData}
-              className="ml-2 inline-flex justify-center items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+              className="ml-2 inline-flex justify-center items-center rounded-md bg-teal-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
             >
               {isSearching ? (
                 <div className="flex w-full justify-center align-middle gap-2">
@@ -322,7 +322,7 @@ export default function AddUserStock() {
                   onChange={handleInputChange}
                   required
                   readOnly
-                  className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                 />
               </div>
             </div>
@@ -342,7 +342,7 @@ export default function AddUserStock() {
                   onChange={(e) =>
                     setFormData({ ...formData, type: e.target.value })
                   }
-                  className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                 >
                   <option value="Buy">Buy</option>
                   <option value="Sell">Sell</option>
@@ -369,7 +369,7 @@ export default function AddUserStock() {
                       shares: parseInt(e.target.value) || 0,
                     })
                   }
-                  className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                 />
               </div>
             </div>
@@ -392,7 +392,7 @@ export default function AddUserStock() {
                     handleInputChange(value, "tradePrice")
                   }
                   required
-                  className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                 />
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                   <span
@@ -424,7 +424,7 @@ export default function AddUserStock() {
                   }
                   required
                   readOnly
-                  className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                 />
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                   <span
@@ -456,7 +456,7 @@ export default function AddUserStock() {
                   }
                   required
                   readOnly
-                  className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                 />
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                   <span
@@ -486,7 +486,7 @@ export default function AddUserStock() {
                   onValueChange={(value) => handleInputChange(value, "value")}
                   required
                   readOnly
-                  className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                 />
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                   <span
@@ -514,7 +514,7 @@ export default function AddUserStock() {
                   value={formData.profitLoss}
                   onChange={handleInputChange}
                   readOnly
-                  className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                 />
               </div>
             </div>
@@ -532,7 +532,7 @@ export default function AddUserStock() {
                   name="status"
                   value={formData.status}
                   onChange={handleInputChange}
-                  className="block w-full rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-teal-600 sm:text-sm sm:leading-6"
                   required
                 >
                   <option value="Pending">Pending</option>
@@ -562,7 +562,7 @@ export default function AddUserStock() {
                       tradeDate: e.target.value,
                     })
                   }
-                  className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="text-sm leading-6 text-gray-900 font-normal block w-full rounded-md border-gray-300 shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
                 />
               </div>
             </div>
@@ -572,14 +572,14 @@ export default function AddUserStock() {
         <div className="mt-4 flex space-x-6 justify-end">
           <button
             type="button"
-            className="mt-3 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+            className="mt-3 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
             onClick={() => window.history.back()}
           >
             Close
           </button>
           <button
             type="submit"
-            className=" inline-flex justify-center items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
+            className=" inline-flex justify-center items-center rounded-md bg-teal-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600"
           >
             {isLoading ? (
               <div className="flex w-full justify-center align-middle gap-2">

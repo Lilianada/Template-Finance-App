@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.css-166bipr-Input input:focus,  .css-qbdosj-Input input:focus,  .css-qbdosj-Input:focus{
+    outline: none;
+    border-color: transparent;
+    box-shadow: none;
+  }
+  
